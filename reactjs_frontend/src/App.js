@@ -137,7 +137,7 @@ function App() {
               {/* Optionally show time and sender */}
               <span style={{
                 fontSize:"0.92rem",
-                color: "var(--muted-text)", marginLeft: msg.role==="user"?"14px":"7px",
+                color: "#2F4858", marginLeft: msg.role==="user"?"14px":"7px",
                 marginTop: "1.1em", fontWeight:400,
                 alignSelf:"flex-end"
               }}>
@@ -152,9 +152,15 @@ function App() {
       {/* Error state */}
       {error && (
         <div style={{
-          background:"#7e2e2e12", color:"#e55", border:"1.2px solid #bb3333",
-          margin:"9px auto 0 auto", padding:"8px 20px", borderRadius:"13px", maxWidth:"420px",
-          fontWeight:600, textAlign:"center"
+          background:"#8DB58022", 
+          color:"#2F4858", 
+          border:"1.2px solid #8DB580", 
+          margin:"9px auto 0 auto", 
+          padding:"8px 20px", 
+          borderRadius:"13px", 
+          maxWidth:"420px",
+          fontWeight:600, 
+          textAlign:"center"
         }}>{error}</div>
       )}
 

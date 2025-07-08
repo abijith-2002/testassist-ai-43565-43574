@@ -5,9 +5,23 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #2F4858;
+  color: #2F4858;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Ensure input and placeholder colors match the palette */
+input,
+.chat-input-main {
+  color: #2F4858;
+  background: #33658A;
+}
+
+::-webkit-input-placeholder { color: #2F4858; }
+::-moz-placeholder { color: #2F4858; }
+:-ms-input-placeholder { color: #2F4858; }
+::placeholder { color: #2F4858; }

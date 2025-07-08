@@ -1,15 +1,15 @@
 :root {
-  --primary-bg: #335266;
-  --surface-bg: #203947;
-  --assistant-bubble: #BAE7AE;
-  --input-bg: #3F5D6A;
-  --send-btn-bg: #8DC48E;
+  --primary-bg: #2F4858;
+  --surface-bg: #2F4858;
+  --assistant-bubble: #8DB580;
+  --input-bg: #33658A;
+  --send-btn-bg: #8DB580;
   --white: #FFFFFF;
   --muted-text: #BCC6D0;
   --icon-blue: #3F6E8D;
-  --header-avatar-bg: #44678a;
-  --user-bubble: #ffffff;
-  --bubble-text: #283340;
+  --header-avatar-bg: #33658A;
+  --user-bubble: #33658A;
+  --bubble-text: #2F4858;
 }
 html, body, #root {
   height: 100%;
