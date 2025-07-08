@@ -159,12 +159,14 @@ function App() {
       <header className="header-bar">
         <div className="header-left">
           {/* Monochromatic logo avatar SVG */}
-          <span className="avatar" aria-label="Logo">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-label="TestAssist logo" role="img">
-              <circle cx="14" cy="14" r="13" stroke="#3F6E8D" strokeWidth="2.2" fill="#203947"/>
-              <path d="M11.6 21c.19-2.2.36-4.46.96-7.37.11-.54.73-.81 1.2-.53 2.09 1.21 3.82.69 5.1-1.26.51-.8.7-1.53.77-2.3.05-.57-.54-.99-1.06-.73-1.66.87-3.04 1.34-4.5 1.34S9.8 9.98 8.14 9.12c-.52-.26-1.11.16-1.06.73a6.48 6.48 0 0 0 .77 2.3c1.28 1.95 3.01 2.47 5.1 1.26a.89.89 0 0 1 1.2.53c.6 2.91.77 5.17.96 7.37" fill="#3F6E8D"/>
-              <circle cx="10.5" cy="10.5" r="1.3" fill="#BCC6D0"/>
-              <circle cx="17.5" cy="10.5" r="1.3" fill="#BCC6D0"/>
+          <span className="avatar" aria-label="AI Assistant">
+            {/* New modern monochrome AI SVG logo */}
+            <svg width="28" height="28" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
+              <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
+              <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
+              <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
+              <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
+              <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
             </svg>
           </span>
           <span className="titlebox">
@@ -197,11 +199,13 @@ function App() {
                 {/* Avatar for assistant bubble only */}
                 {msg.role==="assistant" && (
                   <span className="bubble-avatar assistant" aria-label="AI logo">
-                    <svg width="20" height="20" viewBox="0 0 28 28" fill="none" aria-label="TestAssist logo" role="img">
-                      <circle cx="14" cy="14" r="13" stroke="#3F6E8D" strokeWidth="2.2" fill="#203947"/>
-                      <path d="M11.6 21c.19-2.2.36-4.46.96-7.37.11-.54.73-.81 1.2-.53 2.09 1.21 3.82.69 5.1-1.26.51-.8.7-1.53.77-2.3.05-.57-.54-.99-1.06-.73-1.66.87-3.04 1.34-4.5 1.34S9.8 9.98 8.14 9.12c-.52-.26-1.11.16-1.06.73a6.48 6.48 0 0 0 .77 2.3c1.28 1.95 3.01 2.47 5.1 1.26a.89.89 0 0 1 1.2.53c.6 2.91.77 5.17.96 7.37" fill="#3F6E8D"/>
-                      <circle cx="10.5" cy="10.5" r="1.3" fill="#BCC6D0"/>
-                      <circle cx="17.5" cy="10.5" r="1.3" fill="#BCC6D0"/>
+                    {/* New modern monochrome AI SVG */}
+                    <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
+                      <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
+                      <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
+                      <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
+                      <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
+                      <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
                     </svg>
                   </span>
                 )}
