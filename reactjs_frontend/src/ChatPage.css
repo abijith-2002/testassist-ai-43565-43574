@@ -334,3 +334,35 @@ html, body, #root {
 ::-moz-placeholder { color: var(--muted-text); }
 :-ms-input-placeholder { color: var(--muted-text); }
 ::placeholder { color: var(--muted-text); }
+
+/* --- Error message overlay: always visible above chat + input, no overlap --- */
+.chat-error-overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 76px;
+  z-index: 9999;
+  background: #FFEAEA;
+  color: #B22F2F;
+  border: 2px solid #B22F2F77;
+  border-radius: 13px;
+  margin: 0 auto;
+  padding: 13px 24px;
+  box-shadow: 0 8px 16px #B22F2F15;
+  text-align: center;
+  max-width: 480px;
+  font-weight: 700;
+  font-size: 1.08rem;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  font-family: 'Lexend Deca', 'Helvetica Neue', Arial, sans-serif;
+  display: block;
+}
+@media (max-width: 700px) {
+  .chat-error-overlay {
+    max-width: 97vw;
+    padding: 10px 2vw;
+    font-size: 0.97rem;
+    bottom: 92px;
+  }
+}

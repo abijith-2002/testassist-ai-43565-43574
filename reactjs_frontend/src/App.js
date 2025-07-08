@@ -226,19 +226,9 @@ function App() {
         </div>
       </main>
 
-      {/* Error state */}
+      {/* Error state: overlay, visible at all times above the input/footer */}
       {error && (
-        <div style={{
-          background:"#8DB58022", 
-          color:"#2F4858", 
-          border:"1.2px solid #8DB580", 
-          margin:"9px auto 0 auto", 
-          padding:"8px 20px", 
-          borderRadius:"13px", 
-          maxWidth:"420px",
-          fontWeight:600, 
-          textAlign:"center"
-        }}>{error}</div>
+        <div className="chat-error-overlay">{error}</div>
       )}
 
       {/* Input bar and footer note */}
