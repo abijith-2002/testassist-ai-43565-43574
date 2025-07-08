@@ -234,15 +234,10 @@ function App() {
                 )}
                 <span className="bubble-txt">{msg.content}</span>
               </div>
-              {/* Optionally show time and sender */}
-              <span style={{
-                fontSize:"0.92rem",
-                color: "#2F4858", marginLeft: msg.role==="user"?"14px":"7px",
-                marginTop: "1.1em", fontWeight:400,
-                alignSelf:"flex-end"
-              }}>
+              {/* Timestamp directly beneath the chat bubble */}
+              <div className="chat-timestamp">
                 {(msg.role==="user"?"You":"AI")}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
-              </span>
+              </div>
             </div>
           ))}
           <div ref={chatEndRef}/>

@@ -290,40 +290,34 @@ html, body, #root {
   white-space: pre-line;
 }
 
-/* Timestamp and sender spacing - high contrast for all backgrounds */
-.chat-bubble-row > span {
+/* Timestamp and sender below bubble: always #b666d0, visually separated */
+.chat-timestamp {
   font-size: 0.93rem;
-  /* Default fallback for timestamp is dark gray */
-  color: #333333;
-  margin-left: 14px;
-  margin-top: 0.95em;
+  color: #b666d0;
   font-weight: 400;
-  align-self: flex-end;
+  margin-top: 0.70em;
+  margin-left: 6px;
+  margin-right: 6px;
+  align-self: flex-start;
+  padding-top: 0.11em;
+  display: block;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  user-select: none;
+  /* Spacing from bubble */
 }
 
-/* Timestamp for assistant bubble (light green) - use dark for background #8DB580, white for very dark backgrounds */
+/* Remove previous span timestamp coloring rules */
+/* .chat-bubble-row > span,
 .chat-bubble-row.assistant > span,
-.chat-bubble-row .chat-bubble.assistant ~ span {
-  color: #333333;
-}
-
-/* Timestamp for error bubble (pink/danger, #CB8589) - enforce bright white for contrast */
+.chat-bubble-row .chat-bubble.assistant ~ span,
 .chat-bubble-row.assistant-error > span,
-.chat-bubble-row .chat-bubble.error-bubble ~ span {
-  color: #fff !important;
-  /* fallback for max contrast: color: #fafafa; */
-}
-
-/* Timestamp for user bubble (bluish) - ensure it is always visible, white if user bubble is dark */
+.chat-bubble-row .chat-bubble.error-bubble ~ span,
 .chat-bubble-row.user > span,
-.chat-bubble-row .chat-bubble.user ~ span {
-  color: #fafafa;
-}
-
-/* Fallback muted style (not actively used, but for completeness if muted style is referenced elsewhere) */
+.chat-bubble-row .chat-bubble.user ~ span,
 .timestamp-muted {
-  color: #BCC6D0 !important;
-}
+  color: unset !important;
+} */
 
 /* Input bar and footer: generously spaced */
 .input-footer-bar {
