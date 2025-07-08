@@ -180,10 +180,11 @@ html, body, #root {
 }
 /* Error messages from assistant: style almost identically, but can highlight if wanted */
 .chat-bubble.assistant.error-bubble {
-  /* Remove extra red error styles for indistinguishable style, or make subtle if needed */
-  /* border: 1.8px solid #D1555E; */
-  /* background: var(--assistant-bubble); */
-  /* color: var(--bubble-text); */
+  /* Show error bubbles with strong color; readable text */
+  border: 1.8px solid #D1555E;
+  background: #CB8589 !important;
+  color: #fff !important; /* Ensure strong contrast and accessibility */
+  text-align: left;
 }
 
 .chat-bubble {
