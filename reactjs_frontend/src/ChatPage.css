@@ -264,14 +264,39 @@ html, body, #root {
   white-space: pre-line;
 }
 
-/* Timestamp and sender spacing */
+/* Timestamp and sender spacing - high contrast for all backgrounds */
+/* Default (user bubble): forced dark color for visibility */
 .chat-bubble-row > span {
   font-size: 0.93rem;
-  color: #a08d95; /* Low-contrast accessible muted tone */
+  color: #333333;
   margin-left: 14px;
   margin-top: 0.95em;
   font-weight: 400;
   align-self: flex-end;
+  /* Let JS margin correction still work */
+}
+
+/* Timestamp for assistant bubble (light green) - use dark text for best contrast */
+.chat-bubble-row.assistant > span,
+.chat-bubble-row .chat-bubble.assistant ~ span {
+  color: #333333;
+}
+
+/* Timestamp for error bubble (pink/danger) - use extra bright for contrast with #CB8589 */
+.chat-bubble-row.assistant-error > span,
+.chat-bubble-row .chat-bubble.error-bubble ~ span {
+  color: #e5dfe0;
+}
+
+/* Timestamp for user bubble (bluish) - default to the same forced dark for readability */
+.chat-bubble-row.user > span,
+.chat-bubble-row .chat-bubble.user ~ span {
+  color: #333333;
+}
+
+/* Fallback muted style (not actively used, but for completeness if muted style is referenced elsewhere) */
+.timestamp-muted {
+  color: #BCC6D0 !important;
 }
 
 /* Input bar and footer: generously spaced */
