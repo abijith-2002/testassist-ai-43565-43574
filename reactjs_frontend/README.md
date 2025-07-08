@@ -18,6 +18,19 @@ In the project directory, you can run:
 Runs the app in development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
+### API Backend URL Configuration
+
+By default, chat API requests are sent to `/chat` at the backend server.  
+To target *a different backend address* (for example, when running frontend and backend on different hosts/ports, or in Docker/VM environments), use the environment variable `REACT_APP_BACKEND_API_URL`:
+
+```bash
+REACT_APP_BACKEND_API_URL=http://localhost:3001 npm start
+```
+- If not set, the frontend will use `/chat` (same host).
+- On `localhost`, it defaults to `http://localhost:3001/chat`.
+
+The API endpoint POSTs to `${REACT_APP_BACKEND_API_URL}/chat`. Make sure the backend FastAPI server is reachable and CORS headers are properly set in FastAPI.
+
 ### `npm test`
 
 Launches the test runner in interactive watch mode.
