@@ -99,11 +99,11 @@ function App() {
       } catch (_) {
         data = {};
       }
-      // Prefer 'answer' prop, fallback to 'reply'/'content', then default
+      // Extract only the 'answer' property for assistant's reply
       const replyText =
-        (typeof data === "object" && ("answer" in data))
+        (typeof data === "object" && data !== null && typeof data.answer !== "undefined")
           ? data.answer
-          : (data.reply || data.content || (typeof data === "string" ? data : "[No reply returned]"));
+          : "[No reply returned]";
 
       const assistantMsg = {
         role: "assistant",
