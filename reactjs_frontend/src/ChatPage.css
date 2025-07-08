@@ -174,7 +174,7 @@ html, body, #root {
   gap: 10px;
   min-height: 70px; /* ensure row is always tall enough for bubble plus timestamp */
   position: relative;
-  /* Remove any restrictions that could cause inner scrolling */
+  /* Ensure NO inner scrolling: overflow must be visible, remove any max-height */ 
   overflow: visible !important;
 }
 
@@ -256,7 +256,7 @@ html, body, #root {
   align-items: flex-start;
   border: none;
   min-width: 0;
-  /* Remove any overflow, max-height, and internal scrollbar styling on chat bubble */
+  /* ENFORCE: Remove ALL overflow, max-height, prevent scrollbars in chat bubble */
   overflow: visible !important;
   max-height: none !important;
   margin: 0;
@@ -497,7 +497,7 @@ html, body, #root {
     border-radius: 19px / 19px;
     border-radius: 22px !important;
     min-height: 46px;
-    /* Remove overflow/max-height, ensure bubble wraps naturally with all content visible */
+    /* Mobile: ENFORCE NO internal scrollbars/overflow/max-height on bubble */
     overflow: visible !important;
     max-height: none !important;
   }
