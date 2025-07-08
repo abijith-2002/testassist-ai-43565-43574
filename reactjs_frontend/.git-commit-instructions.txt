@@ -1,0 +1,10 @@
+# Stage, commit, and push instructions for reactjs_frontend
+
+# Stage all changes
+git add .
+
+# Commit with message
+git commit -m "Full feature: UI, Gemini-powered backend, robust error handling, and responsive design."
+
+# Attempt to push to remote (if remote is configured)
+git push
