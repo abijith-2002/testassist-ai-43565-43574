@@ -36,9 +36,9 @@ html, body, #root {
 .chatpage-root {
   min-height: 100vh;
   min-height: 100dvh;
-  /* Constrain max width for chat, center horizontally */
-  max-width: 700px;
-  width: 100%;
+  /* Use 90% viewport width with optional max-width for readability on large displays */
+  width: 90vw;
+  max-width: 1200px;
   margin: 0 auto;
   background: var(--primary-bg);
   font-family: 'Lexend Deca', 'Helvetica Neue', Arial, sans-serif;
@@ -57,9 +57,9 @@ html, body, #root {
 /* Prevent double centering on tiny screens */
 @media (max-width: 750px) {
   .chatpage-root {
-    max-width: 100vw;
-    width: 100vw;
-    margin: 0;
+    width: 90vw;
+    max-width: none;
+    margin: 0 auto;
     border-radius: 0;
     box-shadow: none;
     height: 100vh;
@@ -269,8 +269,8 @@ html, body, #root {
 
 /* Chat bubble general: slightly more compact padding, never scrollable */
 .chat-bubble {
-  /* allow wider bubble now we're closer to edge */
-  max-width: 80vw;
+  /* allow wider bubble to utilize 90% width effectively */
+  max-width: 75%;
   word-break: break-word;
   padding: 22px 22px 24px 22px; /* more vertical padding, esp. extra at bottom for timestamp clearance */
   font-size: 1.12rem;
@@ -382,8 +382,8 @@ html, body, #root {
 
 /* Input bar and footer: generously spaced */
 .input-footer-bar {
-  width: 100%;
-  max-width: 700px;
+  width: 90vw;
+  max-width: 1200px;
   overflow-x: hidden;
   background: var(--primary-bg);
   position: fixed;
@@ -399,17 +399,17 @@ html, body, #root {
 }
 @media (max-width: 750px) {
   .input-footer-bar {
-    max-width: 100vw;
-    width: 100vw;
-    left: 0;
-    transform: none;
+    width: 90vw;
+    max-width: none;
+    left: 50%;
+    transform: translateX(-50%);
     border-radius: 0;
   }
 }
 
 .input-bar-wrap {
   width: 100%;
-  max-width: 650px;
+  max-width: calc(100% - 48px);
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -481,11 +481,6 @@ html, body, #root {
 /* Responsive: mobile tweaks for comfortable spacing */
 @media (max-width: 850px) {
   .bubble-avatar { width: 25px; height: 25px; font-size: 1rem; margin-right:8px;}
-  .main-chat-section, .chat-content-list, .input-footer-bar, .input-bar-wrap {
-    max-width: 100vw !important;
-    width: 100vw !important;
-    overflow-x: hidden;
-  }
   .header-bar { padding: 0 7px; }
   .input-bar-wrap { padding: 0 7px; gap: 8px;}
   /* fine grain: left/right padding via row classes */
@@ -495,40 +490,40 @@ html, body, #root {
     gap: 5px; 
   }
   .chat-bubble-row.user {
-    padding-left: 22vw;
-    padding-right: 2vw;
+    padding-left: 20%;
+    padding-right: 2%;
   }
   .chat-bubble-row.assistant, .chat-bubble-row.assistant-error {
-    padding-left: 2vw;
-    padding-right: 22vw;
+    padding-left: 2%;
+    padding-right: 20%;
   }
 }
 
 @media (max-width: 600px) {
-  .header-bar { padding: 0 2vw; }
+  .header-bar { padding: 0 2%; }
   .main-chat-section { padding-top: 4px; padding-bottom: 88px; }
   .chat-content-list { padding-top: 2px; }
-  /* Bring bubbles even closer to edge, but leave 1vw for touch/visual space */
+  /* Bring bubbles even closer to edge, but leave space for touch/visual */
   .chat-bubble-row { 
     margin-bottom: 26px; /* more for mobile timestamp breathing */
-    padding-left: 1vw;
-    padding-right: 1vw;
+    padding-left: 2%;
+    padding-right: 2%;
     gap: 4px;
     min-height: 66px;
   }
   .chat-bubble-row.user {
-    padding-left: 16vw;
-    padding-right: 1vw;
+    padding-left: 15%;
+    padding-right: 2%;
     min-height: 66px;
   }
   .chat-bubble-row.assistant, .chat-bubble-row.assistant-error {
-    padding-left: 1vw;
-    padding-right: 16vw;
+    padding-left: 2%;
+    padding-right: 15%;
     min-height: 66px;
   }
-  .input-bar-wrap { padding: 0 2vw; gap: 5px;}
+  .input-bar-wrap { padding: 0 2%; gap: 5px;}
   .chat-bubble {
-    max-width: 97vw;
+    max-width: 85%;
     padding: 14px 10px 19px 10px; /* more vertical for timestamp */
     font-size: 0.99rem;
     border-radius: 19px;
