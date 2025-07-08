@@ -154,7 +154,13 @@ function App() {
   };
 
   return (
-    <div className="chatpage-root">
+    <div className="chatpage-root" style={{
+      maxWidth: "100vw",
+      width: "100vw",
+      overflowX: "hidden",
+      minHeight: "100vh",
+      boxSizing: "border-box"
+    }}>
       {/* Header */}
       <header className="header-bar">
         <div className="header-left">
