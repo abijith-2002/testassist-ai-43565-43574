@@ -183,7 +183,9 @@ html, body, #root {
   margin-left: auto;
   background: var(--user-bubble);
   color: #FAFAFA;
-  border-radius: 23px;
+  border-radius: 22px;
+  border-radius: 22px / 22px; /* for maximal rectangular rounding cross-browser */
+  border-radius: 24px !important;
   box-shadow: 0 2px 8px #6688af25;
   border: none;
 }
@@ -192,7 +194,9 @@ html, body, #root {
 .chat-bubble.assistant {
   background: var(--assistant-bubble);
   color: var(--bubble-text);
-  border-radius: 23px;
+  border-radius: 22px;
+  border-radius: 22px / 22px;
+  border-radius: 24px !important;
   box-shadow: 0 2px 10px #8bc34a23;
   border: none;
 }
@@ -203,6 +207,9 @@ html, body, #root {
   background: #CB8589 !important;
   color: #fff !important;
   text-align: left;
+  border-radius: 22px;
+  border-radius: 22px / 22px;
+  border-radius: 24px !important;
 }
 
 /* Chat bubble general: much more padding, relaxed, never scrollable */
@@ -222,6 +229,9 @@ html, body, #root {
   overflow: visible !important; /* ensure no scrollbar ever shown */
   max-height: none !important;
   margin: 0;
+  border-radius: 22px;
+  border-radius: 22px / 22px;
+  border-radius: 24px !important;
   /* Never allow chat bubble to scroll */
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
@@ -374,6 +384,9 @@ html, body, #root {
     max-width: 93vw;
     padding: 12px 12px;
     font-size: 0.99rem;
+    border-radius: 19px;
+    border-radius: 19px / 19px;
+    border-radius: 22px !important;
   }
   .input-footer-bar {
     padding-bottom: 11px;
