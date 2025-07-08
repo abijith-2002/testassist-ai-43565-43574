@@ -1,13 +1,18 @@
 /* CSS Variables for Theme Management */
 :root {
-  /* Light theme colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
+  /* Kavia Specified Theme Colors */
+  --primary: #1976d2;
+  --secondary: #455a64;
+  --accent: #ffd600;
+  --bg: #fff;
+  --sidebar-bg: var(--secondary);
+  --sidebar-text: #fff;
+  --msg-user-bg: #e3f2fd;
+  --msg-bot-bg: #fffde7;
+  --input-bg: #f7faff;
+  --border-color: #e0e0e0;
+  --text-primary: #222;
+  --text-secondary: #888;
 }
 
 [data-theme="dark"] {
