@@ -85,10 +85,17 @@ function App() {
       {/* Header */}
       <header className="header-bar">
         <div className="header-left">
-          <span className="avatar" aria-label="Assistant">🤖</span>
+          {/* Monochromatic logo avatar SVG */}
+          <span className="avatar" aria-label="Logo">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-label="TestAssist logo" role="img">
+              <circle cx="14" cy="14" r="13" stroke="#3F6E8D" strokeWidth="2.2" fill="#203947"/>
+              <path d="M11.6 21c.19-2.2.36-4.46.96-7.37.11-.54.73-.81 1.2-.53 2.09 1.21 3.82.69 5.1-1.26.51-.8.7-1.53.77-2.3.05-.57-.54-.99-1.06-.73-1.66.87-3.04 1.34-4.5 1.34S9.8 9.98 8.14 9.12c-.52-.26-1.11.16-1.06.73a6.48 6.48 0 0 0 .77 2.3c1.28 1.95 3.01 2.47 5.1 1.26a.89.89 0 0 1 1.2.53c.6 2.91.77 5.17.96 7.37" fill="#3F6E8D"/>
+              <circle cx="10.5" cy="10.5" r="1.3" fill="#BCC6D0"/>
+              <circle cx="17.5" cy="10.5" r="1.3" fill="#BCC6D0"/>
+            </svg>
+          </span>
           <span className="titlebox">
-            <span className="ai-title">AI Assistant</span>
-            <span className="ai-sub">Always here to help</span>
+            <span className="ai-title">TestAssist</span>
           </span>
         </div>
         <div className="header-actions">
@@ -104,18 +111,7 @@ function App() {
       {/* Main chat area */}
       <main className="main-chat-section">
         <div className="chat-content-list" id="chat-messages">
-          {messages.length === 0 && (
-            <div style={{
-              color:"var(--muted-text)",textAlign:"center",margin:"20% 0 0 0",
-              fontSize:"1.11rem",fontWeight:400
-            }}>
-              <p>
-                Need help with Application Testing?
-                <br/>
-                Just ask your question below!
-              </p>
-            </div>
-          )}
+          {/* No empty-state help text to display */}
           {messages.map((msg, idx) => (
             <div
               key={idx}
@@ -127,7 +123,14 @@ function App() {
               >
                 {/* Avatar for assistant bubble only */}
                 {msg.role==="assistant" && (
-                  <span className="bubble-avatar assistant" aria-label="AI avatar">🤖</span>
+                  <span className="bubble-avatar assistant" aria-label="AI logo">
+                    <svg width="20" height="20" viewBox="0 0 28 28" fill="none" aria-label="TestAssist logo" role="img">
+                      <circle cx="14" cy="14" r="13" stroke="#3F6E8D" strokeWidth="2.2" fill="#203947"/>
+                      <path d="M11.6 21c.19-2.2.36-4.46.96-7.37.11-.54.73-.81 1.2-.53 2.09 1.21 3.82.69 5.1-1.26.51-.8.7-1.53.77-2.3.05-.57-.54-.99-1.06-.73-1.66.87-3.04 1.34-4.5 1.34S9.8 9.98 8.14 9.12c-.52-.26-1.11.16-1.06.73a6.48 6.48 0 0 0 .77 2.3c1.28 1.95 3.01 2.47 5.1 1.26a.89.89 0 0 1 1.2.53c.6 2.91.77 5.17.96 7.37" fill="#3F6E8D"/>
+                      <circle cx="10.5" cy="10.5" r="1.3" fill="#BCC6D0"/>
+                      <circle cx="17.5" cy="10.5" r="1.3" fill="#BCC6D0"/>
+                    </svg>
+                  </span>
                 )}
                 <span className="bubble-txt">{msg.content}</span>
               </div>
