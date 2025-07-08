@@ -66,7 +66,7 @@ function App() {
         resp = await fetch(`${API_BASE}/chat`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({message: userMsg.content})
+          body: JSON.stringify({question: userMsg.content})
         });
       } catch (err) {
         // Network or CORS error
