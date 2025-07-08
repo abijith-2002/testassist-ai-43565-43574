@@ -200,6 +200,9 @@ html, body, #root {
   align-items: flex-start;
   border: none;
   min-width: 0;
+  /* Removed any overflow or max-height, so bubbles expand with content */
+  overflow: visible;
+  max-height: none;
 }
 .bubble-avatar {
   margin-right: 10px;
