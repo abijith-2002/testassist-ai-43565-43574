@@ -171,10 +171,11 @@ html, body, #root {
   /* Move bubbles closer to screen edge: less padding */
   padding-left: 22px;
   padding-right: 22px;
-  overflow-x: hidden;
   gap: 10px;
   min-height: 70px; /* ensure row is always tall enough for bubble plus timestamp */
   position: relative;
+  /* Remove any restrictions that could cause inner scrolling */
+  overflow: visible !important;
 }
 
 /* User always right-aligned */
@@ -255,18 +256,15 @@ html, body, #root {
   align-items: flex-start;
   border: none;
   min-width: 0;
-  overflow: visible !important; /* ensure no scrollbar ever shown */
+  /* Remove any overflow, max-height, and internal scrollbar styling on chat bubble */
+  overflow: visible !important;
   max-height: none !important;
   margin: 0;
   border-radius: 22px;
   border-radius: 22px / 22px;
   border-radius: 24px !important;
   min-height: 50px; /* always tall enough for a single line and timestamp visuals */
-  /* Never allow chat bubble to scroll */
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
 }
-.chat-bubble::-webkit-scrollbar { display:none !important; }
 
 /* Avatar styles */
 .bubble-avatar {
@@ -499,6 +497,9 @@ html, body, #root {
     border-radius: 19px / 19px;
     border-radius: 22px !important;
     min-height: 46px;
+    /* Remove overflow/max-height, ensure bubble wraps naturally with all content visible */
+    overflow: visible !important;
+    max-height: none !important;
   }
   .input-footer-bar {
     padding-bottom: 11px;
