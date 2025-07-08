@@ -211,11 +211,11 @@ html, body, #root {
   border-radius: 24px !important;
 }
 
-/* Chat bubble general: much more padding, relaxed, never scrollable */
+/* Chat bubble general: slightly more compact padding, never scrollable */
 .chat-bubble {
   max-width: 66vw;
   word-break: break-word;
-  padding: 24px 32px;
+  padding: 16px 22px;
   font-size: 1.12rem;
   font-family: 'Lexend Deca', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
@@ -266,9 +266,9 @@ html, body, #root {
 
 /* Timestamp and sender spacing */
 .chat-bubble-row > span {
-  font-size: 1rem;
-  color: #234056;
-  margin-left: 18px;
+  font-size: 0.93rem;
+  color: #a08d95; /* Low-contrast accessible muted tone */
+  margin-left: 14px;
   margin-top: 0.95em;
   font-weight: 400;
   align-self: flex-end;
@@ -381,7 +381,7 @@ html, body, #root {
   .input-bar-wrap { padding: 0 2vw; gap: 5px;}
   .chat-bubble {
     max-width: 93vw;
-    padding: 12px 12px;
+    padding: 9px 10px;
     font-size: 0.99rem;
     border-radius: 19px;
     border-radius: 19px / 19px;
