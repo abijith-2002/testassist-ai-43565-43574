@@ -292,52 +292,64 @@ html, body, #root {
   z-index: 2;
 }
 
-/* Place timestamp absolutely bottom right INSIDE the bubble */
-.bubble-timestamp {
+/* ===== Timestamp outside bubble at bottom right of chat row ===== */
+.chat-timestamp {
+  display: inline-block;
   position: absolute;
-  right: 16px;
-  bottom: 10px;
+  right: 0;
+  bottom: -21px; /* a bit below bubble shadow */
   color: #bcccd0 !important;
   font-size: 0.91rem;
   font-weight: 400;
   letter-spacing: 0.01em;
-  white-space: nowrap;
-  user-select: none;
-  z-index: 3;
+  opacity: 1;
   background: transparent;
-  padding-left: 10px;
-  pointer-events: none; /* so text selection in bubble works naturally */
+  z-index: 10;
+  padding-top: 2px;
+  user-select: none;
+  white-space: nowrap;
+  pointer-events: none; /* allow selection in bubble, not timestamp */
+  width: auto;
+  min-width: 70px;
+  text-align: right;
 }
 
-/* Make sure parent bubble is positioned rel */
-.chat-bubble {
+/* Ensure chat row has enough space for timestamp outside bubble */
+.chat-bubble-row {
   position: relative;
+  min-height: 42px;
+  align-items: flex-end;
 }
 
+/* For last child, nudge timestamp a bit up if near footer */
+.chat-bubble-row:last-child .chat-timestamp {
+  bottom: -8px;
+}
+
+/* Alignment for user (right) and assistant (left) : puts timestamp at true outer edge */
+.chat-bubble-row.user .chat-timestamp {
+  right: 0;
+  left: auto;
+  text-align: right;
+}
+.chat-bubble-row.assistant .chat-timestamp,
+.chat-bubble-row.assistant-error .chat-timestamp {
+  left: 0;
+  right: auto;
+  text-align: left;
+}
 @media (max-width: 600px) {
-  .bubble-timestamp {
-    right: 9px;
-    bottom: 7px;
-    font-size: 0.85rem;
+  .chat-timestamp {
+    font-size: 0.82rem;
+    bottom: -16px;
+    min-width: 52px;
   }
 }
 
-/* Timestamp and sender below bubble: always #b666d0, visually separated */
-.chat-timestamp {
-  display: none;
+/* Remove timestamp in bubble style */
+.bubble-timestamp {
+  display: none !important;
 }
-
-/* Remove previous span timestamp coloring rules */
-/* .chat-bubble-row > span,
-.chat-bubble-row.assistant > span,
-.chat-bubble-row .chat-bubble.assistant ~ span,
-.chat-bubble-row.assistant-error > span,
-.chat-bubble-row .chat-bubble.error-bubble ~ span,
-.chat-bubble-row.user > span,
-.chat-bubble-row .chat-bubble.user ~ span,
-.timestamp-muted {
-  color: unset !important;
-} */
 
 /* Input bar and footer: generously spaced */
 .input-footer-bar {

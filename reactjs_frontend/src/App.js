@@ -231,10 +231,10 @@ function App() {
                   </span>
                 )}
                 <span className="bubble-txt">{msg.content}</span>
-                <span className="bubble-timestamp">
-                  {(msg.role==="user"?"You":"AI")}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
-                </span>
               </div>
+              <span className="chat-timestamp">
+                {(msg.role==="user"?"You":"AI")}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
+              </span>
             </div>
           ))}
           <div ref={chatEndRef}/>
