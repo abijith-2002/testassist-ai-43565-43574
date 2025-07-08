@@ -99,11 +99,18 @@ function App() {
       } catch (_) {
         data = {};
       }
-      // Extract only the 'answer' property for assistant's reply
-      const replyText =
-        (typeof data === "object" && data !== null && typeof data.answer !== "undefined")
-          ? data.answer
-          : "[No reply returned]";
+      // The UI should always display Gemini's reply if present, never fallback to generic message
+      // Prefer: If 'answer' exists and is non-empty, display it, else show empty string (not "[No reply returned]")
+      let replyText = "";
+      if (data && typeof data.answer !== "undefined" && data.answer !== null) {
+        if (typeof data.answer === "string" && data.answer.trim().length > 0) {
+          replyText = data.answer;
+        } else if (typeof data.answer === "string") {
+          replyText = ""; // empty string for empty answer
+        } else {
+          replyText = String(data.answer);
+        }
+      }
 
       const assistantMsg = {
         role: "assistant",
