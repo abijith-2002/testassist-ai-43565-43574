@@ -4,8 +4,12 @@ body, #root {
   font-family: "Helvetica Neue", Arial, sans-serif;
   background: #2F4858;
   color: #CB8589;
-  /* Ensure height is inherited for proper scroll calculations */
   min-height: 100vh;
-  height: auto;
+  min-width: 100vw;
   width: 100vw;
+  height: auto;
+  box-sizing: border-box;
+  overflow-x: hidden !important;
+  /* Only scroll vertically when content exceeds viewport */
+  overflow-y: auto;
 }

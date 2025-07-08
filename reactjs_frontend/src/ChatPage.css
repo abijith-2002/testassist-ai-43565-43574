@@ -36,22 +36,42 @@ html, body, #root {
 .chatpage-root {
   min-height: 100vh;
   min-height: 100dvh;
-  max-width: 100vw;
-  width: 100vw;
+  /* Constrain max width for chat, center horizontally */
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
   background: var(--primary-bg);
   font-family: 'Lexend Deca', 'Helvetica Neue', Arial, sans-serif;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  box-sizing: border-box;
   overflow-x: hidden;
-  /* Remove overflow-y: auto here to allow parent (body/root) to control main page scrolling if needed */
+  /* Only allow vertical scrolling if content actually overflows the viewport */
+  max-height: 90vh;
+  height: 90vh;
+  border-radius: 20px;
+  box-shadow: 0 4px 28px 0 #1b263344;
+  position: relative;
+}
+/* Prevent double centering on tiny screens */
+@media (max-width: 750px) {
+  .chatpage-root {
+    max-width: 100vw;
+    width: 100vw;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    height: 100vh;
+    max-height: none;
+  }
 }
 
 /* Header */
 .header-bar {
   background: var(--surface-bg);
   color: var(--white);
-  height: 64px; /* more vertical padding */
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -59,9 +79,11 @@ html, body, #root {
   box-shadow: 0 2px 12px 0 #0004;
   position: relative;
   z-index: 2;
-  max-width: 100vw;
-  width: 100vw;
+  max-width: 100%;
+  width: 100%;
   overflow-x: hidden;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 /* Header left: logo/title */
@@ -139,9 +161,11 @@ html, body, #root {
   padding: 32px 0 0 0;
   position: relative;
   min-height: 0;
-  width: 100vw;
-  max-width: 100vw;
+  width: 100%;
+  max-width: 100%;
+  /* Allow full usage of max chat area—height is managed by chatpage-root */
   overflow-x: hidden;
+  overflow-y: hidden;  /* Hide vertical scroll in the main area; let chat-content-list scroll */
   padding-bottom: 112px; /* extra room for large input bar */
 }
 
@@ -155,8 +179,11 @@ html, body, #root {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 18px 0 0 0;
-  width: 100vw;
-  max-width: 100vw;
+  width: 100%;
+  max-width: 100%;
+  max-height: calc(90vh - 64px - 136px); /* 90vh minus header and footer/input ~136px total */
+  margin: 0 auto;
+  background: transparent;
 }
 
 /* Chat bubble row: extra margin, more lateral breathing space */
@@ -166,7 +193,6 @@ html, body, #root {
   align-items: flex-end;
   margin-bottom: 48px; /* increased for more space for timestamp and tall bubbles */
   width: 100%;
-  max-width: 100vw;
   box-sizing: border-box;
   /* Move bubbles closer to screen edge: less padding */
   padding-left: 22px;
@@ -356,29 +382,41 @@ html, body, #root {
 
 /* Input bar and footer: generously spaced */
 .input-footer-bar {
-  width: 100vw;
-  max-width: 100vw;
+  width: 100%;
+  max-width: 700px;
   overflow-x: hidden;
   background: var(--primary-bg);
   position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: 0;
-  left: 0;
   z-index: 100;
   padding: 0 0 34px 0;
   display: flex; flex-direction: column; align-items: center;
   box-shadow: 0 -6px 40px 0 #2f485825;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+@media (max-width: 750px) {
+  .input-footer-bar {
+    max-width: 100vw;
+    width: 100vw;
+    left: 0;
+    transform: none;
+    border-radius: 0;
+  }
 }
 
 .input-bar-wrap {
-  width: 100vw;
-  max-width: 980px;
+  width: 100%;
+  max-width: 650px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  padding: 0 38px;
+  padding: 0 24px;
   box-sizing: border-box;
   overflow-x: hidden;
-  gap: 16px;
+  gap: 14px;
   margin-top: 11px;
 }
 
