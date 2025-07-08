@@ -208,7 +208,6 @@ function App() {
             <div
               key={idx}
               className={`chat-bubble-row ${msg.role}${msg.error ? " assistant-error" : ""}`}
-              style={{justifyContent: msg.role==="user"?"flex-end":"flex-start"}}
             >
               <div
                 className={

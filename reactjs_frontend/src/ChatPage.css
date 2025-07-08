@@ -160,6 +160,7 @@ html, body, #root {
 }
 
 /* Chat bubble row: extra margin, more lateral breathing space */
+/* Chat bubble row: ensures alignment for user left/right, correct spacing */
 .chat-bubble-row {
   display: flex;
   align-items: flex-end;
@@ -171,8 +172,25 @@ html, body, #root {
   padding-right: 70px;
   overflow-x: hidden;
   gap: 10px;
-  /* Ensure no child is scrollable */
 }
+
+/* User always right-aligned */
+.chat-bubble-row.user {
+  justify-content: flex-end;
+}
+.chat-bubble-row.user .chat-bubble {
+  align-self: flex-end;
+}
+
+/* Assistant and errors always left-aligned */
+.chat-bubble-row.assistant, .chat-bubble-row.assistant-error {
+  justify-content: flex-start;
+}
+.chat-bubble-row.assistant .chat-bubble,
+.chat-bubble-row.assistant-error .chat-bubble {
+  align-self: flex-start;
+}
+
 .chat-bubble-row:last-child {
   margin-bottom: 16px; /* don't stick to footer */
 }
@@ -396,6 +414,11 @@ html, body, #root {
   }
   .header-bar { padding: 0 7px; }
   .input-bar-wrap { padding: 0 7px; gap: 8px;}
+  .chat-bubble-row {
+    padding-left: 8px;
+    padding-right: 8px;
+    gap: 5px;
+  }
 }
 
 @media (max-width: 600px) {
