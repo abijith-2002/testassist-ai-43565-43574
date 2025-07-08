@@ -4,4 +4,8 @@ body, #root {
   font-family: "Helvetica Neue", Arial, sans-serif;
   background: #2F4858;
   color: #CB8589;
+  /* Ensure height is inherited for proper scroll calculations */
+  min-height: 100vh;
+  height: auto;
+  width: 100vw;
 }
