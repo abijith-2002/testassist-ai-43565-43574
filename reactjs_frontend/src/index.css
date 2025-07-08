@@ -1,10 +1,18 @@
 /* Import Lexend Deca from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;600;700&display=swap');
 
-html {
+html, body, #root {
   box-sizing: border-box;
   width: 100vw;
+  height: 100%;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
   overflow-x: hidden;
+  overflow-y: auto;
+  /* Use flex layout at the root to control vertical growth and sticky footer */
+  display: flex;
+  flex-direction: column;
 }
 
 *, *::before, *::after {

@@ -14,6 +14,7 @@
 
 html, body, #root {
   height: 100%;
+  min-height: 100vh;
   width: 100vw;
   margin: 0;
   padding: 0;
@@ -21,6 +22,10 @@ html, body, #root {
   font-size: 15px;
   box-sizing: border-box;
   overflow-x: hidden;
+  overflow-y: auto;
+  /* Use flex-box for root vertical alignment */
+  display: flex;
+  flex-direction: column;
 }
 
 /* Global box-sizing for all components */
@@ -30,13 +35,17 @@ html, body, #root {
 
 .chatpage-root {
   min-height: 100vh;
+  min-height: 100dvh;
   max-width: 100vw;
   width: 100vw;
   background: var(--primary-bg);
   font-family: 'Lexend Deca', 'Helvetica Neue', Arial, sans-serif;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
   overflow-x: hidden;
+  /* Prevent outer scroll if not needed */
+  overflow-y: auto;
 }
 
 .header-bar {
@@ -117,21 +126,26 @@ html, body, #root {
 
 /* Main chat area: leave extra space at the bottom for sticky/fixed input footer */
 .main-chat-section {
-  flex: 1;
+  flex: 1 1 auto !important;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
   padding: 18px 0 0 0;
   position: relative;
   min-height: 0;
   width: 100vw;
   max-width: 100vw;
   overflow-x: hidden;
+  /* Remove unnecessary overflow-y here, only .chat-content-list scrolls */
   padding-bottom: 85px; /* make room for the fixed input footer */
 }
 .chat-content-list {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 18px 0 0 0;
