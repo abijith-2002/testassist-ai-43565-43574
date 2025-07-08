@@ -29,7 +29,8 @@ function App() {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  // Remove error state - errors will now become a message in the conversation
+  // const [error, setError] = useState("");
   const chatEndRef = useRef(null);
 
   // PUBLIC_INTERFACE: Scroll to latest message
@@ -44,7 +45,7 @@ function App() {
     e && e.preventDefault();
     if(!input.trim() || isLoading) return;
     setIsLoading(true);
-    setError("");
+    // setError(""); // Remove old error state clear logic
     // Add user message optimistically
     const userMsg = {role:"user", content:input, timestamp: new Date().toISOString()};
     setMessages(prev=>[...prev, userMsg]);
@@ -119,14 +120,20 @@ function App() {
       };
       setMessages(prev=>[...prev, assistantMsg]);
     } catch (err) {
-      // Show any fetch/backend errors (including 404/5xx) to user
-      setError(
+      // Show any fetch/backend errors (including 404/5xx) as an "assistant" message with error styling
+      const errorMsg =
         "Sorry, failed to fetch AI response. " +
         (err?.message
           ? err.message.replace(/^Error:/, '').trim()
           : String(err)
-        )
-      );
+        );
+      const assistantErrorMsg = {
+        role: "assistant",
+        content: errorMsg,
+        timestamp: new Date().toISOString(),
+        error: true,
+      };
+      setMessages(prev=>[...prev, assistantErrorMsg]);
     } finally {
       setIsLoading(false);
     }
@@ -142,7 +149,18 @@ function App() {
 
   // Header action handlers (demo stub)
   const handleReload = ()=>window.location.reload();
-  const handleStop = ()=>setError("✋ AI stopped (demo)");
+  const handleStop = ()=>{
+    // Insert an "AI stopped" message as an assistant (error) message inline in chat
+    setMessages(prev => [
+      ...prev,
+      {
+        role: "assistant",
+        content: "✋ AI stopped (demo)",
+        timestamp: new Date().toISOString(),
+        error: true
+      }
+    ]);
+  };
 
   // Focus effect
   const inputRef = useRef(null);
@@ -190,11 +208,18 @@ function App() {
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`chat-bubble-row ${msg.role}`}
+              className={`chat-bubble-row ${msg.role}${msg.error ? " assistant-error" : ""}`}
               style={{justifyContent: msg.role==="user"?"flex-end":"flex-start"}}
             >
               <div
-                className={`chat-bubble ${msg.role}`}
+                className={
+                  `chat-bubble ${msg.role}${msg.error ? " error-bubble" : ""}`
+                }
+                style={
+                  msg.error
+                    ? { border: "1.8px solid #D1555E", background: "#FFF7F7" }
+                    : undefined
+                }
               >
                 {/* Avatar for assistant bubble only */}
                 {msg.role==="assistant" && (
@@ -225,21 +250,6 @@ function App() {
           <div ref={chatEndRef}/>
         </div>
       </main>
-
-      {/* Error state */}
-      {error && (
-        <div style={{
-          background:"#8DB58022", 
-          color:"#2F4858", 
-          border:"1.2px solid #8DB580", 
-          margin:"9px auto 0 auto", 
-          padding:"8px 20px", 
-          borderRadius:"13px", 
-          maxWidth:"420px",
-          fontWeight:600, 
-          textAlign:"center"
-        }}>{error}</div>
-      )}
 
       {/* Input bar and footer note */}
       <footer className="input-footer-bar">

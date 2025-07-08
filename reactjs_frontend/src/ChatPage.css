@@ -178,6 +178,13 @@ html, body, #root {
   border-radius: 16px;
   box-shadow: 0 1px 4px #8bc34a1a;
 }
+/* Error messages from assistant: style almost identically, but can highlight if wanted */
+.chat-bubble.assistant.error-bubble {
+  /* Remove extra red error styles for indistinguishable style, or make subtle if needed */
+  /* border: 1.8px solid #D1555E; */
+  /* background: var(--assistant-bubble); */
+  /* color: var(--bubble-text); */
+}
 
 .chat-bubble {
   max-width: 60%;
