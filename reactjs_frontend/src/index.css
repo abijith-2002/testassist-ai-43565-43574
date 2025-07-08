@@ -1,55 +1,55 @@
-/* Import Lexend Deca from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;600;700&display=swap');
-
-html, body, #root {
-  box-sizing: border-box;
-  min-width: 100vw;
-  width: 100vw;
-  max-width: 100vw;
-  min-height: 100vh;
-  height: auto;
+/* Base styles for the application */
+html, body {
+  margin: 0;
   padding: 0;
-  margin: 0;
-  overflow-x: hidden !important;
-  overflow-y: auto;
-  /* Remove flex here to allow natural block stacking */
-  display: block;
-}
-
-*, *::before, *::after {
-  box-sizing: inherit;
-  min-width: 0;
-}
-
-body {
-  margin: 0;
-  font-family: 'Lexend Deca', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  font-size: 15px; /* slightly smaller for compactness */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #2F4858;
+  background-color: #CB8589;
   color: #CB8589;
-  width: 100vw;
-  min-height: 100vh;
+  height: 100%;
   overflow-x: hidden;
-  padding: 0;
+}
+
+#root {
+  height: 100%;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-/* Ensure input and placeholder colors match the palette */
-input,
-.chat-input-main {
-  color: #2F4858;
-  background: #33658A;
+/* Ensure proper box-sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-::-webkit-input-placeholder { color: #2F4858; }
-::-moz-placeholder { color: #2F4858; }
-:-ms-input-placeholder { color: #2F4858; }
-::placeholder { color: #2F4858; }
+/* Remove default button styles */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Remove default input styles */
+input {
+  border: none;
+  outline: none;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  body {
+    background-color: white;
+    color: black;
+  }
+}
