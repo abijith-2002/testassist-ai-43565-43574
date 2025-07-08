@@ -20,16 +20,36 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ### API Backend URL Configuration
 
-By default, chat API requests are sent to `/chat` at the backend server.  
-To target *a different backend address* (for example, when running frontend and backend on different hosts/ports, or in Docker/VM environments), use the environment variable `REACT_APP_BACKEND_API_URL`:
+Chat API requests are sent to the backend server `/chat` endpoint.
+You **must** configure the API base URL via the environment variable `REACT_APP_BACKEND_API_URL` if the backend is not running on the same host/port (e.g., cloud or Docker deployment).
 
-```bash
-REACT_APP_BACKEND_API_URL=http://localhost:3001 npm start
-```
-- If not set, the frontend will use `/chat` (same host).
-- On `localhost`, it defaults to `http://localhost:3001/chat`.
+**Recommended Production/Cloud:**
+- The default for non-localhost deployments (such as preview and production) is:
+  ```
+  https://vscode-internal-7963-beta.beta01.cloud.kavia.ai:3001
+  ```
+- The React UI POSTs chat requests to `${REACT_APP_BACKEND_API_URL}/chat`.
+- To override the endpoint target, launch with:
+  ```bash
+  REACT_APP_BACKEND_API_URL=https://vscode-internal-7963-beta.beta01.cloud.kavia.ai:3001 npm start
+  ```
+  or set in `.env` file:
+  ```
+  REACT_APP_BACKEND_API_URL=https://vscode-internal-7963-beta.beta01.cloud.kavia.ai:3001
+  ```
 
-The API endpoint POSTs to `${REACT_APP_BACKEND_API_URL}/chat`. Make sure the backend FastAPI server is reachable and CORS headers are properly set in FastAPI.
+**Local development:**
+- On `localhost`, the frontend defaults to `http://localhost:3001` for backend API calls.
+- (You can still override with `REACT_APP_BACKEND_API_URL` if needed.)
+
+**Error handling:**  
+- If the backend returns an error (including 404 or 5xx), or responds with an error message, the error will be clearly shown at the top of the chat UI for the user.
+- If the backend cannot be reached (bad base URL/CORS/network), a friendly error is also surfaced.
+
+### Robust Error Handling
+
+- If the backend response is not OK (`!resp.ok`), all error responses (including HTTP 404s and FastAPI/Gemini error objects) are parsed and surfaced to users within the chat area.
+- Network or CORS failures will also show a detailed, user-friendly error.
 
 ### `npm test`
 

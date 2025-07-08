@@ -51,8 +51,16 @@ function App() {
     setInput("");
 
     try {
-      // Determine base URL: Use environment variable or fallback (supports local/dev/prod, can override by REACT_APP_BACKEND_API_URL)
-      const API_BASE = process.env.REACT_APP_BACKEND_API_URL || (window.location.hostname === "localhost" ? "http://localhost:3001" : "");
+      // Determine base URL: Use environment variable or fallback.
+      // Default to Kavia cloud backend per requirements.
+      // - Priority: REACT_APP_BACKEND_API_URL (env) -> default cloud URL -> localhost (for local dev).
+      let API_BASE =
+        process.env.REACT_APP_BACKEND_API_URL
+        || (window.location.hostname === "localhost"
+          ? "http://localhost:3001"
+          : "https://vscode-internal-7963-beta.beta01.cloud.kavia.ai:3001"
+        );
+
       let resp;
       try {
         resp = await fetch(`${API_BASE}/chat`, {
@@ -61,34 +69,41 @@ function App() {
           body: JSON.stringify({message: userMsg.content})
         });
       } catch (err) {
+        // Network or CORS error
         throw new Error(`Could not reach backend server at ${API_BASE}/chat. ${err?.message || ""}`);
       }
 
+      // Surface ALL error responses, including 404s, with details if present
       if (!resp.ok) {
-        // Try to parse error from backend, fallback to status
-        let err = `${resp.status} ${resp.statusText}`;
+        let errMsg = `${resp.status} ${resp.statusText}`;
         try {
-          // Attempt JSON error object from FastAPI or Gemini
-          const data = await resp.json();
-          // FastAPI: {"detail": "..."} or Gemini {"error":{...}}
-          if (data && (typeof data === "object")) {
-            if (data.detail) err = data.detail;
-            else if (data.error && data.error.message) err = data.error.message;
-            else if (data.error) err = JSON.stringify(data.error);
-            else err = JSON.stringify(data);
+          // Try JSON error payloads: FastAPI {"detail": ...}, Gemini {"error": ...}, or custom
+          const errData = await resp.json();
+          if (errData && typeof errData === "object") {
+            if (errData.detail) errMsg = errData.detail;
+            else if (errData.error && errData.error.message) errMsg = errData.error.message;
+            else if (errData.error) errMsg = JSON.stringify(errData.error);
+            else errMsg = JSON.stringify(errData);
           }
-        } catch (_) { /* fallback to statusText above */ }
-        throw new Error(`Backend error: ${err}`);
+        } catch (_) {
+          // Not JSON, use statusText
+        }
+        // Surface all errors (including 404) to chat UI clearly
+        throw new Error(`[Backend error] ${errMsg} (code ${resp.status})`);
       }
 
-      // Get backend reply (assume: {reply: str})
+      // Get backend reply (assume: {reply: str} or {content: str})
       let data;
       try {
         data = await resp.json();
       } catch (_) {
         data = {};
       }
-      const replyText = data.reply || data.content || (typeof data === "string" ? data : "[No reply returned]");
+      const replyText =
+        data.reply
+        || data.content
+        || (typeof data === "string" ? data : "[No reply returned]");
+
       const assistantMsg = {
         role: "assistant",
         content: replyText,
@@ -96,7 +111,14 @@ function App() {
       };
       setMessages(prev=>[...prev, assistantMsg]);
     } catch (err) {
-      setError("Sorry, failed to fetch AI response. " + (err?.message || ""));
+      // Show any fetch/backend errors (including 404/5xx) to user
+      setError(
+        "Sorry, failed to fetch AI response. " +
+        (err?.message
+          ? err.message.replace(/^Error:/, '').trim()
+          : String(err)
+        )
+      );
     } finally {
       setIsLoading(false);
     }
