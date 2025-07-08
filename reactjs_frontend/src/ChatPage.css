@@ -12,6 +12,7 @@
   --bubble-text: #2F4858;
 }
 
+/* Core structural settings for relaxed, modern spacing */
 html, body, #root {
   height: 100%;
   min-height: 100vh;
@@ -23,12 +24,12 @@ html, body, #root {
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
-  /* Use flex-box for root vertical alignment */
   display: flex;
   flex-direction: column;
+  background: var(--primary-bg);
 }
 
-/* Global box-sizing for all components */
+/* Box-sizing for all */
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -44,19 +45,19 @@ html, body, #root {
   flex-direction: column;
   flex: 1 1 auto;
   overflow-x: hidden;
-  /* Prevent outer scroll if not needed */
   overflow-y: auto;
 }
 
+/* Header */
 .header-bar {
   background: var(--surface-bg);
   color: var(--white);
-  height: 56px;
+  height: 64px; /* more vertical padding */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 26px;
-  box-shadow: 0 2px 8px 0 #0002;
+  padding: 0 38px;
+  box-shadow: 0 2px 12px 0 #0004;
   position: relative;
   z-index: 2;
   max-width: 100vw;
@@ -64,48 +65,53 @@ html, body, #root {
   overflow-x: hidden;
 }
 
+/* Header left: logo/title */
 .header-bar .header-left {
   display: flex;
   align-items: center;
 }
 
+/* Logo avatar styling */
 .header-bar .avatar {
   background: var(--header-avatar-bg);
-  width: 42px; height: 42px;
+  width: 48px; height: 48px;
   border-radius: 50%;
   display: flex;
   align-items: center; justify-content: center;
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  margin-right: 13px;
+  margin-right: 23px;
   color: var(--white);
-  box-shadow: 0 0 0 1.7px #46617944;
-  border: 2px solid #3F6E8D33;
+  box-shadow: 0 0 0 2px #46617944;
+  border: 2.5px solid #3F6E8D33;
 }
+
+/* App Title spacing */
 .header-bar .titlebox {
   display: flex; flex-direction: column; align-items: flex-start;
   line-height: 1.12;
 }
 .header-bar .ai-title {
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--white);
-  letter-spacing: 0.02rem;
+  letter-spacing: 0.018em;
 }
 .header-bar .ai-sub {
   font-size: 1rem;
   color: var(--muted-text);
   font-weight: 400;
-  letter-spacing: 0;
-  margin-top: 1px;
+  margin-top: 2px;
 }
+
 .header-bar .header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 18px;
 }
+
 .header-icon-btn {
-  width: 36px; height: 36px;
+  width: 41px; height: 41px;
   background: var(--surface-bg);
   border: 2px solid var(--icon-blue);
   border-radius: 50%;
@@ -115,8 +121,8 @@ html, body, #root {
   cursor: pointer;
   transition: background 0.17s, border-color 0.18s;
   color: var(--white);
-  margin-left: 0;
   outline: none;
+  margin-left: 0;
 }
 .header-icon-btn:active,
 .header-icon-btn:focus {
@@ -124,22 +130,23 @@ html, body, #root {
   border-color: #2D415B;
 }
 
-/* Main chat area: leave extra space at the bottom for sticky/fixed input footer */
+/* Main chat area - more bottom padding for input footer, relaxed spacing */
 .main-chat-section {
   flex: 1 1 auto !important;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-  padding: 18px 0 0 0;
+  padding: 32px 0 0 0;
   position: relative;
   min-height: 0;
   width: 100vw;
   max-width: 100vw;
   overflow-x: hidden;
-  /* Remove unnecessary overflow-y here, only .chat-content-list scrolls */
-  padding-bottom: 85px; /* make room for the fixed input footer */
+  padding-bottom: 112px; /* extra room for large input bar */
 }
+
+/* Chat message list: comfortable vertical rhythm */
 .chat-content-list {
   flex: 1 1 auto;
   min-height: 0;
@@ -152,67 +159,85 @@ html, body, #root {
   width: 100vw;
   max-width: 100vw;
 }
+
+/* Chat bubble row: extra margin, more lateral breathing space */
 .chat-bubble-row {
   display: flex;
-  align-items: flex-start;
-  margin-bottom: 18px;
+  align-items: flex-end;
+  margin-bottom: 36px;
   width: 100%;
   max-width: 100vw;
   box-sizing: border-box;
-  padding-left: 36px;
-  padding-right: 36px;
+  padding-left: 70px;
+  padding-right: 70px;
   overflow-x: hidden;
+  gap: 10px;
+  /* Ensure no child is scrollable */
 }
-/* User message (right-aligned), light text on dark bubble for contrast. Meets WCAG contrast */
+.chat-bubble-row:last-child {
+  margin-bottom: 16px; /* don't stick to footer */
+}
+
+/* User message (right-aligned) */
 .chat-bubble.user {
   margin-left: auto;
   background: var(--user-bubble);
   color: #FAFAFA;
-  border-radius: 16px;
-  box-shadow: 0 1px 4px #6688af09;
+  border-radius: 23px;
+  box-shadow: 0 2px 8px #6688af25;
+  border: none;
 }
-/* Assistant bubble: pale background, dark text */
+
+/* Assistant bubble: pale green, dark text */
 .chat-bubble.assistant {
   background: var(--assistant-bubble);
   color: var(--bubble-text);
-  border-radius: 16px;
-  box-shadow: 0 1px 4px #8bc34a1a;
+  border-radius: 23px;
+  box-shadow: 0 2px 10px #8bc34a23;
+  border: none;
 }
-/* Error messages from assistant: style almost identically, but can highlight if wanted */
+
+/* Error messages: prominent colors */
 .chat-bubble.assistant.error-bubble {
-  /* Show error bubbles with strong color; readable text */
-  border: 1.8px solid #D1555E;
+  border: 2px solid #D1555E;
   background: #CB8589 !important;
-  color: #fff !important; /* Ensure strong contrast and accessibility */
+  color: #fff !important;
   text-align: left;
 }
 
+/* Chat bubble general: much more padding, relaxed, never scrollable */
 .chat-bubble {
-  max-width: 60%;
+  max-width: 66vw;
   word-break: break-word;
-  padding: 13px 24px;
-  font-size: 1.04rem; /* decreased for compactness */
+  padding: 24px 32px;
+  font-size: 1.12rem;
   font-family: 'Lexend Deca', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
-  line-height: 1.46;
+  line-height: 1.52;
   position: relative;
   display: flex;
   align-items: flex-start;
   border: none;
   min-width: 0;
-  /* Removed any overflow or max-height, so bubbles expand with content */
-  overflow: visible;
-  max-height: none;
+  overflow: visible !important; /* ensure no scrollbar ever shown */
+  max-height: none !important;
+  margin: 0;
+  /* Never allow chat bubble to scroll */
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
+.chat-bubble::-webkit-scrollbar { display:none !important; }
+
+/* Avatar styles */
 .bubble-avatar {
-  margin-right: 10px;
-  margin-top: 1px;
+  margin-right: 16px;
+  margin-top: 2px;
   flex-shrink: 0;
-  width: 30px; height: 30px;
+  width: 34px; height: 34px;
   border-radius: 50%;
   background: #b6bfcf;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.12rem;
+  font-size: 1.14rem;
   font-weight: 600;
   color: #335266;
   border: 2px solid #BEE7BC;
@@ -223,60 +248,74 @@ html, body, #root {
 }
 .chat-bubble.user .bubble-avatar { display: none; }
 .chat-bubble.assistant .bubble-avatar { display: flex; }
+
+/* Assist text */
 .bubble-txt {
   display: block;
   white-space: pre-line;
 }
 
-/*
- * Input/footer bar (query input box)
- * - Always visible at the bottom, fixed, with shadow.
- */
+/* Timestamp and sender spacing */
+.chat-bubble-row > span {
+  font-size: 1rem;
+  color: #234056;
+  margin-left: 18px;
+  margin-top: 0.95em;
+  font-weight: 400;
+  align-self: flex-end;
+}
+
+/* Input bar and footer: generously spaced */
 .input-footer-bar {
   width: 100vw;
   max-width: 100vw;
   overflow-x: hidden;
   background: var(--primary-bg);
-  position: fixed; /* position:sticky can cause overlap when user scrolls up, so fixed is safest */
+  position: fixed;
   bottom: 0;
   left: 0;
   z-index: 100;
-  padding: 0 0 20px 0;
+  padding: 0 0 34px 0;
   display: flex; flex-direction: column; align-items: center;
-  box-shadow: 0 -6px 32px 0 #2f48581c;
+  box-shadow: 0 -6px 40px 0 #2f485825;
 }
 
 .input-bar-wrap {
   width: 100vw;
-  max-width: 1060px;
+  max-width: 980px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  padding: 0 28px;
+  padding: 0 38px;
   box-sizing: border-box;
   overflow-x: hidden;
+  gap: 16px;
+  margin-top: 11px;
 }
+
 .chat-input-main {
   flex: 1;
-  height: 41px;
+  height: 56px;
   background: var(--input-bg);
   border: none;
-  border-radius: 22px;
-  font-size: 0.97rem;
-  padding: 0 18px 0 18px;
+  border-radius: 28px;
+  font-size: 1.08rem;
+  padding: 0 24px;
   color: var(--white);
   outline: none;
-  margin-right: 12px;
+  margin-right: 18px;
   font-family: 'Lexend Deca', 'Helvetica Neue', Arial, sans-serif;
   transition: box-shadow 0.16s, border-color 0.18s;
-  box-shadow: 0 1.4px 8px 0 #11233316;
+  box-shadow: 0 2px 11px 0 #11233319;
+  margin-bottom: 0;
 }
 .chat-input-main:focus {
-  box-shadow: 0 1.4px 18px 0 #aef9f766;
-  border: 2px solid #60e2b8a0;
+  box-shadow: 0 2px 22px 0 #aef9f788;
+  border: 2.2px solid #60e2b8b0;
 }
+
 .send-btn {
-  width: 44px; height: 44px;
+  width: 52px; height: 52px;
   background: var(--send-btn-bg);
   border: none;
   border-radius: 50%;
@@ -285,63 +324,63 @@ html, body, #root {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 1.35rem;
+  font-size: 1.39rem;
   font-weight: 700;
   justify-self: flex-end;
   transition: background 0.17s;
-  box-shadow: 0 2px 8px #60bfaf3d;
+  box-shadow: 0 3px 14px #60bfaf29;
 }
 .send-btn:active,
 .send-btn:focus {
   background: #55B87B;
 }
 .send-btn[disabled] {
-  opacity: 0.52;
+  opacity: 0.47;
   cursor: default;
 }
+
 .footer-disclaimer {
-  margin-top: 12px;
-  font-size: 0.88rem;
+  margin-top: 14px;
+  font-size: 1rem;
   text-align: center;
   color: var(--muted-text);
-  letter-spacing: 0.01em;
   font-family: 'Lexend Deca', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
   width: 100%;
   user-select: none;
+  letter-spacing: 0.012em;
 }
-/* Responsive/adaptive tweaks */
+
+/* Responsive: mobile tweaks for comfortable spacing */
 @media (max-width: 850px) {
-  .chat-bubble, .chat-bubble-row { padding-left: 16px; padding-right: 16px; }
-  .bubble-avatar { width: 25px; height: 25px; font-size: 0.98rem; }
+  .chat-bubble, .chat-bubble-row { padding-left: 10px; padding-right: 10px; }
+  .bubble-avatar { width: 25px; height: 25px; font-size: 1rem; margin-right:8px;}
   .main-chat-section, .chat-content-list, .input-footer-bar, .input-bar-wrap {
     max-width: 100vw !important;
     width: 100vw !important;
     overflow-x: hidden;
   }
+  .header-bar { padding: 0 7px; }
+  .input-bar-wrap { padding: 0 7px; gap: 8px;}
 }
-/* Extra mobile rules: extra space so input isn't covered, bubbles are wider */
+
 @media (max-width: 600px) {
-  .header-bar { padding: 0 10px; }
-  .main-chat-section { padding-top: 8px; padding-bottom: 100px; }
-  .chat-content-list { padding-top: 6px; }
-  .chat-bubble-row { margin-bottom: 10px; }
-  .input-bar-wrap { padding: 0 9px; }
+  .header-bar { padding: 0 2vw; }
+  .main-chat-section { padding-top: 4px; padding-bottom: 88px; }
+  .chat-content-list { padding-top: 2px; }
+  .chat-bubble-row { margin-bottom: 18px; padding-left:6vw; padding-right:6vw;}
+  .input-bar-wrap { padding: 0 2vw; gap: 5px;}
   .chat-bubble {
-    max-width: 94vw;
-    padding: 10px 14px;
+    max-width: 93vw;
+    padding: 12px 12px;
     font-size: 0.99rem;
   }
   .input-footer-bar {
-    padding-bottom: 14px;
-  }
-  .main-chat-section, .chat-content-list, .input-footer-bar, .input-bar-wrap {
-    max-width: 100vw !important;
-    width: 100vw !important;
-    overflow-x: hidden;
+    padding-bottom: 11px;
   }
 }
 ::-webkit-input-placeholder { color: var(--muted-text); }
 ::-moz-placeholder { color: var(--muted-text); }
 :-ms-input-placeholder { color: var(--muted-text); }
 ::placeholder { color: var(--muted-text); }
+
