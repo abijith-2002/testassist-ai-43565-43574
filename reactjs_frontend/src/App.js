@@ -92,17 +92,18 @@ function App() {
         throw new Error(`[Backend error] ${errMsg} (code ${resp.status})`);
       }
 
-      // Get backend reply (assume: {reply: str} or {content: str})
+      // Get backend reply (expecting { answer: str, from_gemini: bool, ... })
       let data;
       try {
         data = await resp.json();
       } catch (_) {
         data = {};
       }
+      // Prefer 'answer' prop, fallback to 'reply'/'content', then default
       const replyText =
-        data.reply
-        || data.content
-        || (typeof data === "string" ? data : "[No reply returned]");
+        (typeof data === "object" && ("answer" in data))
+          ? data.answer
+          : (data.reply || data.content || (typeof data === "string" ? data : "[No reply returned]"));
 
       const assistantMsg = {
         role: "assistant",
