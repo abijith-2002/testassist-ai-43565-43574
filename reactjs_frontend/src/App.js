@@ -35,28 +35,52 @@ function App() {
   // PUBLIC_INTERFACE: Scroll to latest message
   useEffect(() => { if(chatEndRef.current) chatEndRef.current.scrollIntoView({behavior:"smooth"}); }, [messages]);
 
-  // Simulate send (for demo), integration logic would call backend
-  // PUBLIC_INTERFACE
+  /**
+   * PUBLIC_INTERFACE
+   * Send chat message to backend API, append user question and AI response to chat UI.
+   * Robust error and loading handling.
+   */
   const sendMessage = async e => {
     e && e.preventDefault();
     if(!input.trim() || isLoading) return;
     setIsLoading(true);
     setError("");
-    // Push user message
+    // Add user message optimistically
     const userMsg = {role:"user", content:input, timestamp: new Date().toISOString()};
     setMessages(prev=>[...prev, userMsg]);
     setInput("");
-    // Simulate backend response delay
-    setTimeout(() => {
-      const aiResp = [
-        "I'm your AI assistant! Ask me anything about software testing.",
-        "That's an interesting question. Can you share more details?"
-      ];
-      setMessages(prev=>[...prev,
-        {role:"assistant", content:aiResp[Math.floor(Math.random()*aiResp.length)], timestamp: new Date().toISOString()}
-      ]);
+
+    try {
+      // POST to FastAPI backend (assume on same host, adjust as needed)
+      const resp = await fetch('/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: userMsg.content})
+      });
+
+      if (!resp.ok) {
+        // Try to parse error from backend, fallback to status
+        let err = `${resp.status} ${resp.statusText}`;
+        try {
+          const data = await resp.json();
+          err = data.detail || JSON.stringify(data);
+        } catch {}
+        throw new Error(`Backend error: ${err}`);
+      }
+
+      // Get backend reply (assume: {reply: str})
+      const data = await resp.json();
+      const assistantMsg = {
+        role: "assistant",
+        content: data.reply || (data.content ?? "[No reply returned]"),
+        timestamp: new Date().toISOString(),
+      };
+      setMessages(prev=>[...prev, assistantMsg]);
+    } catch (err) {
+      setError("Sorry, failed to fetch AI response. " + (err?.message || ""));
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   // Keydown handler: submit on Enter w/o Shift
@@ -190,7 +214,7 @@ function App() {
           </button>
         </form>
         <span className="footer-disclaimer">
-          AI responses are simulated for demonstration purposes.
+          Answers are powered by TestAssist AI and Google Gemini.
         </span>
       </footer>
     </div>
