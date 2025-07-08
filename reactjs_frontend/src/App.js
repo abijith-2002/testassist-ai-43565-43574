@@ -30,7 +30,6 @@ function App() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   // Remove error state - errors will now become a message in the conversation
-  // const [error, setError] = useState("");
   const chatEndRef = useRef(null);
 
   // PUBLIC_INTERFACE: Scroll to latest message
@@ -45,7 +44,6 @@ function App() {
     e && e.preventDefault();
     if(!input.trim() || isLoading) return;
     setIsLoading(true);
-    // setError(""); // Remove old error state clear logic
     // Add user message optimistically
     const userMsg = {role:"user", content:input, timestamp: new Date().toISOString()};
     setMessages(prev=>[...prev, userMsg]);
@@ -233,10 +231,9 @@ function App() {
                   </span>
                 )}
                 <span className="bubble-txt">{msg.content}</span>
-              </div>
-              {/* Timestamp directly beneath the chat bubble */}
-              <div className="chat-timestamp">
-                {(msg.role==="user"?"You":"AI")}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
+                <span className="bubble-timestamp">
+                  {(msg.role==="user"?"You":"AI")}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
+                </span>
               </div>
             </div>
           ))}

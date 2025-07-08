@@ -288,23 +288,43 @@ html, body, #root {
 .bubble-txt {
   display: block;
   white-space: pre-line;
+  position: relative;
+  z-index: 2;
+}
+
+/* Place timestamp absolutely bottom right INSIDE the bubble */
+.bubble-timestamp {
+  position: absolute;
+  right: 16px;
+  bottom: 10px;
+  color: #bcccd0 !important;
+  font-size: 0.91rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  user-select: none;
+  z-index: 3;
+  background: transparent;
+  padding-left: 10px;
+  pointer-events: none; /* so text selection in bubble works naturally */
+}
+
+/* Make sure parent bubble is positioned rel */
+.chat-bubble {
+  position: relative;
+}
+
+@media (max-width: 600px) {
+  .bubble-timestamp {
+    right: 9px;
+    bottom: 7px;
+    font-size: 0.85rem;
+  }
 }
 
 /* Timestamp and sender below bubble: always #b666d0, visually separated */
 .chat-timestamp {
-  font-size: 0.93rem;
-  color: #b666d0;
-  font-weight: 400;
-  margin-top: 0.70em;
-  margin-left: 6px;
-  margin-right: 6px;
-  align-self: flex-start;
-  padding-top: 0.11em;
-  display: block;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  user-select: none;
-  /* Spacing from bubble */
+  display: none;
 }
 
 /* Remove previous span timestamp coloring rules */
