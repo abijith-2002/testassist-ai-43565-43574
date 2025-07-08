@@ -265,33 +265,33 @@ html, body, #root {
 }
 
 /* Timestamp and sender spacing - high contrast for all backgrounds */
-/* Default (user bubble): forced dark color for visibility */
 .chat-bubble-row > span {
   font-size: 0.93rem;
+  /* Default fallback for timestamp is dark gray */
   color: #333333;
   margin-left: 14px;
   margin-top: 0.95em;
   font-weight: 400;
   align-self: flex-end;
-  /* Let JS margin correction still work */
 }
 
-/* Timestamp for assistant bubble (light green) - use dark text for best contrast */
+/* Timestamp for assistant bubble (light green) - use dark for background #8DB580, white for very dark backgrounds */
 .chat-bubble-row.assistant > span,
 .chat-bubble-row .chat-bubble.assistant ~ span {
   color: #333333;
 }
 
-/* Timestamp for error bubble (pink/danger) - use extra bright for contrast with #CB8589 */
+/* Timestamp for error bubble (pink/danger, #CB8589) - enforce bright white for contrast */
 .chat-bubble-row.assistant-error > span,
 .chat-bubble-row .chat-bubble.error-bubble ~ span {
-  color: #e5dfe0;
+  color: #fff !important;
+  /* fallback for max contrast: color: #fafafa; */
 }
 
-/* Timestamp for user bubble (bluish) - default to the same forced dark for readability */
+/* Timestamp for user bubble (bluish) - ensure it is always visible, white if user bubble is dark */
 .chat-bubble-row.user > span,
 .chat-bubble-row .chat-bubble.user ~ span {
-  color: #333333;
+  color: #fafafa;
 }
 
 /* Fallback muted style (not actively used, but for completeness if muted style is referenced elsewhere) */
