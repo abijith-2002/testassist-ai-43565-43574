@@ -249,9 +249,9 @@ html, body, #root {
   min-width: 0;
   /* Prevent overflow and scrolling inside bubble */
   overflow-wrap: break-word;
-  overflow-y: visible !important; /* explicit */
-  overflow-x: visible !important; /* explicit */
-  max-height: none !important;    /* ensure bubbles grow with content */
+  overflow: visible !important;    /* ensure bubbles always expand and never scroll */
+  max-height: none !important;     /* no restriction */
+  height: auto !important;         /* always expand for content */
   box-sizing: border-box;
 }
 .bubble-avatar {
@@ -384,8 +384,9 @@ html, body, #root {
     min-height: 46px;
     padding: 19px 14px;
     font-size: 1.09rem;
-    overflow-y: visible !important;
+    overflow: visible !important;   /* reinforce no scrolling, full auto-size for content */
     max-height: none !important;
+    height: auto !important;
   }
   .bubble-avatar {
     width: 32px; height: 32px; font-size: 1.15rem;

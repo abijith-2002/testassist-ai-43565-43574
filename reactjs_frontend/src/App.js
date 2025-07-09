@@ -205,6 +205,7 @@ function App() {
                     msg.role === "user"
                       ? "flex-end"
                       : "flex-start"
+                  // REMOVE: do not add anything related to overflow, height, or max-height here
                 }}
               >
                 <div
