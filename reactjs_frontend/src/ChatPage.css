@@ -193,10 +193,11 @@ html, body, #root {
 
 /* Error chat bubble, bot-style but #E3879E & white text */
 .chat-bubble.error {
-  background: #E3879E !important;
-  color: #fff !important;
+  background: rgba(194, 128, 144, 1) !important;
+  color: #2f4858 !important;
   border-radius: 16px;
   box-shadow: 0 1px 4px #b97b9e1a;
+  text-align: left;
 }
 
 /* Avatar for error bubble: match assistant for simplicity */
