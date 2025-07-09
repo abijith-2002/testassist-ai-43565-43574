@@ -161,7 +161,6 @@ html, body, #root {
   box-sizing: border-box;
   padding-left: 36px;
   padding-right: 36px;
-  overflow-x: hidden;
 }
 /* User message (right-aligned), light text on dark bubble for contrast. Meets WCAG contrast */
 .chat-bubble.user {
