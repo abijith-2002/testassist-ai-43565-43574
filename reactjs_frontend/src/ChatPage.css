@@ -233,24 +233,22 @@ html, body, #root {
   display: block;
   font-size: 0.92rem;
   line-height: 1.4;
-  text-align: left;
-  margin: 0.3em 0 0 0.3em;
   color: #bcc6d0;
   font-weight: 400;
+  text-align: center;
   letter-spacing: 0.01em;
   font-family: inherit;
   user-select: none;
-  /* Ensure it does not overlap horizontally with the bubble, aligns visually under the bubble left edge */
-  padding-left: 3px;
+  margin-top: 0.4em;
+  margin-bottom: -0.1em;
+  width: 100%;
+  padding: 0;
 }
 
-.chat-bubble-row.user .bubble-timestamp {
-  text-align: right;
-  margin-left: 0;
-  margin-right: 0.3em;
-  padding-left: 0;
-  padding-right: 3px;
+.bubble-timestamp.user {
+  text-align: center;
 }
+
 
 /*
  * Input/footer bar (query input box)

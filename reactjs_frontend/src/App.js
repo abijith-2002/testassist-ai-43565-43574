@@ -215,14 +215,14 @@ function App() {
                   </span>
                 )}
                 <span className="bubble-txt">{msg.content}</span>
+                {/* Timestamp block positioned directly beneath the bubble */}
+                <span
+                  className={`bubble-timestamp${msg.role === "user" ? " user" : ""}`}
+                  aria-label={"Sent at " + formatTime(msg.timestamp)}
+                >
+                  {formatTime(msg.timestamp)}
+                </span>
               </div>
-              <span
-                className="bubble-timestamp"
-                aria-label={"Sent at " + formatTime(msg.timestamp)}
-                // Style now handled in ChatPage.css
-              >
-                {formatTime(msg.timestamp)}
-              </span>
             </div>
           ))}
           <div ref={chatEndRef}/>
