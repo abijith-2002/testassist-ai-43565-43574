@@ -138,8 +138,12 @@ html, body, #root {
   width: 100vw;
   max-width: 100vw;
   overflow-x: hidden;
-  overflow-y: auto; /* Only main chat section should scroll vertically */
-  padding-bottom: 100px; /* Extra room for fixed input footer */
+  /* Make the main chat area the scrollable region, with a sensible max-height */
+  /* On desktop, set bottom padding to fit the fixed input footer */
+  padding-bottom: 100px;
+  height: calc(100vh - 56px - 66px);  /* 56px header + ~66px input/footer estimated */
+  max-height: calc(100vh - 56px); /* never exceeds viewport minus header */
+  overflow-y: auto;
 }
 
 .chat-content-list {
@@ -148,7 +152,7 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  /* Remove overflow-y: auto from here, as scrolling is now on main-chat-section */
+  /* DO NOT apply overflow-y: auto here; main-chat-section handles all scrolling. */
   overflow-x: hidden;
   padding: 30px 0 0 0;   /* More padding for increased space */
   width: 100vw;
@@ -249,9 +253,10 @@ html, body, #root {
   min-width: 0;
   /* Prevent overflow and scrolling inside bubble */
   overflow-wrap: break-word;
-  overflow: visible !important;    /* ensure bubbles always expand and never scroll */
-  max-height: none !important;     /* no restriction */
-  height: auto !important;         /* always expand for content */
+  /* MAIN ENFORCEMENT: bubbles never scroll internally */
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
   box-sizing: border-box;
 }
 .bubble-avatar {
@@ -384,7 +389,8 @@ html, body, #root {
     min-height: 46px;
     padding: 19px 14px;
     font-size: 1.09rem;
-    overflow: visible !important;   /* reinforce no scrolling, full auto-size for content */
+    /* Enforce bubble is always fully expanded (never scrollable/overflowing) */
+    overflow: visible !important;
     max-height: none !important;
     height: auto !important;
   }
