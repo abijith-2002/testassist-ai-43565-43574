@@ -217,6 +217,30 @@ html, body, #root {
   white-space: pre-line;
 }
 
+/* Error message as bot bubble */
+.chat-bubble-row.assistant.error-bubble-row {
+  margin-bottom: 18px !important;
+  margin-top: 12px !important;
+  padding-left: 36px !important;
+  padding-right: 36px !important;
+}
+.chat-bubble.error-bubble {
+  background: #ad454b !important;
+  color: #fff !important;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px #ad454b2a;
+  border: 0;
+  font-weight: 500;
+}
+.chat-bubble.error-bubble .bubble-avatar.assistant {
+  border: 2px solid #fff5;
+  background: #88071f !important;
+}
+
+.chat-bubble-row.assistant.error-bubble-row > span {
+  color: #fff !important;
+}
+
 /*
  * Input/footer bar (query input box)
  * - Always visible at the bottom, fixed, with shadow.
