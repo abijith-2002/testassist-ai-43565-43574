@@ -179,6 +179,26 @@ html, body, #root {
   box-shadow: 0 1px 4px #8bc34a1a;
 }
 
+/* Error bubble in assistant reply style */
+.chat-bubble.assistant.error-bubble {
+  background: #ad454b !important;
+  color: #fff !important;
+  box-shadow: 0 1px 6px #ad454b33;
+  border-radius: 16px;
+  border: none;
+  position: relative;
+}
+.chat-bubble-row.error-bubble-row {
+  margin-bottom: 18px;
+  width: 100%;
+  padding-left: 36px;
+  padding-right: 36px;
+}
+.error-bubble .bubble-avatar.assistant {
+  border: 2px solid #ad454b55;
+  background: #fff3f4;
+}
+
 .chat-bubble {
   max-width: 60%;
   word-break: break-word;

@@ -226,19 +226,30 @@ function App() {
         </div>
       </main>
 
-      {/* Error state */}
+      {/* Error state styled as assistant chat bubble */}
       {error && (
-        <div style={{
-          background:"#8DB58022", 
-          color:"#2F4858", 
-          border:"1.2px solid #8DB580", 
-          margin:"9px auto 0 auto", 
-          padding:"8px 20px", 
-          borderRadius:"13px", 
-          maxWidth:"420px",
-          fontWeight:600, 
-          textAlign:"center"
-        }}>{error}</div>
+        <div className="chat-bubble-row assistant error-bubble-row" style={{justifyContent: "flex-start"}}>
+          <div className="chat-bubble assistant error-bubble">
+            <span className="bubble-avatar assistant" aria-label="Error logo">
+              <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Error Icon" fill="none" role="img">
+                <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#ad454b" strokeWidth="2"/>
+                <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#ad454b"/>
+                <circle cx="12.75" cy="13" r="1.25" fill="#fff"/>
+                <circle cx="15.25" cy="13" r="1.25" fill="#fff"/>
+                <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#fff" />
+              </svg>
+            </span>
+            <span className="bubble-txt">{error}</span>
+          </div>
+          <span style={{
+            fontSize:"0.92rem",
+            color: "#ad454b", marginLeft:"7px",
+            marginTop: "1.1em", fontWeight:400,
+            alignSelf:"flex-end"
+          }}>
+            AI&nbsp;•&nbsp;Error
+          </span>
+        </div>
       )}
 
       {/* Input bar and footer note */}
