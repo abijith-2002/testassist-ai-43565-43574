@@ -222,38 +222,37 @@ function App() {
               </span>
             </div>
           ))}
+          {/* Append error as a special "assistant" message bubble for alignment */}
+          {error && (
+            <div className="chat-bubble-row assistant error-bubble-row" style={{justifyContent:"flex-start"}}>
+              <div className="chat-bubble assistant error-bubble">
+                <span className="bubble-avatar assistant" aria-label="AI error">
+                  {/* AI SVG logo (reuse from above) */}
+                  <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
+                    <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
+                    <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
+                    <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
+                    <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
+                    <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
+                  </svg>
+                </span>
+                <span className="bubble-txt">{error}</span>
+              </div>
+              <span style={{
+                fontSize:"0.92rem",
+                color: "#fff",
+                marginLeft: "7px",
+                marginTop: "1.1em",
+                fontWeight: 400,
+                alignSelf:"flex-end"
+              }}>
+                AI&nbsp;•&nbsp;{formatTime(new Date().toISOString())}
+              </span>
+            </div>
+          )}
           <div ref={chatEndRef}/>
         </div>
       </main>
-
-      {/* Error state as a chat bot reply bubble */}
-      {error && (
-        <div className="chat-bubble-row assistant error-bubble-row" style={{justifyContent:"flex-start"}}>
-          <div className="chat-bubble assistant error-bubble">
-            <span className="bubble-avatar assistant" aria-label="AI error">
-              {/* AI SVG logo (reuse from above) */}
-              <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
-                <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
-                <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
-                <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
-                <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
-                <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
-              </svg>
-            </span>
-            <span className="bubble-txt">{error}</span>
-          </div>
-          <span style={{
-            fontSize:"0.92rem",
-            color: "#fff",
-            marginLeft: "7px",
-            marginTop: "1.1em",
-            fontWeight: 400,
-            alignSelf:"flex-end"
-          }}>
-            AI&nbsp;•&nbsp;{formatTime(new Date().toISOString())}
-          </span>
-        </div>
-      )}
 
       {/* Input bar and footer note */}
       <footer className="input-footer-bar">
