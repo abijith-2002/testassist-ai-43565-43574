@@ -206,18 +206,26 @@ html, body, #root {
   border: 2px solid #E3879E;
 }
 
-/* Universal timestamp styling (below bubble, right-aligned) */
+/* Timestamp styling below chat bubbles (alignment varies by message type) */
 .chat-bubble-timestamp {
   display: block;
   font-size: 0.93rem;
   color: #bcc6d0;
+  font-weight: 400;
+  min-width: 65px;
+  margin-top: .65em;
+}
+.chat-bubble-timestamp-left {
+  align-self: flex-start;
+  margin-left: 4px;
+  margin-right: 0;
+  text-align: left;
+}
+.chat-bubble-timestamp-right {
   align-self: flex-end;
   margin-right: 4px;
   margin-left: 0;
-  font-weight: 400;
-  min-width: 65px;
   text-align: right;
-  margin-top: .65em;
 }
 
 .chat-bubble {

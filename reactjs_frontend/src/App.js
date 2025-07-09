@@ -226,18 +226,13 @@ function App() {
                   )}
                   <span className="bubble-txt">{msg.content}</span>
                 </div>
-                {/* Timestamp below bubble, right-aligned inside bubble-row */}
+                {/* Timestamp below bubble, aligned differently by role */}
                 <span
-                  className="chat-bubble-timestamp"
-                  style={{
-                    marginTop: '0.7em',
-                    alignSelf: "flex-end",
-                    fontSize: "0.93rem",
-                    color: "#bcc6d0",
-                    fontWeight: 400,
-                    minWidth: 65,
-                    textAlign: "right"
-                  }}
+                  className={
+                    msg.role === "user"
+                      ? "chat-bubble-timestamp chat-bubble-timestamp-right"
+                      : "chat-bubble-timestamp chat-bubble-timestamp-left"
+                  }
                 >
                   {formatTime(msg.timestamp)}
                 </span>
