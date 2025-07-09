@@ -221,46 +221,129 @@ function App() {
             </div>
           )}
 
-          {/* Normal chat messages */}
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`chat-bubble-row ${msg.role}`}
-              style={{ justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}
-            >
-              <div className={`chat-bubble ${msg.role}`}>
-                {/* Avatar for assistant bubble only */}
-                {msg.role === "assistant" && (
-                  <span className="bubble-avatar assistant" aria-label="AI logo">
-                    {/* New modern monochrome AI SVG */}
-                    <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
-                      <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
-                      <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
-                      <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
-                      <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
-                      <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
-                    </svg>
+          {/* Normal chat messages (paired: user+assistant) */}
+          {(() => {
+            // Build a grouped array: each user + its following assistant.
+            const rows = [];
+            let i = 0;
+            while (i < messages.length) {
+              // If user message, render it + the next assistant (if present)
+              if (messages[i].role === "user") {
+                // Render user message
+                rows.push(
+                  <div
+                    key={`user-${i}`}
+                    className="chat-bubble-row user"
+                    style={{ justifyContent: "flex-end" }}
+                  >
+                    <div className="chat-bubble user">
+                      <span className="bubble-txt">{messages[i].content}</span>
+                    </div>
+                    <span
+                      className="bubble-timestamp user"
+                      style={{
+                        fontSize: "0.92rem",
+                        color: "#2F4858",
+                        marginLeft: "14px",
+                        marginTop: "1.1em",
+                        fontWeight: 400,
+                        alignSelf: "flex-end",
+                      }}
+                    >
+                      You&nbsp;•&nbsp;{formatTime(messages[i].timestamp)}
+                    </span>
+                  </div>
+                );
+                // Check if next message is assistant reply
+                if (
+                  i + 1 < messages.length &&
+                  messages[i + 1].role === "assistant"
+                ) {
+                  rows.push(
+                    <div
+                      key={`assistant-${i + 1}`}
+                      className="chat-bubble-row assistant"
+                      style={{ justifyContent: "flex-start" }}
+                    >
+                      <div className="chat-bubble assistant">
+                        <span className="bubble-avatar assistant" aria-label="AI logo">
+                          {/* New modern monochrome AI SVG */}
+                          <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
+                            <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
+                            <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
+                            <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
+                            <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
+                            <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
+                          </svg>
+                        </span>
+                        <span className="bubble-txt">{messages[i + 1].content}</span>
+                      </div>
+                      <span
+                        className="bubble-timestamp assistant"
+                        style={{
+                          fontSize: "0.92rem",
+                          color: "#bcc6d0",
+                          marginLeft: "7px",
+                          marginTop: "1.1em",
+                          fontWeight: 400,
+                          alignSelf: "flex-end",
+                        }}
+                      >
+                        AI&nbsp;•&nbsp;{formatTime(messages[i + 1].timestamp)}
+                      </span>
+                    </div>
+                  );
+                  i += 2; // skip the assistant that was just paired/handled
+                  continue;
+                }
+                i += 1;
+                continue;
+              }
+              // If unexpectedly starts with assistant or out-of-order, render as fallback
+              rows.push(
+                <div
+                  key={`${messages[i].role}-${i}`}
+                  className={`chat-bubble-row ${messages[i].role}`}
+                  style={{ justifyContent: messages[i].role === "user" ? "flex-end" : "flex-start" }}
+                >
+                  <div className={`chat-bubble ${messages[i].role}`}>
+                    {messages[i].role === "assistant" && (
+                      <span className="bubble-avatar assistant" aria-label="AI logo">
+                        <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
+                          <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
+                          <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
+                          <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
+                          <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
+                          <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
+                        </svg>
+                      </span>
+                    )}
+                    <span className="bubble-txt">{messages[i].content}</span>
+                  </div>
+                  <span
+                    className={`bubble-timestamp ${messages[i].role}`}
+                    style={{
+                      fontSize: "0.92rem",
+                      color: messages[i].role === "user" ? "#2F4858" : "#bcc6d0",
+                      marginLeft: messages[i].role === "user" ? "14px" : "7px",
+                      marginTop: "1.1em",
+                      fontWeight: 400,
+                      alignSelf: "flex-end",
+                    }}
+                  >
+                    {messages[i].role === "user" ? "You" : "AI"}&nbsp;•&nbsp;{formatTime(messages[i].timestamp)}
                   </span>
-                )}
-                <span className="bubble-txt">{msg.content}</span>
-              </div>
-              {/* Timestamp below the bubble (as required - now for all) */}
-              <span
-                className={`bubble-timestamp ${msg.role}`}
-                style={{
-                  fontSize: "0.92rem",
-                  color: msg.role === "user" ? "#2F4858" : "#bcc6d0",
-                  marginLeft: msg.role === "user" ? "14px" : "7px",
-                  marginTop: "1.1em",
-                  fontWeight: 400,
-                  alignSelf: "flex-end",
-                }}
-              >
-                {msg.role === "user" ? "You" : "AI"}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
-              </span>
-            </div>
-          ))}
-          <div ref={chatEndRef} />
+                </div>
+              );
+              i += 1;
+            }
+            return (
+              <>
+                {rows}
+                <div ref={chatEndRef} />
+              </>
+            );
+          })()}
         </div>
       </main>
 
