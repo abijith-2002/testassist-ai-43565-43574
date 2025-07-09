@@ -146,11 +146,13 @@ html, body, #root {
 .chat-content-list {
   flex: 1 1 auto;
   min-height: 0;
+  /* The chat-content-list is the ONLY area that should scroll vertically in chat! */
   max-height: 54vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  overflow-y: auto;
+  /* Enable smooth vertical scrolling for entire chat message history only */
+  overflow-y: auto !important;
   overflow-x: hidden;
   padding: 18px 0 0 0;
   width: 100vw;
@@ -175,7 +177,8 @@ html, body, #root {
   padding-left: 36px;
   padding-right: 36px;
   overflow-x: hidden;
-  /* Remove any vertical scroll restriction from row level (no overflow-y) */
+  /* Remove any vertical scroll restriction from row level (no overflow-y at all) */
+  /* overflow-y removed to allow contents to expand */
 }
 /* User message (right-aligned), light text on dark bubble for contrast. Meets WCAG contrast */
 .chat-bubble.user {
@@ -206,8 +209,12 @@ html, body, #root {
   align-items: flex-start;
   border: none;
   min-width: 0;
-  /* Remove all scrolling/overflow except natural expansion. No scrollbar here. */
-  overflow: visible;
+  /* Make chat bubble expand as needed. Remove ALL scroll/overflow from bubble. */
+  /* overflow and max-height REMOVED or overridden */
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+  /* Remove unwanted hidden/auto/scroll from previous rules, if any */
 }
 .bubble-avatar {
   margin-right: 10px;
@@ -360,6 +367,10 @@ html, body, #root {
     max-width: 94vw;
     padding: 10px 14px;
     font-size: 0.99rem;
+    /* Ensure chat bubbles never scroll or get cut off—let them expand. */
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
   }
   .input-footer-bar {
     padding-bottom: 14px;
@@ -369,6 +380,14 @@ html, body, #root {
     width: 100vw !important;
     overflow-x: hidden;
   }
+}
+/* Strongest override — just in case: make ALL bubbles expand and never scroll */
+.chat-bubble, .chat-bubble * {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+  /* Remove any -webkit-overflow-scrolling, which would allow scrollbars on mobile */
+  -webkit-overflow-scrolling: auto !important;
 }
 ::-webkit-input-placeholder { color: var(--muted-text); }
 ::-moz-placeholder { color: var(--muted-text); }
