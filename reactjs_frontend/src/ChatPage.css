@@ -146,18 +146,16 @@ html, body, #root {
 .chat-content-list {
   flex: 1 1 auto;
   min-height: 0;
-  /* The chat-content-list is the ONLY area that should scroll vertically in chat! */
-  max-height: 54vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  /* Enable smooth vertical scrolling for entire chat message history only */
+  /* The ONLY scrollable area for chat! */
   overflow-y: auto !important;
   overflow-x: hidden;
   padding: 18px 0 0 0;
   width: 100vw;
   max-width: 100vw;
-  /* Vertical scrolling for chat area only */
   scrollbar-width: thin;
   scrollbar-color: #abc #33658A33;
 }
@@ -197,6 +195,7 @@ html, body, #root {
 }
 
 .chat-bubble {
+  width: fit-content;
   max-width: 60%;
   word-break: break-word;
   padding: 13px 24px;
@@ -209,12 +208,10 @@ html, body, #root {
   align-items: flex-start;
   border: none;
   min-width: 0;
-  /* Make chat bubble expand as needed. Remove ALL scroll/overflow from bubble. */
-  /* overflow and max-height REMOVED or overridden */
+  /* Absolutely NO vertical scroll, height limit, or overflow. */
   overflow: visible !important;
   max-height: none !important;
   height: auto !important;
-  /* Remove unwanted hidden/auto/scroll from previous rules, if any */
 }
 .bubble-avatar {
   margin-right: 10px;
@@ -238,6 +235,10 @@ html, body, #root {
 .bubble-txt {
   display: block;
   white-space: pre-line;
+  /* Always expand fully—never scroll or limit height */
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
 }
 
 /* Error message as bot bubble */
@@ -364,10 +365,10 @@ html, body, #root {
   .chat-bubble-row { margin-bottom: 10px; }
   .input-bar-wrap { padding: 0 9px; }
   .chat-bubble {
+    width: fit-content;
     max-width: 94vw;
     padding: 10px 14px;
     font-size: 0.99rem;
-    /* Ensure chat bubbles never scroll or get cut off—let them expand. */
     overflow: visible !important;
     max-height: none !important;
     height: auto !important;
@@ -382,11 +383,11 @@ html, body, #root {
   }
 }
 /* Strongest override — just in case: make ALL bubbles expand and never scroll */
-.chat-bubble, .chat-bubble * {
+.chat-bubble, .chat-bubble *, .chat-bubble *:not(textarea) {
   overflow: visible !important;
   max-height: none !important;
   height: auto !important;
-  /* Remove any -webkit-overflow-scrolling, which would allow scrollbars on mobile */
+  width: fit-content !important;
   -webkit-overflow-scrolling: auto !important;
 }
 ::-webkit-input-placeholder { color: var(--muted-text); }
