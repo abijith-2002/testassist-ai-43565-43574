@@ -212,6 +212,28 @@ html, body, #root {
 }
 .chat-bubble.user .bubble-avatar { display: none; }
 .chat-bubble.assistant .bubble-avatar { display: flex; }
+
+/* Error bubbles: styled as AI chat, but with special color */
+.chat-bubble.error {
+  background: #ad454b !important;
+  color: #fff !important;
+  border-radius: 16px;
+  box-shadow: 0 1px 8px #ad454b25;
+}
+.chat-bubble-row.error {
+  justify-content: flex-start;
+}
+.bubble-timestamp.error {
+  color: #bcc6d0 !important;
+}
+/* Also style the .bubble-timestamp for all bubbles (assistant, user); user stays as before, assistant gets #bcc6d0 */
+.bubble-timestamp.assistant {
+  color: #bcc6d0 !important;
+}
+.bubble-timestamp.user {
+  color: #2F4858 !important;
+}
+
 .bubble-txt {
   display: block;
   white-space: pre-line;

@@ -186,18 +186,51 @@ function App() {
       {/* Main chat area */}
       <main className="main-chat-section">
         <div className="chat-content-list" id="chat-messages">
-          {/* No empty-state help text to display */}
+          {/* Error message as a bot reply, styled as special bubble if error exists */}
+          {error && (
+            <div
+              className="chat-bubble-row error"
+              style={{ justifyContent: "flex-start" }}
+            >
+              <div className="chat-bubble error">
+                {/* Use assistant avatar for error, for coherence */}
+                <span className="bubble-avatar assistant" aria-label="AI logo">
+                  <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
+                    <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
+                    <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
+                    <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
+                    <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
+                    <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
+                  </svg>
+                </span>
+                <span className="bubble-txt">{error}</span>
+              </div>
+              <span
+                className="bubble-timestamp error"
+                style={{
+                  fontSize: "0.92rem",
+                  color: "#bcc6d0",
+                  marginLeft: 7,
+                  marginTop: "1.1em",
+                  fontWeight: 400,
+                  alignSelf: "flex-end",
+                }}
+              >
+                AI&nbsp;•&nbsp;{formatTime(new Date().toISOString())}
+              </span>
+            </div>
+          )}
+
+          {/* Normal chat messages */}
           {messages.map((msg, idx) => (
             <div
               key={idx}
               className={`chat-bubble-row ${msg.role}`}
-              style={{justifyContent: msg.role==="user"?"flex-end":"flex-start"}}
+              style={{ justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}
             >
-              <div
-                className={`chat-bubble ${msg.role}`}
-              >
+              <div className={`chat-bubble ${msg.role}`}>
                 {/* Avatar for assistant bubble only */}
-                {msg.role==="assistant" && (
+                {msg.role === "assistant" && (
                   <span className="bubble-avatar assistant" aria-label="AI logo">
                     {/* New modern monochrome AI SVG */}
                     <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
@@ -211,35 +244,25 @@ function App() {
                 )}
                 <span className="bubble-txt">{msg.content}</span>
               </div>
-              {/* Optionally show time and sender */}
-              <span style={{
-                fontSize:"0.92rem",
-                color: "#2F4858", marginLeft: msg.role==="user"?"14px":"7px",
-                marginTop: "1.1em", fontWeight:400,
-                alignSelf:"flex-end"
-              }}>
-                {(msg.role==="user"?"You":"AI")}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
+              {/* Timestamp below the bubble (as required - now for all) */}
+              <span
+                className={`bubble-timestamp ${msg.role}`}
+                style={{
+                  fontSize: "0.92rem",
+                  color: msg.role === "user" ? "#2F4858" : "#bcc6d0",
+                  marginLeft: msg.role === "user" ? "14px" : "7px",
+                  marginTop: "1.1em",
+                  fontWeight: 400,
+                  alignSelf: "flex-end",
+                }}
+              >
+                {msg.role === "user" ? "You" : "AI"}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
               </span>
             </div>
           ))}
-          <div ref={chatEndRef}/>
+          <div ref={chatEndRef} />
         </div>
       </main>
-
-      {/* Error state */}
-      {error && (
-        <div style={{
-          background:"#8DB58022", 
-          color:"#2F4858", 
-          border:"1.2px solid #8DB580", 
-          margin:"9px auto 0 auto", 
-          padding:"8px 20px", 
-          borderRadius:"13px", 
-          maxWidth:"420px",
-          fontWeight:600, 
-          textAlign:"center"
-        }}>{error}</div>
-      )}
 
       {/* Input bar and footer note */}
       <footer className="input-footer-bar">
