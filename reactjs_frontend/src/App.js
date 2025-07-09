@@ -216,15 +216,12 @@ function App() {
                 )}
                 <span className="bubble-txt">{msg.content}</span>
               </div>
-              {/* Optionally show time and sender */}
-              <span style={{
-                fontSize:"0.92rem",
-                color: msg.error ? "#fff" : "#2F4858", 
-                marginLeft: msg.role==="user"?"14px":"7px",
-                marginTop: "1.1em", fontWeight:400,
-                alignSelf:"flex-end"
-              }}>
-                {(msg.role==="user"?"You":"AI")}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
+              <span
+                className="bubble-timestamp"
+                aria-label={"Sent at " + formatTime(msg.timestamp)}
+                // Style now handled in ChatPage.css
+              >
+                {formatTime(msg.timestamp)}
               </span>
             </div>
           ))}
