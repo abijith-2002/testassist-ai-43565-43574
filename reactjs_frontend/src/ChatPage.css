@@ -225,12 +225,13 @@ html, body, #root {
   padding-right: 36px !important;
 }
 .chat-bubble.error-bubble {
-  background: #ad454b !important;
+  background: rgba(191, 95, 99, 1) !important;
   color: #fff !important;
   border-radius: 16px;
   box-shadow: 0 2px 4px #ad454b2a;
   border: 0;
   font-weight: 500;
+  text-align: left;
 }
 .chat-bubble.error-bubble .bubble-avatar.assistant {
   border: 2px solid #fff5;
@@ -358,3 +359,32 @@ html, body, #root {
 ::-moz-placeholder { color: var(--muted-text); }
 :-ms-input-placeholder { color: var(--muted-text); }
 ::placeholder { color: var(--muted-text); }
+
+/* Loading Spinner Styles */
+.loader-spinner {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 5px;
+  pointer-events: none;
+  user-select: none;
+  /* keep transparent background */
+}
+.loader-spinner svg {
+  display: block;
+}
+.loader-spinner-head {
+  stroke: #3F6E8D;
+  filter: drop-shadow(0 0 1.5px #3f6e8d55);
+}
+.loading-row { min-height: 56px; }
+.loading-bubble {
+  min-width: 70px;
+  min-height: 41px;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(90deg, #a3c7e7 0%, #d1e4f9 100%);
+  opacity: 0.93;
+}
+.loading-bubble .loader-spinner {
+  margin-right: -9px;
+}

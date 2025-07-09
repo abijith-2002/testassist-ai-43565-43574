@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./ChatPage.css";
+import LoadingSpinner from "./LoadingSpinner";
 
 // SVG icon components for header and send button (inline for no deps)
 const ReloadIcon = ({size=20}) => (
@@ -222,6 +223,36 @@ function App() {
               </span>
             </div>
           ))}
+          {/* Show loading spinner between last user message and next assistant reply */}
+          {isLoading && (
+            <div className="chat-bubble-row assistant loading-row" style={{justifyContent:"flex-start"}}>
+              <div className="chat-bubble assistant loading-bubble" style={{alignItems: "center", justifyContent:"center"}}>
+                <span className="bubble-avatar assistant" aria-label="AI loading">
+                  {/* AI SVG logo, but pale */}
+                  <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img" style={{opacity:0.68}}>
+                    <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#dbeafe" strokeWidth="2"/>
+                    <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#dbeafe"/>
+                    <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
+                    <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
+                    <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
+                  </svg>
+                </span>
+                <span>
+                  <LoadingSpinner size={30} />
+                </span>
+              </div>
+              <span style={{
+                fontSize:"0.9rem",
+                color: "#7fb1d3",
+                marginLeft: "7px",
+                marginTop: "0.88em",
+                fontWeight: 400,
+                alignSelf: "flex-end"
+              }}>
+                AI&nbsp;•&nbsp;loading...
+              </span>
+            </div>
+          )}
           {/* Append error as a special "assistant" message bubble for alignment */}
           {error && (
             <div className="chat-bubble-row assistant error-bubble-row" style={{justifyContent:"flex-start"}}>
