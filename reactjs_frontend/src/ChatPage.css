@@ -179,6 +179,41 @@ html, body, #root {
   box-shadow: 0 1px 4px #8bc34a1a;
 }
 
+/* Error chat bubble - similar shape as assistant, but custom color and font */
+.chat-bubble.error {
+  background: #ad454b;
+  color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 8px #ad454b30;
+  font-weight: 500;
+  max-width: 60%;
+  word-break: break-word;
+  padding: 13px 24px;
+  font-size: 1.04rem;
+  font-family: 'Lexend Deca', 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.46;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  border: none;
+  min-width: 0;
+}
+
+/* Avatar for error bubble */
+.bubble-avatar.error {
+  margin-right: 10px;
+  margin-top: 1px;
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: #66282c;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: #fff;
+  border: 2px solid #ad454b;
+}
+
 .chat-bubble {
   max-width: 60%;
   word-break: break-word;
@@ -320,6 +355,14 @@ html, body, #root {
     max-width: 94vw;
     padding: 10px 14px;
     font-size: 0.99rem;
+  }
+  .chat-bubble.error {
+    max-width: 94vw;
+    padding: 10px 14px;
+    font-size: 0.99rem;
+  }
+  .bubble-avatar.error {
+    width: 25px; height: 25px; font-size: 0.98rem;
   }
   .input-footer-bar {
     padding-bottom: 14px;

@@ -186,7 +186,35 @@ function App() {
       {/* Main chat area */}
       <main className="main-chat-section">
         <div className="chat-content-list" id="chat-messages">
-          {/* No empty-state help text to display */}
+          {/* Error as a chat bubble matching assistant style */}
+          {error && (
+            <div
+              className="chat-bubble-row error"
+              style={{justifyContent: "flex-start"}}
+            >
+              <div className="chat-bubble error">
+                {/* Error avatar icon, visually distinct but similar to assistant avatar */}
+                <span className="bubble-avatar error" aria-label="Error">
+                  {/* SVG with warning style */}
+                  <svg width="20" height="20" viewBox="0 0 28 28" aria-label="Error" fill="none" role="img">
+                    <circle cx="14" cy="14" r="12.5" fill="#2e2324" stroke="#ad454b" strokeWidth="2"/>
+                    <path d="M14 9v6" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+                    <circle cx="14" cy="18" r="1.3" fill="#fff"/>
+                  </svg>
+                </span>
+                <span className="bubble-txt">{error}</span>
+              </div>
+              <span style={{
+                fontSize:"0.92rem",
+                color: "#ad454b", marginLeft:"7px",
+                marginTop: "1.1em", fontWeight:600,
+                alignSelf:"flex-end"
+              }}>
+                Error
+              </span>
+            </div>
+          )}
+          {/* Normal messages */}
           {messages.map((msg, idx) => (
             <div
               key={idx}
@@ -225,21 +253,6 @@ function App() {
           <div ref={chatEndRef}/>
         </div>
       </main>
-
-      {/* Error state */}
-      {error && (
-        <div style={{
-          background:"#8DB58022", 
-          color:"#2F4858", 
-          border:"1.2px solid #8DB580", 
-          margin:"9px auto 0 auto", 
-          padding:"8px 20px", 
-          borderRadius:"13px", 
-          maxWidth:"420px",
-          fontWeight:600, 
-          textAlign:"center"
-        }}>{error}</div>
-      )}
 
       {/* Input bar and footer note */}
       <footer className="input-footer-bar">
