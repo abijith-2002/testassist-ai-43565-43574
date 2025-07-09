@@ -187,59 +187,81 @@ function App() {
       <main className="main-chat-section">
         <div className="chat-content-list" id="chat-messages">
           {/* No empty-state help text to display */}
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`chat-bubble-row ${msg.role}`}
-              style={{justifyContent: msg.role==="user"?"flex-end":"flex-start"}}
-            >
+          {messages.map((msg, idx) => {
+            // Determine chat bubble classes/logic
+            let showAvatar = msg.role === "assistant" || msg.role === "error";
+            let isError = msg.role === "error";
+            let bubbleProps = {};
+            if (isError) {
+              // always align left like assistant
+              bubbleProps.style = { background: "#E3879E", color: "#fff" };
+            }
+            return (
               <div
-                className={`chat-bubble ${msg.role}`}
+                key={idx}
+                className={`chat-bubble-row ${msg.role}${isError ? " error-bubble-row" : ""}`}
+                style={{
+                  justifyContent:
+                    msg.role === "user"
+                      ? "flex-end"
+                      : "flex-start"
+                }}
               >
-                {/* Avatar for assistant bubble only */}
-                {msg.role==="assistant" && (
-                  <span className="bubble-avatar assistant" aria-label="AI logo">
-                    {/* New modern monochrome AI SVG */}
-                    <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
-                      <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
-                      <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
-                      <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
-                      <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
-                      <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
-                    </svg>
-                  </span>
-                )}
-                <span className="bubble-txt">{msg.content}</span>
+                <div
+                  className={`chat-bubble ${msg.role}${isError ? " error" : ""}`}
+                  {...bubbleProps}
+                >
+                  {/* Avatar for assistant and error chats */}
+                  {showAvatar && (
+                    <span className={`bubble-avatar ${msg.role}`} aria-label={isError ? "Error" : "AI logo"}>
+                      {/* New modern monochrome AI SVG (reused for bot and error) */}
+                      <svg width="20" height="20" viewBox="0 0 28 28" aria-label={isError ? "Error" : "AI Monochrome Icon"} fill="none" role="img">
+                        <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
+                        <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
+                        <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
+                        <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
+                        <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
+                      </svg>
+                    </span>
+                  )}
+                  <span className="bubble-txt">{msg.content}</span>
+                </div>
+                {/* Timestamp below bubble, right-aligned inside bubble-row */}
+                <span
+                  className="chat-bubble-timestamp"
+                  style={{
+                    marginTop: '0.7em',
+                    alignSelf: "flex-end",
+                    fontSize: "0.93rem",
+                    color: "#bcc6d0",
+                    fontWeight: 400,
+                    minWidth: 65,
+                    textAlign: "right"
+                  }}
+                >
+                  {formatTime(msg.timestamp)}
+                </span>
               </div>
-              {/* Optionally show time and sender */}
-              <span style={{
-                fontSize:"0.92rem",
-                color: "#2F4858", marginLeft: msg.role==="user"?"14px":"7px",
-                marginTop: "1.1em", fontWeight:400,
-                alignSelf:"flex-end"
-              }}>
-                {(msg.role==="user"?"You":"AI")}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
-              </span>
-            </div>
-          ))}
+            );
+          })}
           <div ref={chatEndRef}/>
         </div>
       </main>
 
       {/* Error state */}
-      {error && (
-        <div style={{
-          background:"#8DB58022", 
-          color:"#2F4858", 
-          border:"1.2px solid #8DB580", 
-          margin:"9px auto 0 auto", 
-          padding:"8px 20px", 
-          borderRadius:"13px", 
-          maxWidth:"420px",
-          fontWeight:600, 
-          textAlign:"center"
-        }}>{error}</div>
-      )}
+      {error && (() => {
+        // Push error into chat bubbles as an "error" message
+        setMessages(prev => [
+          ...prev,
+          {
+            role: "error",
+            content: error,
+            timestamp: new Date().toISOString(),
+          }
+        ]);
+        setError("");
+        return null;
+      })()}
 
       {/* Input bar and footer note */}
       <footer className="input-footer-bar">

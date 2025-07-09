@@ -162,14 +162,25 @@ html, body, #root {
   padding-left: 36px;
   padding-right: 36px;
   overflow-x: hidden;
+  /* timestamp always below, move as column for timestamp */
+  flex-direction: column;
+  align-items: flex-start;
 }
+
+.error-bubble-row {
+  /* error bubbles look like assistant but colored and always left-aligned */
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+}
+
 /* User message (right-aligned), light text on dark bubble for contrast. Meets WCAG contrast */
 .chat-bubble.user {
   margin-left: auto;
-  background: var(--user-bubble);
+  background: rgba(227, 135, 158, 1);
   color: #FAFAFA;
   border-radius: 16px;
   box-shadow: 0 1px 4px #6688af09;
+  text-align: left;
 }
 /* Assistant bubble: pale background, dark text */
 .chat-bubble.assistant {
@@ -177,6 +188,35 @@ html, body, #root {
   color: var(--bubble-text);
   border-radius: 16px;
   box-shadow: 0 1px 4px #8bc34a1a;
+}
+
+/* Error chat bubble, bot-style but #E3879E & white text */
+.chat-bubble.error {
+  background: #E3879E !important;
+  color: #fff !important;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px #b97b9e1a;
+}
+
+/* Avatar for error bubble: match assistant for simplicity */
+.bubble-avatar.error {
+  background: #ead1d7; /* faded pink bg */
+  color: #B81B57; /* some contrast for icon (could hide completely if wanted) */
+  border: 2px solid #E3879E;
+}
+
+/* Universal timestamp styling (below bubble, right-aligned) */
+.chat-bubble-timestamp {
+  display: block;
+  font-size: 0.93rem;
+  color: #bcc6d0;
+  align-self: flex-end;
+  margin-right: 4px;
+  margin-left: 0;
+  font-weight: 400;
+  min-width: 65px;
+  text-align: right;
+  margin-top: .65em;
 }
 
 .chat-bubble {
