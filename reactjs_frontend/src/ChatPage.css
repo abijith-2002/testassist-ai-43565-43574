@@ -9,6 +9,7 @@
   --icon-blue: #3F6E8D;
   --header-avatar-bg: #33658A;
   --user-bubble: #33658A;
+  --user-bubble-text: #fff;
   --bubble-text: #2F4858;
 }
 
@@ -173,11 +174,11 @@ html, body, #root {
   justify-content: flex-start !important;
 }
 
-/* User message (right-aligned), light text on dark bubble for contrast. Meets WCAG contrast */
+/* User message (right-aligned), medium blue bubble with white text for strong contrast. */
 .chat-bubble.user {
   margin-left: auto;
-  background: rgba(227, 135, 158, 1);
-  color: #FAFAFA;
+  background: var(--user-bubble);
+  color: var(--user-bubble-text);
   border-radius: 16px;
   box-shadow: 0 1px 4px #6688af09;
   text-align: left;
@@ -299,6 +300,7 @@ html, body, #root {
   font-family: 'Lexend Deca', 'Helvetica Neue', Arial, sans-serif;
   transition: box-shadow 0.16s, border-color 0.18s;
   box-shadow: 0 1.4px 8px 0 #11233316;
+  /* Ensure placeholder color is visible on blue bg */
 }
 .chat-input-main:focus {
   box-shadow: 0 1.4px 18px 0 #aef9f766;

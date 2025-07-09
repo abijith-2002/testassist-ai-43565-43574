@@ -42,13 +42,5 @@ code {
 }
 
 /* Ensure input and placeholder colors match the palette */
-input,
-.chat-input-main {
-  color: #2F4858;
-  background: #33658A;
-}
+/* Placeholder and input handled in ChatPage.css */
 
-::-webkit-input-placeholder { color: #2F4858; }
-::-moz-placeholder { color: #2F4858; }
-:-ms-input-placeholder { color: #2F4858; }
-::placeholder { color: #2F4858; }
