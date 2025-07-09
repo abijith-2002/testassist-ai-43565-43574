@@ -51,9 +51,6 @@ function App() {
     setInput("");
 
     try {
-      // Determine base URL: Use environment variable or fallback.
-      // Default to Kavia cloud backend per requirements.
-      // - Priority: REACT_APP_BACKEND_API_URL (env) -> default cloud URL -> localhost (for local dev).
       let API_BASE =
         process.env.REACT_APP_BACKEND_API_URL
         || (window.location.hostname === "localhost"
@@ -73,11 +70,9 @@ function App() {
         throw new Error(`Could not reach backend server at ${API_BASE}/chat. ${err?.message || ""}`);
       }
 
-      // Surface ALL error responses, including 404s, with details if present
       if (!resp.ok) {
         let errMsg = `${resp.status} ${resp.statusText}`;
         try {
-          // Try JSON error payloads: FastAPI {"detail": ...}, Gemini {"error": ...}, or custom
           const errData = await resp.json();
           if (errData && typeof errData === "object") {
             if (errData.detail) errMsg = errData.detail;
@@ -85,22 +80,26 @@ function App() {
             else if (errData.error) errMsg = JSON.stringify(errData.error);
             else errMsg = JSON.stringify(errData);
           }
-        } catch (_) {
-          // Not JSON, use statusText
-        }
-        // Surface all errors (including 404) to chat UI clearly
-        throw new Error(`[Backend error] ${errMsg} (code ${resp.status})`);
+        } catch (_) {}
+        // Instead of setError, push error as assistant message with error type
+        const errorMsg = {
+          role: "assistant",
+          content: "Sorry, failed to fetch AI response. " +
+            (`${errMsg} (code ${resp.status})`),
+          timestamp: new Date().toISOString(),
+          error: true
+        };
+        setMessages(prev=>[...prev, errorMsg]);
+        setIsLoading(false);
+        return;
       }
 
-      // Get backend reply (expecting { answer: str, from_gemini: bool, ... })
       let data;
       try {
         data = await resp.json();
       } catch (_) {
         data = {};
       }
-      // The UI should always display Gemini's reply if present, never fallback to generic message
-      // Prefer: If 'answer' exists and is non-empty, display it, else show empty string (not "[No reply returned]")
       let replyText = "";
       if (data && typeof data.answer !== "undefined" && data.answer !== null) {
         if (typeof data.answer === "string" && data.answer.trim().length > 0) {
@@ -119,14 +118,18 @@ function App() {
       };
       setMessages(prev=>[...prev, assistantMsg]);
     } catch (err) {
-      // Show any fetch/backend errors (including 404/5xx) to user
-      setError(
-        "Sorry, failed to fetch AI response. " +
-        (err?.message
-          ? err.message.replace(/^Error:/, '').trim()
-          : String(err)
-        )
-      );
+      // Instead of setError, push error as assistant message with error type
+      const errorMsg = {
+        role: "assistant",
+        content: "Sorry, failed to fetch AI response. " +
+          (err?.message
+            ? err.message.replace(/^Error:/, '').trim()
+            : String(err)
+          ),
+        timestamp: new Date().toISOString(),
+        error: true
+      };
+      setMessages(prev=>[...prev, errorMsg]);
     } finally {
       setIsLoading(false);
     }
@@ -190,15 +193,17 @@ function App() {
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`chat-bubble-row ${msg.role}`}
+              className={`chat-bubble-row ${msg.role}${msg.error ? " error-msg-row" : ""}`}
               style={{justifyContent: msg.role==="user"?"flex-end":"flex-start"}}
             >
               <div
-                className={`chat-bubble ${msg.role}`}
+                className={`chat-bubble ${msg.role}${msg.error ? " error" : ""}`}
+                style={msg.error ? {background: "#ad454b", color: "#fff", border:"none", boxShadow:"0 1px 4px #ad454b33"} : {}}
+                aria-live={msg.error ? "polite" : undefined}
               >
                 {/* Avatar for assistant bubble only */}
                 {msg.role==="assistant" && (
-                  <span className="bubble-avatar assistant" aria-label="AI logo">
+                  <span className={`bubble-avatar assistant${msg.error ? " error" : ""}`} aria-label="AI logo">
                     {/* New modern monochrome AI SVG */}
                     <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
                       <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
@@ -214,7 +219,8 @@ function App() {
               {/* Optionally show time and sender */}
               <span style={{
                 fontSize:"0.92rem",
-                color: "#2F4858", marginLeft: msg.role==="user"?"14px":"7px",
+                color: msg.error ? "#fff" : "#2F4858", 
+                marginLeft: msg.role==="user"?"14px":"7px",
                 marginTop: "1.1em", fontWeight:400,
                 alignSelf:"flex-end"
               }}>
@@ -226,20 +232,7 @@ function App() {
         </div>
       </main>
 
-      {/* Error state */}
-      {error && (
-        <div style={{
-          background:"#8DB58022", 
-          color:"#2F4858", 
-          border:"1.2px solid #8DB580", 
-          margin:"9px auto 0 auto", 
-          padding:"8px 20px", 
-          borderRadius:"13px", 
-          maxWidth:"420px",
-          fontWeight:600, 
-          textAlign:"center"
-        }}>{error}</div>
-      )}
+      {/* Render error messages as chatbot error bubbles in chat window */}
 
       {/* Input bar and footer note */}
       <footer className="input-footer-bar">

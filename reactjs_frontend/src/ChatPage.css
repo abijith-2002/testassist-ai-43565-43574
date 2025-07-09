@@ -178,6 +178,17 @@ html, body, #root {
   border-radius: 16px;
   box-shadow: 0 1px 4px #8bc34a1a;
 }
+.chat-bubble.assistant.error, .chat-bubble.assistant.error-msg, .chat-bubble.error {
+  background: #ad454b !important;
+  color: #fff !important;
+  border: none;
+  box-shadow: 0 1px 4px #ad454b33;
+}
+.bubble-avatar.assistant.error, .bubble-avatar.error {
+  background: #ad454b !important;
+  color: #fff !important;
+  border: 2px solid #fff;
+}
 
 .chat-bubble {
   max-width: 60%;
