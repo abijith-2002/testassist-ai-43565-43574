@@ -155,7 +155,7 @@ html, body, #root {
   padding: 18px 0 0 0;
   width: 100vw;
   max-width: 100vw;
-  /* Always allow vertical scrolling; if parent provides less height, this will shrink */
+  /* Vertical scrolling for chat area only */
   scrollbar-width: thin;
   scrollbar-color: #abc #33658A33;
 }
@@ -175,6 +175,7 @@ html, body, #root {
   padding-left: 36px;
   padding-right: 36px;
   overflow-x: hidden;
+  /* Remove any vertical scroll restriction from row level (no overflow-y) */
 }
 /* User message (right-aligned), light text on dark bubble for contrast. Meets WCAG contrast */
 .chat-bubble.user {
@@ -205,6 +206,8 @@ html, body, #root {
   align-items: flex-start;
   border: none;
   min-width: 0;
+  /* Remove all scrolling/overflow except natural expansion. No scrollbar here. */
+  overflow: visible;
 }
 .bubble-avatar {
   margin-right: 10px;
