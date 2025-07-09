@@ -58,7 +58,7 @@ function App() {
         process.env.REACT_APP_BACKEND_API_URL
         || (window.location.hostname === "localhost"
           ? "http://localhost:3001"
-          : "https://vscode-internal-7963-beta.beta01.cloud.kavia.ai:3001"
+          : "https://vscode-internal-31070-beta.beta01.cloud.kavia.ai:3001"
         );
 
       let resp;
