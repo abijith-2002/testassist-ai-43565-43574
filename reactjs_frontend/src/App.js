@@ -159,15 +159,14 @@ function App() {
       {/* Header */}
       <header className="header-bar">
         <div className="header-left">
-          {/* Monochromatic logo avatar SVG */}
+          {/* Professional minimal chat bubble SVG avatar */}
           <span className="avatar" aria-label="AI Assistant">
-            {/* New modern monochrome AI SVG logo */}
-            <svg width="28" height="28" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
-              <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
-              <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
-              <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
-              <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
-              <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
+            {/* Modern chat bubble SVG */}
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img">
+              <rect width="32" height="32" rx="16" fill="#1976D2"/>
+              <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
+              <circle cx="14.5" cy="15" r="1.2" fill="#1976D2"/>
+              <circle cx="17.5" cy="15" r="1.2" fill="#1976D2"/>
             </svg>
           </span>
           <span className="titlebox">
@@ -200,13 +199,12 @@ function App() {
                 {/* Avatar for assistant bubble only */}
                 {msg.role==="assistant" && (
                   <span className="bubble-avatar assistant" aria-label="AI logo">
-                    {/* New modern monochrome AI SVG */}
-                    <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
-                      <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
-                      <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
-                      <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
-                      <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
-                      <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
+                    {/* Modern chat bubble SVG */}
+                    <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img">
+                      <rect width="32" height="32" rx="16" fill="#1976D2"/>
+                      <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
+                      <circle cx="14.5" cy="15" r="1.2" fill="#1976D2"/>
+                      <circle cx="17.5" cy="15" r="1.2" fill="#1976D2"/>
                     </svg>
                   </span>
                 )}
@@ -228,13 +226,12 @@ function App() {
             <div className="chat-bubble-row assistant loading-row" style={{justifyContent:"flex-start"}}>
               <div className="chat-bubble assistant loading-bubble" style={{alignItems: "center", justifyContent:"center"}}>
                 <span className="bubble-avatar assistant" aria-label="AI loading">
-                  {/* AI SVG logo, but pale */}
-                  <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img" style={{opacity:0.68}}>
-                    <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#dbeafe" strokeWidth="2"/>
-                    <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#dbeafe"/>
-                    <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
-                    <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
-                    <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
+                  {/* Modern chat bubble SVG, faded */}
+                  <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img" style={{opacity:0.65}}>
+                    <rect width="32" height="32" rx="16" fill="#a3c7e7"/>
+                    <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
+                    <circle cx="14.5" cy="15" r="1.2" fill="#a3c7e7"/>
+                    <circle cx="17.5" cy="15" r="1.2" fill="#a3c7e7"/>
                   </svg>
                 </span>
                 <span>
@@ -258,13 +255,12 @@ function App() {
             <div className="chat-bubble-row assistant error-bubble-row" style={{justifyContent:"flex-start"}}>
               <div className="chat-bubble assistant error-bubble">
                 <span className="bubble-avatar assistant" aria-label="AI error">
-                  {/* AI SVG logo (reuse from above) */}
-                  <svg width="20" height="20" viewBox="0 0 28 28" aria-label="AI Monochrome Icon" fill="none" role="img">
-                    <circle cx="14" cy="14" r="12.5" fill="#212a34" stroke="#90caf9" strokeWidth="2"/>
-                    <rect x="8" y="8.8" width="12" height="8.4" rx="4.2" fill="#90caf9"/>
-                    <circle cx="12.75" cy="13" r="1.25" fill="#212a34"/>
-                    <circle cx="15.25" cy="13" r="1.25" fill="#212a34"/>
-                    <rect x="12.2" y="16.05" width="3.6" height="0.8" rx="0.4" fill="#212a34" />
+                  {/* Modern chat bubble SVG, error styling */}
+                  <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img">
+                    <rect width="32" height="32" rx="16" fill="#BF5F63"/>
+                    <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
+                    <circle cx="14.5" cy="15" r="1.2" fill="#BF5F63"/>
+                    <circle cx="17.5" cy="15" r="1.2" fill="#BF5F63"/>
                   </svg>
                 </span>
                 <span className="bubble-txt">{error}</span>
