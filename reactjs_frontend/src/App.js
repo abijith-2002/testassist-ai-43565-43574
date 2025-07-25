@@ -53,13 +53,12 @@ function App() {
 
     try {
       // Determine base URL: Use environment variable or fallback.
-      // Default to Kavia cloud backend per requirements.
-      // - Priority: REACT_APP_BACKEND_API_URL (env) -> default cloud URL -> localhost (for local dev).
+      // Read from REACT_APP_API_BASE_URL, fallback to localhost for local dev, else required default.
       let API_BASE =
-        process.env.REACT_APP_BACKEND_API_URL
+        process.env.REACT_APP_API_BASE_URL
         || (window.location.hostname === "localhost"
           ? "http://localhost:3001"
-          : "https://vscode-internal-1111-beta.beta01.cloud.kavia.ai:3001"
+          : "https://vscode-internal-382-beta.beta01.cloud.kavia.ai:3001"
         );
 
       let resp;

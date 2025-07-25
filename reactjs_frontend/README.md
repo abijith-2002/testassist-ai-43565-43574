@@ -21,21 +21,21 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 ### API Backend URL Configuration
 
 Chat API requests are sent to the backend server `/chat` endpoint.
-You **must** configure the API base URL via the environment variable `REACT_APP_BACKEND_API_URL` if the backend is not running on the same host/port (e.g., cloud or Docker deployment).
+You **must** configure the API base URL via the environment variable `REACT_APP_API_BASE_URL` if the backend is not running on the same host/port (e.g., cloud or Docker deployment).
 
 **Recommended Production/Cloud:**
 - The default for non-localhost deployments (such as preview and production) is:
   ```
-  https://vscode-internal-7963-beta.beta01.cloud.kavia.ai:3001
+  https://vscode-internal-382-beta.beta01.cloud.kavia.ai:3001
   ```
-- The React UI POSTs chat requests to `${REACT_APP_BACKEND_API_URL}/chat`.
+- The React UI POSTs chat requests to `${REACT_APP_API_BASE_URL}/chat`.
 - To override the endpoint target, launch with:
   ```bash
-  REACT_APP_BACKEND_API_URL=https://vscode-internal-7963-beta.beta01.cloud.kavia.ai:3001 npm start
+  REACT_APP_API_BASE_URL=https://vscode-internal-382-beta.beta01.cloud.kavia.ai:3001 npm start
   ```
   or set in `.env` file:
   ```
-  REACT_APP_BACKEND_API_URL=https://vscode-internal-7963-beta.beta01.cloud.kavia.ai:3001
+  REACT_APP_API_BASE_URL=https://vscode-internal-382-beta.beta01.cloud.kavia.ai:3001
   ```
 
 **Local development:**
