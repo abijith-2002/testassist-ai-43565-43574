@@ -261,23 +261,55 @@ html, body, #root {
   line-height: 1.7;
   border-radius: 0;
   box-shadow: none;
-  /* REMOVE any divider/border lines between AI messages */
   border-top: none;
   border-bottom: none;
-  /* Offset for headline alignment */
-  /* Responsive font, optionally bigger for mobile */
-  white-space: pre-line;
+  white-space: normal; /* Remove pre-line so markdown handles newlines properly */
   word-break: break-word;
   text-align: left;
   box-sizing: border-box;
-  /* Center content on page for wide screens */
   padding-left: 28px;
   padding-right: 28px;
-  /* Enable text selection for AI answers */
   -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
+}
+
+/* Compact markdown spacing for paragraphs and lists in AI replies */
+.assistant-content-direct p {
+  margin-top: 0;
+  margin-bottom: 0.3em;
+  line-height: 1.6;
+}
+
+/* Remove extra margin above/below lists */
+.assistant-content-direct ul,
+.assistant-content-direct ol {
+  margin-top: 0.2em;
+  margin-bottom: 0.4em;
+  padding-left: 1.5em; /* ensure indent for nested lists */
+  line-height: 1.55;
+}
+
+/* List item spacing—minimal gap, no extra bottom margin except for nested */
+.assistant-content-direct li {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 1.55;
+  padding-left: 0.2em;
+}
+
+.assistant-content-direct ul ul,
+.assistant-content-direct ol ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Remove margin on last elements to avoid trailing gaps */
+.assistant-content-direct p:last-child,
+.assistant-content-direct ul:last-child,
+.assistant-content-direct ol:last-child {
+  margin-bottom: 0;
 }
 
 .assistant-content-direct.error {
