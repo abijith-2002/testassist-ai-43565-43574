@@ -273,6 +273,11 @@ html, body, #root {
   /* Center content on page for wide screens */
   padding-left: 28px;
   padding-right: 28px;
+  /* Enable text selection for AI answers */
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 .assistant-content-direct.error {
@@ -370,6 +375,11 @@ html, body, #root {
   border: 1px solid var(--user-bubble-border);
   position: relative;
   overflow: hidden;
+  /* Make user message bubble selectable */
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 .chat-bubble.user::before {
@@ -444,6 +454,11 @@ html, body, #root {
   white-space: pre-line;
   position: relative;
   z-index: 1;
+  /* Make chat text selectable for copy/paste */
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 /* Timestamp styling below bubbles */
