@@ -258,7 +258,7 @@ html, body, #root {
   font-size: 1.10rem;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
-  line-height: 1.7;
+  line-height: 1.6; /* Increased line-height for AI markdown */
   border-radius: 0;
   box-shadow: none;
   border-top: none;
@@ -273,6 +273,18 @@ html, body, #root {
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
+}
+
+/* Ensure markdown inner elements like paragraphs, lists, list-items also use the improved line-height for consistency */
+.assistant-content-direct p,
+.assistant-content-direct ul,
+.assistant-content-direct ol,
+.assistant-content-direct li {
+  line-height: 1.6 !important;
+}
+
+.chat-bubble.user, .chat-bubble-wrapper.user, .bubble-txt {
+  line-height: 1.6 !important; /* Increase line-height for user chat bubble as well */
 }
 
 /* Compact markdown spacing for paragraphs and lists in AI replies */
