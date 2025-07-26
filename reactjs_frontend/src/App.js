@@ -35,6 +35,13 @@ function App() {
    * Robust error and loading handling.
    */
   // PUBLIC_INTERFACE: Stream AI response word-by-word/chunk-by-chunk as it arrives
+  /**
+   * Handles sending of user question and receiving assistant response (including markdown/code).
+   * 
+   * - Prevents sending if assistant is still streaming (avoids lost context in backend RAG).
+   * - After streaming, always finalizes the assistant message without "streaming" property
+   *   so that the full AI response—including all markdown/code—is included in backend chat context.
+   */
   const sendMessage = async e => {
     e && e.preventDefault();
     if (!input.trim() || isLoading) return;
@@ -44,6 +51,13 @@ function App() {
     setMessages(prev => [...prev, userMsg]);
     setInput("");
 
+    // NEW: Prevent user from sending another message if assistant reply is not finished streaming
+    if (messages.length > 0 && messages[messages.length-1].role === "assistant" && messages[messages.length-1].streaming) {
+      setError("Please wait for the assistant to finish replying before sending your next question.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       let API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
 
@@ -51,14 +65,14 @@ function App() {
       try {
         // Send the entire chat history for context-based RAG logic.
         // Ensure ALL assistant messages (including markdown/code blocks) are included as-is;
-        // Keep only finalized messages (not streaming); preserve code/format for context.
+        // Only finalized (non-streaming) messages are included for reliable LLM/RAG grounding.
+        // If an assistant streaming message still exists, it's a bug—prevent double submit above.
+
         const cleanHistory = [
           ...messages
             .filter(m => !m.streaming)
             .map(({ role, content }) => ({
               role,
-              // For the assistant: always include the full markdown/formatted content as shown in UI.
-              // For the user: use content as-is (plain text input).
               content
             })),
           { role: "user", content: userMsg.content }
@@ -188,6 +202,25 @@ function App() {
           }
           updateStreamingAssistant(replyText || "");
         }
+
+        // --- Finalize streaming message so that history[] always contains the full rendered markdown/code ---
+        setMessages(prev => {
+          // find last assistant streaming message and mark as finalized, copying its content as-is.
+          let lastIdx = prev.length - 1;
+          if (
+            prev.length > 0 &&
+            prev[lastIdx].role === "assistant" &&
+            prev[lastIdx].streaming
+          ) {
+            // Remove 'streaming' property and keep complete content
+            return prev.map((msg, idx) =>
+              idx === lastIdx
+                ? { ...msg, streaming: undefined } // Remove streaming flag
+                : msg
+            );
+          }
+          return prev;
+        });
 
       } else {
         // Fallback: Not a streaming body, treat as ordinary JSON { answer: ... }
