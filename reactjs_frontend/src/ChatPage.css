@@ -567,9 +567,17 @@ html, body, #root {
   font-size: 1rem;
   padding: 0 16px;
   color: var(--text-primary);
-  outline: none;
+  outline: none !important;
+  box-shadow: none !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   transition: all 0.3s ease;
+}
+
+/* Remove native focus styles from input—only show pill shape. Use :focus and :focus-visible */
+.floating-chat-input:focus, .floating-chat-input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 
 .floating-chat-input::placeholder {
