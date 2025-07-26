@@ -242,12 +242,13 @@ function App() {
         <div className="header-left">
           {/* Professional minimal chat bubble SVG avatar */}
           <span className="avatar" aria-label="AI Assistant">
-            {/* Modern chat bubble SVG */}
-            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img">
-              <rect width="32" height="32" rx="16" fill="#1976D2"/>
-              <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
-              <circle cx="14.5" cy="15" r="1.2" fill="#1976D2"/>
-              <circle cx="17.5" cy="15" r="1.2" fill="#1976D2"/>
+            {/* Minimalist dot-in-bubble SVG */}
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-label="Minimal AI Bot" role="img">
+              <circle cx="16" cy="16" r="16" fill="#1976D2" />
+              <rect x="9" y="11" width="14" height="10" rx="5" fill="#fff" />
+              <circle cx="13" cy="16" r="1.15" fill="#1976D2" />
+              <circle cx="16" cy="16" r="1.15" fill="#1976D2" />
+              <circle cx="19" cy="16" r="1.15" fill="#1976D2" />
             </svg>
           </span>
           <span className="titlebox">
