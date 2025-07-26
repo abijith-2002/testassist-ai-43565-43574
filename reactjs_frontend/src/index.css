@@ -1,5 +1,5 @@
-/* Import Lexend Deca from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;600;700&display=swap');
+/* Import modern font stack */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 html, body, #root {
   box-sizing: border-box;
@@ -10,7 +10,6 @@ html, body, #root {
   margin: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  /* Use flex layout at the root to control vertical growth and sticky footer */
   display: flex;
   flex-direction: column;
 }
@@ -22,33 +21,192 @@ html, body, #root {
 
 body {
   margin: 0;
-  font-family: 'Lexend Deca', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  font-size: 15px; /* slightly smaller for compactness */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #2F4858;
-  color: #2F4858;
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #0d1117 100%);
+  color: #f0f6fc;
   width: 100vw;
   min-height: 100vh;
   overflow-x: hidden;
   padding: 0;
+  /* Prevent text selection on UI elements */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in chat messages and input */
+.bubble-txt,
+.chat-input-main,
+input,
+textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+  font-size: 0.9em;
+  background: rgba(240, 246, 252, 0.1);
+  padding: 2px 4px;
+  border-radius: 3px;
+  color: #79c0ff;
 }
 
-/* Ensure input and placeholder colors match the palette */
+/* Ensure proper styling for all input elements */
 input,
+textarea,
 .chat-input-main {
-  color: #2F4858;
-  background: #33658A;
+  color: #f0f6fc;
+  background: linear-gradient(135deg, #21262d 0%, #30363d 100%);
+  border: 1px solid rgba(240, 246, 252, 0.12);
 }
 
-::-webkit-input-placeholder { color: #2F4858; }
-::-moz-placeholder { color: #2F4858; }
-:-ms-input-placeholder { color: #2F4858; }
-::placeholder { color: #2F4858; }
+/* Placeholder styling for dark theme */
+::-webkit-input-placeholder {
+  color: #6e7681;
+  opacity: 1;
+}
+
+::-moz-placeholder {
+  color: #6e7681;
+  opacity: 1;
+}
+
+:-ms-input-placeholder {
+  color: #6e7681;
+  opacity: 1;
+}
+
+::placeholder {
+  color: #6e7681;
+  opacity: 1;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(31, 111, 235, 0.3);
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background: rgba(31, 111, 235, 0.3);
+  color: #ffffff;
+}
+
+/* Scrollbar styling for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(240, 246, 252, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(240, 246, 252, 0.2);
+  border-radius: 4px;
+  border: 1px solid rgba(240, 246, 252, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(240, 246, 252, 0.3);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Link styling for dark theme */
+a {
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #79c0ff;
+  text-decoration: underline;
+}
+
+a:visited {
+  color: #a5a3ff;
+}
+
+/* Button reset for consistent styling */
+button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #58a6ff;
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: #ffffff;
+    --text-secondary: #d0d7de;
+    --assistant-bubble-border: rgba(255, 255, 255, 0.3);
+    --user-bubble-border: rgba(31, 111, 235, 0.6);
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .header-bar,
+  .input-footer-bar {
+    display: none !important;
+  }
+  
+  .chat-bubble {
+    background: white !important;
+    color: black !important;
+    border: 1px solid #000 !important;
+  }
+}
