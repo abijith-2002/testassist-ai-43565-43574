@@ -2,17 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import "./ChatPage.css";
 import LoadingSpinner from "./LoadingSpinner";
 
-// SVG icon components for header and send button (inline for no deps)
-const ReloadIcon = ({size=20}) => (
-  <svg width={size} height={size} fill="none" aria-label="Reload" viewBox="0 0 20 20" role="img">
-    <path d="M16.98 10.59A7 7 0 1 1 10 3V1.1a.85.85 0 0 1 1.3-.7l3.14 2.13a.85.85 0 0 1 0 1.4l-3.14 2.14A.85.85 0 0 1 10 5.36V3a6 6 0 1 0 5.31 8.76" stroke="#3F6E8D" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-  </svg>
-);
-const StopIcon = ({size=20}) => (
-  <svg width={size} height={size} viewBox="0 0 20 20" aria-label="Stop" role="img">
-    <rect x="5" y="5" width="10" height="10" rx="3" fill="#3F6E8D"/>
-  </svg>
-);
+// SVG icon components for send button (inline for no deps)
 const SendArrowIcon = ({size=26}) => (
   <svg width={size} height={size} viewBox="0 0 26 26" fill="none" aria-label="Send" role="img">
     <path d="M3 22.5L24 13L3 3.5V10.75L17 13L3 15.25V22.5Z" fill="#FFF"/>
@@ -52,15 +42,9 @@ function App() {
     setInput("");
 
     try {
-      // Determine base URL: Use environment variable or fallback.
-      // Read from REACT_APP_API_BASE_URL, fallback to localhost for local dev, else required default.
-      // Use the official deployed backend base URL if not on localhost
-      let API_BASE =
-        process.env.REACT_APP_API_BASE_URL
-        || (window.location.hostname === "localhost"
-          ? "http://localhost:3001"
-          : "https://vscode-internal-597704-beta.beta01.cloud.kavia.ai:3001"
-        );
+      // Determine base URL: Use environment variable or fallback to localhost:3001 as default.
+      // REACT_APP_API_BASE_URL takes precedence, otherwise default to localhost:3001
+      let API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
 
       let resp;
       try {
@@ -141,10 +125,6 @@ function App() {
     }
   };
 
-  // Header action handlers (demo stub)
-  const handleReload = ()=>window.location.reload();
-  const handleStop = ()=>setError("✋ AI stopped (demo)");
-
   // Focus effect
   const inputRef = useRef(null);
 
@@ -170,17 +150,10 @@ function App() {
             </svg>
           </span>
           <span className="titlebox">
-            <span className="ai-title">TestAssist</span>
+            <span className="ai-title">Knowledge Bot</span>
           </span>
         </div>
-        <div className="header-actions">
-          <button className="header-icon-btn" tabIndex={0} onClick={handleReload} aria-label="Reload chat">
-            <ReloadIcon size={19}/>
-          </button>
-          <button className="header-icon-btn" tabIndex={0} onClick={handleStop} aria-label="Stop response">
-            <StopIcon size={19}/>
-          </button>
-        </div>
+
       </header>
 
       {/* Main chat area */}
@@ -190,102 +163,86 @@ function App() {
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`chat-bubble-row ${msg.role}`}
-              style={{justifyContent: msg.role==="user"?"flex-end":"flex-start"}}
+              className={`chat-message-container ${msg.role}`}
             >
-              <div
-                className={`chat-bubble ${msg.role}`}
-              >
-                {/* Avatar for assistant bubble only */}
-                {msg.role==="assistant" && (
-                  <span className="bubble-avatar assistant" aria-label="AI logo">
-                    {/* Modern chat bubble SVG */}
-                    <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img">
-                      <rect width="32" height="32" rx="16" fill="#1976D2"/>
-                      <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
-                      <circle cx="14.5" cy="15" r="1.2" fill="#1976D2"/>
-                      <circle cx="17.5" cy="15" r="1.2" fill="#1976D2"/>
-                    </svg>
-                  </span>
-                )}
-                <span className="bubble-txt">{msg.content}</span>
+              <div className={`chat-bubble-wrapper ${msg.role}`}>
+                <div className={`chat-bubble ${msg.role}`}>
+                  {/* Avatar for assistant bubble only */}
+                  {msg.role==="assistant" && (
+                    <span className="bubble-avatar assistant" aria-label="AI logo">
+                      {/* Modern chat bubble SVG */}
+                      <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img">
+                        <rect width="32" height="32" rx="16" fill="#1976D2"/>
+                        <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
+                        <circle cx="14.5" cy="15" r="1.2" fill="#1976D2"/>
+                        <circle cx="17.5" cy="15" r="1.2" fill="#1976D2"/>
+                      </svg>
+                    </span>
+                  )}
+                  <span className="bubble-txt">{msg.content}</span>
+                </div>
               </div>
-              {/* Optionally show time and sender */}
-              <span style={{
-                fontSize:"0.92rem",
-                color: "#2F4858", marginLeft: msg.role==="user"?"14px":"7px",
-                marginTop: "1.1em", fontWeight:400,
-                alignSelf:"flex-end"
-              }}>
+              {/* Timestamp below the bubble */}
+              <div className={`message-timestamp ${msg.role}`}>
                 {(msg.role==="user"?"You":"AI")}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
-              </span>
+              </div>
             </div>
           ))}
           {/* Show loading spinner between last user message and next assistant reply */}
           {isLoading && (
-            <div className="chat-bubble-row assistant loading-row" style={{justifyContent:"flex-start"}}>
-              <div className="chat-bubble assistant loading-bubble" style={{alignItems: "center", justifyContent:"center"}}>
-                <span className="bubble-avatar assistant" aria-label="AI loading">
-                  {/* Modern chat bubble SVG, faded */}
-                  <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img" style={{opacity:0.65}}>
-                    <rect width="32" height="32" rx="16" fill="#a3c7e7"/>
-                    <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
-                    <circle cx="14.5" cy="15" r="1.2" fill="#a3c7e7"/>
-                    <circle cx="17.5" cy="15" r="1.2" fill="#a3c7e7"/>
-                  </svg>
-                </span>
-                <span>
-                  <LoadingSpinner size={30} />
-                </span>
+            <div className="chat-message-container assistant">
+              <div className="chat-bubble-wrapper assistant">
+                <div className="chat-bubble assistant loading-bubble" style={{alignItems: "center", justifyContent:"center"}}>
+                  <span className="bubble-avatar assistant" aria-label="AI loading">
+                    {/* Modern chat bubble SVG, faded */}
+                    <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img" style={{opacity:0.65}}>
+                      <rect width="32" height="32" rx="16" fill="#a3c7e7"/>
+                      <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
+                      <circle cx="14.5" cy="15" r="1.2" fill="#a3c7e7"/>
+                      <circle cx="17.5" cy="15" r="1.2" fill="#a3c7e7"/>
+                    </svg>
+                  </span>
+                  <span>
+                    <LoadingSpinner size={30} />
+                  </span>
+                </div>
               </div>
-              <span style={{
-                fontSize:"0.9rem",
-                color: "#7fb1d3",
-                marginLeft: "7px",
-                marginTop: "0.88em",
-                fontWeight: 400,
-                alignSelf: "flex-end"
-              }}>
+              <div className="message-timestamp assistant">
                 AI&nbsp;•&nbsp;loading...
-              </span>
+              </div>
             </div>
           )}
           {/* Append error as a special "assistant" message bubble for alignment */}
           {error && (
-            <div className="chat-bubble-row assistant error-bubble-row" style={{justifyContent:"flex-start"}}>
-              <div className="chat-bubble assistant error-bubble">
-                <span className="bubble-avatar assistant" aria-label="AI error">
-                  {/* Modern chat bubble SVG, error styling */}
-                  <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img">
-                    <rect width="32" height="32" rx="16" fill="#BF5F63"/>
-                    <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
-                    <circle cx="14.5" cy="15" r="1.2" fill="#BF5F63"/>
-                    <circle cx="17.5" cy="15" r="1.2" fill="#BF5F63"/>
-                  </svg>
-                </span>
-                <span className="bubble-txt">{error}</span>
+            <div className="chat-message-container assistant">
+              <div className="chat-bubble-wrapper assistant">
+                <div className="chat-bubble assistant error-bubble">
+                  <span className="bubble-avatar assistant" aria-label="AI error">
+                    {/* Modern chat bubble SVG, error styling */}
+                    <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img">
+                      <rect width="32" height="32" rx="16" fill="#BF5F63"/>
+                      <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
+                      <circle cx="14.5" cy="15" r="1.2" fill="#BF5F63"/>
+                      <circle cx="17.5" cy="15" r="1.2" fill="#BF5F63"/>
+                    </svg>
+                  </span>
+                  <span className="bubble-txt">{error}</span>
+                </div>
               </div>
-              <span style={{
-                fontSize:"0.92rem",
-                color: "#fff",
-                marginLeft: "7px",
-                marginTop: "1.1em",
-                fontWeight: 400,
-                alignSelf:"flex-end"
-              }}>
+              <div className="message-timestamp assistant">
                 AI&nbsp;•&nbsp;{formatTime(new Date().toISOString())}
-              </span>
+              </div>
             </div>
           )}
           <div ref={chatEndRef}/>
         </div>
       </main>
 
-      {/* Input bar and footer note */}
-      <footer className="input-footer-bar">
-        <form className="input-bar-wrap" onSubmit={sendMessage} autoComplete="off" spellCheck={true}>
+      {/* Floating input box within chat interface */}
+      <div className="floating-input-container">
+        <form className="floating-input-form" onSubmit={sendMessage} autoComplete="off" spellCheck={true}>
           <input
-            className="chat-input-main"
+            className="floating-chat-input"
             ref={inputRef}
             type="text"
             aria-label="Type your message"
@@ -297,7 +254,7 @@ function App() {
             maxLength={1024}
           />
           <button
-            className="send-btn"
+            className="floating-send-btn"
             type="submit"
             aria-label="Send"
             disabled={!input.trim()||isLoading}
@@ -306,10 +263,7 @@ function App() {
             <SendArrowIcon size={26}/>
           </button>
         </form>
-        <span className="footer-disclaimer">
-          Answers are powered by TestAssist AI and Google Gemini.
-        </span>
-      </footer>
+      </div>
     </div>
   );
 }
