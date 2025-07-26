@@ -73,30 +73,35 @@ function App() {
         throw new Error(`[Backend error] ${errMsg} (code ${resp.status})`);
       }
 
-      // Check if streaming is supported (NDJSON or raw text/lines)
-      if (resp.body && window.ReadableStream && resp.headers.get("content-type") && resp.headers.get("content-type").includes("text/event-stream")) {
-        // (If backend is using event-stream, handle accordingly here. Currently not expected.)
-        throw new Error("Streaming via EventSource not implemented yet.");
-      } else if (resp.body && window.ReadableStream) {
-        // Streaming, e.g. backend sends lines/chunks (JSON/text), use TextDecoder
+      // Handle backend streaming JSON scenario (NDJSON or text lines with JSON objects with 'answer').
+      // Note: For this requirement, we expect the backend to send a single JSON with an 'answer' field, or stream JSON with 'answer' (our focus is to stream/render its characters)
+      let usedStreaming = false;
+      if (resp.body && window.ReadableStream) {
+        // Try to stream
         const reader = resp.body.getReader();
         const decoder = new TextDecoder("utf-8");
-        let partial = "";
-        let isFirstChunk = true;
-        let readDone = false;
-        let aiMsgSoFar = "";
-        // Add assistant message in "streaming" mode (content built-up)
-        let assistantMsg = {
-          role: "assistant",
-          content: "",
-          timestamp: new Date().toISOString(),
-          // Use a key to ensure React renders this as partial
-        };
-        setMessages(prev => [...prev, assistantMsg]);
-        // Function to update only the last assistant message as streaming
+        let buffer = "";
+        let done = false;
+        let parsedAnswer = "";
+        let displayedContent = "";
+
+        // UI: Append a new assistant message that will stream the answer (character-by-character)
+        const timestamp = new Date().toISOString();
+        setMessages(prev => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "",
+            timestamp,
+            streaming: true
+          }
+        ]);
+        let lastContent = "";
+
+        // Function to update only the latest assistant message with the new content
         const updateStreamingAssistant = (partialContent) => {
           setMessages(prev => {
-            // Find last assistant message (must have just been appended above)
+            // Find last assistant message with streaming:true or just appended
             let lastIdx = prev.length - 1;
             return prev.map((msg, idx) =>
               (idx === lastIdx && msg.role === "assistant")
@@ -105,20 +110,68 @@ function App() {
             );
           });
         };
-        // Read chunks
-        while (!readDone) {
-          const { value, done } = await reader.read();
-          readDone = done;
+
+        // Try to detect response as a full JSON (single chunk) or NDJSON (line by line) or plain text.
+        // Read until at least one '{' and one '}' are seen and parse JSON for 'answer'.
+        while (!done) {
+          const { value, done: localDone } = await reader.read();
+          done = localDone;
           if (value) {
-            // Append chunk (UTF-8 decode)
-            let chunk = decoder.decode(value, { stream: !done });
-            aiMsgSoFar += chunk;
-            // Optionally process chunk for markdown (do not finalize yet)
-            updateStreamingAssistant(aiMsgSoFar);
+            buffer += decoder.decode(value, { stream: !localDone });
+            // Try to parse JSON object in buffer
+            try {
+              // Look for the first complete valid JSON object (handle both streaming and non-streaming)
+              // If buffer starts with whitespace or blank lines, skip
+              const jsonStart = buffer.indexOf("{");
+              const jsonEnd = buffer.indexOf("}", jsonStart);
+              if (jsonStart !== -1 && jsonEnd !== -1) {
+                // Extract the first JSON object substring
+                const jsonStr = buffer.substring(jsonStart, jsonEnd + 1);
+                const data = JSON.parse(jsonStr);
+                if (typeof data.answer === "string") {
+                  parsedAnswer = data.answer;
+                  // Now stream one character at a time to the UI for markdown effect (simulate "typing"/revealing)
+                  for (let i = 1; i <= parsedAnswer.length; ++i) {
+                    let toDisplay = parsedAnswer.substring(0, i);
+                    // Don't update if same (avoid excess renders)
+                    if (toDisplay !== lastContent) {
+                      updateStreamingAssistant(toDisplay);
+                      lastContent = toDisplay;
+                      // Add small delay for each char for "live typing" effect (25ms per character, but abort on unread buffer)
+                      // eslint-disable-next-line no-loop-func
+                      await new Promise(resolve => setTimeout(resolve, 12));
+                    }
+                  }
+                  updateStreamingAssistant(parsedAnswer); // Ensure fully complete at end.
+                } else {
+                  // No 'answer' string; render empty string
+                  updateStreamingAssistant("");
+                }
+                usedStreaming = true;
+                break; // Only render the first JSON with answer (rest of buffer, if any, will be ignored)
+              }
+            } catch (err) {
+              // Ignore parsing error: not enough buffer, keep reading more chunks.
+            }
           }
         }
-        // Final update (render full content as finished)
-        updateStreamingAssistant(aiMsgSoFar);
+
+        // If done (EOF) and no answer was parsed, fallback to "full" non-stream path
+        if (!usedStreaming) {
+          // If the backend did not stream JSON, but only normal text, show as a full message (fallback parse)
+          let fallbackData;
+          try {
+            fallbackData = JSON.parse(buffer);
+          } catch {
+            fallbackData = {};
+          }
+          let replyText = "";
+          if (fallbackData && typeof fallbackData.answer === "string" && fallbackData.answer.trim().length > 0) {
+            replyText = fallbackData.answer;
+          }
+          updateStreamingAssistant(replyText || "");
+        }
+
       } else {
         // Fallback: Not a streaming body, treat as ordinary JSON { answer: ... }
         let data;
@@ -137,6 +190,7 @@ function App() {
             replyText = String(data.answer);
           }
         }
+        // Render the answer all at once as markdown (no raw JSON shown)
         const assistantMsg = {
           role: "assistant",
           content: replyText,
