@@ -195,7 +195,7 @@ html, body, #root {
   justify-content: flex-start;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 0 120px 0; /* Bottom padding to ensure content is visible above floating input */
+  padding: 16px 0 120px 0; /* 16px top padding, bottom padding for floating input */
   margin: 0;
   width: 100vw;
   max-width: 100vw;
@@ -261,9 +261,9 @@ html, body, #root {
   line-height: 1.7;
   border-radius: 0;
   box-shadow: none;
-  /* Optionally: a subtle divider or highlight for long answers */
-  border-top: 1px solid rgba(240,246,252,0.06);
-  border-bottom: 1px solid rgba(240,246,252,0.06);
+  /* REMOVE any divider/border lines between AI messages */
+  border-top: none;
+  border-bottom: none;
   /* Offset for headline alignment */
   /* Responsive font, optionally bigger for mobile */
   white-space: pre-line;
@@ -282,7 +282,7 @@ html, body, #root {
   padding-left: 32px;
 }
 
-.assistant-direct-timestamp {
+/* .assistant-direct-timestamp {
   font-size: 0.85rem;
   color: var(--text-muted, #8b949e);
   font-weight: 400;
@@ -292,7 +292,8 @@ html, body, #root {
   margin-left: 28px;
   margin-bottom: 0;
   min-height: 16px;
-}
+} */
+/* Removed timestamp styling for AI messages */
 
 /* Remove chat bubble styling for assistant (legacy, to override) */
 .chat-message-container.assistant,
@@ -446,23 +447,7 @@ html, body, #root {
 }
 
 /* Timestamp styling below bubbles */
-.message-timestamp {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  font-weight: 400;
-  margin-top: 6px;
-  opacity: 0.8;
-}
-
-.message-timestamp.user {
-  text-align: right;
-  margin-right: 4px;
-}
-
-.message-timestamp.assistant {
-  text-align: left;
-  margin-left: 42px; /* Align with bubble content (avatar width + margin) */
-}
+/* Removed timestamp styling for user messages */
 
 /* Error message styling */
 .chat-bubble.error-bubble {

@@ -169,9 +169,7 @@ function App() {
                 <div className="assistant-content-direct">
                   {msg.content}
                 </div>
-                <div className="assistant-direct-timestamp">
-                  AI&nbsp;•&nbsp;{formatTime(msg.timestamp)}
-                </div>
+                {/* No line/divider or timestamp for AI */}
               </div>
             ) : (
               <div
@@ -183,9 +181,7 @@ function App() {
                     <span className="bubble-txt">{msg.content}</span>
                   </div>
                 </div>
-                <div className="message-timestamp user">
-                  You&nbsp;•&nbsp;{formatTime(msg.timestamp)}
-                </div>
+                {/* No timestamp for user either */}
               </div>
             )
           )}
@@ -195,18 +191,14 @@ function App() {
               <div className="assistant-content-direct">
                 <LoadingSpinner size={30} />&nbsp;AI is typing...
               </div>
-              <div className="assistant-direct-timestamp">
-                AI&nbsp;•&nbsp;loading...
-              </div>
+              {/* No timestamp */}
             </div>
           )}
           {/* AI error as fullwidth direct message */}
           {error && (
             <div className="assistant-fullwidth-message">
               <div className="assistant-content-direct error">{error}</div>
-              <div className="assistant-direct-timestamp">
-                AI&nbsp;•&nbsp;{formatTime(new Date().toISOString())}
-              </div>
+              {/* No timestamp */}
             </div>
           )}
           <div ref={chatEndRef}/>
