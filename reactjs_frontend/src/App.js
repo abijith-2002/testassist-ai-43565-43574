@@ -50,9 +50,17 @@ function App() {
       let resp;
       try {
         // Send the entire chat history for context-based RAG logic.
-        // We exclude any assistant messages with streaming:true (not finalized) for clean context.
+        // Ensure ALL assistant messages (including markdown/code blocks) are included as-is;
+        // Keep only finalized messages (not streaming); preserve code/format for context.
         const cleanHistory = [
-          ...messages.filter(m => !m.streaming).map(({ role, content }) => ({ role, content })),
+          ...messages
+            .filter(m => !m.streaming)
+            .map(({ role, content }) => ({
+              role,
+              // For the assistant: always include the full markdown/formatted content as shown in UI.
+              // For the user: use content as-is (plain text input).
+              content
+            })),
           { role: "user", content: userMsg.content }
         ];
         resp = await fetch(`${API_BASE}/chat`, {
