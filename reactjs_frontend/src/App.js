@@ -72,32 +72,67 @@ function App() {
         // TOGGLE this variable to true for detailed POST payload inspection in console
         const DEV_HISTORY_DEBUG = true;
 
+        // --- CHAT SERIALIZATION DEBUGGING PATCH (2024-07) ---
+        // 1. Validate that ALL assistant messages in `messages` retain:
+        //    - Multiline content (preserve all newlines)
+        //    - Embedded markdown codeblocks (full ``` sections)
+        //    - No accidental truncation, HTML/React markdown stripping, or serialization loss
+        // 2. Log exact outgoing array and show warning for any problem before dispatch to backend.
+
         const cleanHistory = [
           ...messages
             .filter(m => !m.streaming)
             .map(({ role, content }, idx) => {
-              // Extra logging for assistant messages; warn if possibly malformed
-              if (DEV_HISTORY_DEBUG && role === "assistant") {
-                // Detect if markdown/code block boundaries are present for assistant
-                // Heuristic: look for at least 3 backticks (code fence) or known markdown
-                const hasFence = content && (content.match(/```/g) || []).length >= 1;
-                const hasNewlines = content && content.includes("\n");
-                if (!hasFence && !hasNewlines && content && content.length > 46)
-                  console.warn(`[chat debug] Assistant message ${idx}: No markdown/code fence or multiline content detected`, content);
-              }
-              return {
-                role,
-                content
-              };
+                // Additional assistant/debug validation
+                if (DEV_HISTORY_DEBUG && role === "assistant") {
+                  // Detect full markdown code blocks and preserve warning info
+                  const codeFenceCount = content && (content.match(/```/g) || []).length || 0;
+                  const hasFullCodeBlock = codeFenceCount >= 2; // well-formed markdown should have 2 or more fences for at least 1 block
+                  const hasInlineCode = content && content.includes("`");
+                  const hasNewlines = content && content.includes("\n");
+                  // Heuristic for truncation: never ends with incomplete fence & not empty
+                  const trimmed = content && typeof content === "string" ? content.trim() : "";
+                  let endsWithBacktick = trimmed.endsWith("`");
+                  // Truncation detection: markdown block code, but ends with just one/few backticks (not trio)
+                  let likelyTruncated = false;
+                  if (typeof content === "string") {
+                    // If markdown block begins but does not end, or last code fence is incomplete
+                    const lastFencePos = content.lastIndexOf("```");
+                    if (lastFencePos !== -1) {
+                      const afterLastFence = content.slice(lastFencePos + 3);
+                      if (afterLastFence.length > 0 && !afterLastFence.includes("\n")) { // Could be a truncated trailing fence
+                        likelyTruncated = true;
+                      }
+                    } else if (endsWithBacktick && !trimmed.endsWith("```")) {
+                      likelyTruncated = true;
+                    }
+                  }
+
+                  if ((!hasFullCodeBlock && !hasNewlines && trimmed.length > 46) || likelyTruncated) {
+                    console.warn(`[chat debug] WARNING: Assistant message ${idx} serialization issue: code/markdown block may be incomplete, missing newlines, or truncated!`,
+                      { content, codeFenceCount, likelyTruncated });
+                  }
+                }
+                return {
+                  role,
+                  content
+                };
             }),
           { role: "user", content: userMsg.content }
         ];
 
         // Print out post-serialization history in order for developer/QA debug
         if (DEV_HISTORY_DEBUG) {
-          // Mark if any assistant message is likely missing markdown/code blocks
-          if (cleanHistory.some(msg => msg.role === "assistant" && typeof msg.content === "string" && !(msg.content.includes("```") || msg.content.includes("\n")) && msg.content.length > 24)) {
-            console.warn("[chat debug] Outgoing chat history: One or more assistant messages do not visibly contain code/markdown blocks or multiline answers (possible strip/loss bug). Please inspect:");
+          const hasMissingBlock = cleanHistory.some(
+            msg =>
+              msg.role === "assistant" &&
+              typeof msg.content === "string" &&
+              (!(msg.content.includes("```") || msg.content.includes("\n")) && msg.content.length > 24)
+          );
+          if (hasMissingBlock) {
+            console.warn(
+              "[chat debug] SERIOUS: Outgoing chat history contains at least one assistant message that does NOT have visible code/markdown blocks or multiline text. This may indicate STRIPPING, TRUNCATION, or SERIALIZATION bugs before the backend call. Inspect below payload closely!"
+            );
           } else {
             console.log("[chat debug] Outgoing chat history payload (in API order):");
           }
@@ -114,13 +149,22 @@ function App() {
                   : msg.content
               );
             } else if (msg.role === "assistant") {
-              console.log(`#${idx} [A] (NO code or multiline detected):`, msg.content.length > 140 ? msg.content.slice(0,120)+" (...)" : msg.content);
+              console.log(
+                `#${idx} [A] (NO code/multiline detected, check for strip/loss/truncate!):`,
+                msg.content && msg.content.length > 140 ? msg.content.slice(0,120)+" (...)" : msg.content
+              );
             } else if (msg.role === "user") {
-              console.log(`#${idx} [U]`, msg.content.length > 140 ? msg.content.slice(0,120)+" (...)" : msg.content);
+              console.log(
+                `#${idx} [U]`,
+                msg.content && msg.content.length > 140 ? msg.content.slice(0,120)+" (...)" : msg.content
+              );
             }
           });
           // Also print the actual POST payload to backend for inspection
-          console.log("[chat debug] Full serialized POST body:", JSON.stringify({history: cleanHistory}, null, 2));
+          console.log(
+            "[chat debug] Full serialized POST body (will be sent to backend):",
+            JSON.stringify({history: cleanHistory}, null, 2)
+          );
         }
 
         resp = await fetch(`${API_BASE}/chat`, {
