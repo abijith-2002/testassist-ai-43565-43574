@@ -130,19 +130,20 @@ function App() {
                 const data = JSON.parse(jsonStr);
                 if (typeof data.answer === "string") {
                   parsedAnswer = data.answer;
-                  // Now stream one character at a time to the UI for markdown effect (simulate "typing"/revealing)
-                  for (let i = 1; i <= parsedAnswer.length; ++i) {
+                  // Stream multiple characters at a time (fast effect)
+                  const charsPerTick = 5; // 4–6 chars for much faster effect
+                  const msInterval = 3;   // 2–3 ms for nearly instant animation
+                  for (let i = charsPerTick; i <= parsedAnswer.length; i += charsPerTick) {
                     let toDisplay = parsedAnswer.substring(0, i);
-                    // Don't update if same (avoid excess renders)
                     if (toDisplay !== lastContent) {
                       updateStreamingAssistant(toDisplay);
                       lastContent = toDisplay;
-                      // Add small delay for each char for "live typing" effect (25ms per character, but abort on unread buffer)
                       // eslint-disable-next-line no-loop-func
-                      await new Promise(resolve => setTimeout(resolve, 12));
+                      await new Promise(resolve => setTimeout(resolve, msInterval));
                     }
                   }
-                  updateStreamingAssistant(parsedAnswer); // Ensure fully complete at end.
+                  // In case length wasn't divisible by charsPerTick, show final
+                  if (lastContent !== parsedAnswer) updateStreamingAssistant(parsedAnswer);
                 } else {
                   // No 'answer' string; render empty string
                   updateStreamingAssistant("");
