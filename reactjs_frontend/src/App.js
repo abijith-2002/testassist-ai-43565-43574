@@ -284,6 +284,32 @@ function App() {
                     linkTarget="_blank"
                     components={{
                       a: ({node, ...props}) => <a {...props} rel="noopener noreferrer" target="_blank"/>,
+                      // Patch code block to wrap language label for CSS badge
+                      code({node, inline, className, children, ...props}) {
+                        // Extract language from className, like "language-python"
+                        const match = /language-(\w+)/.exec(className || "");
+                        // Give our <pre> tag a data-language attr, CSS displays it as a corner badge
+                        if (!inline) {
+                          const lang = match ? match[1] : null;
+                          return (
+                            <pre
+                              className={className}
+                              data-language={lang || undefined}
+                              tabIndex={0}
+                            >
+                              <code {...props} className={className}>
+                                {children}
+                              </code>
+                            </pre>
+                          );
+                        }
+                        // Inline code
+                        return (
+                          <code {...props} className={className}>
+                            {children}
+                          </code>
+                        );
+                      },
                     }}
                   />
                 </div>
