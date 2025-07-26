@@ -238,11 +238,11 @@ function App() {
         </div>
       </main>
 
-      {/* Input bar and footer note */}
-      <footer className="input-footer-bar">
-        <form className="input-bar-wrap" onSubmit={sendMessage} autoComplete="off" spellCheck={true}>
+      {/* Floating input box within chat interface */}
+      <div className="floating-input-container">
+        <form className="floating-input-form" onSubmit={sendMessage} autoComplete="off" spellCheck={true}>
           <input
-            className="chat-input-main"
+            className="floating-chat-input"
             ref={inputRef}
             type="text"
             aria-label="Type your message"
@@ -254,7 +254,7 @@ function App() {
             maxLength={1024}
           />
           <button
-            className="send-btn"
+            className="floating-send-btn"
             type="submit"
             aria-label="Send"
             disabled={!input.trim()||isLoading}
@@ -263,8 +263,7 @@ function App() {
             <SendArrowIcon size={26}/>
           </button>
         </form>
-
-      </footer>
+      </div>
     </div>
   );
 }
