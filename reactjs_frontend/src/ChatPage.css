@@ -50,7 +50,7 @@ html, body, #root {
   width: 100vw;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-size: 15px;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -70,7 +70,7 @@ html, body, #root {
   width: 100vw;
   background: var(--primary-bg);
   background-attachment: fixed;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -165,40 +165,7 @@ html, body, #root {
   margin-top: 2px;
 }
 
-.header-bar .header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
 
-.header-icon-btn {
-  width: 40px;
-  height: 40px;
-  background: rgba(240, 246, 252, 0.05);
-  border: 1px solid rgba(240, 246, 252, 0.1);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: var(--icon-color);
-  outline: none;
-  backdrop-filter: blur(10px);
-}
-
-.header-icon-btn:hover {
-  background: rgba(240, 246, 252, 0.1);
-  border-color: var(--accent-blue);
-  color: var(--icon-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-subtle);
-}
-
-.header-icon-btn:active {
-  transform: translateY(0);
-  background: rgba(240, 246, 252, 0.15);
-}
 
 .main-chat-section {
   flex: 1 1 auto !important;
@@ -319,7 +286,7 @@ html, body, #root {
   word-break: break-word;
   padding: 16px 20px;
   font-size: 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
   line-height: 1.5;
   position: relative;
@@ -442,16 +409,16 @@ html, body, #root {
   color: var(--text-primary);
   outline: none;
   margin-right: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   transition: all 0.3s ease;
-  box-shadow: var(--shadow-subtle);
+  box-shadow: none;
   backdrop-filter: blur(10px);
 }
 
 .chat-input-main:focus {
   border-color: var(--input-focus-border);
-  box-shadow: 0 0 0 4px var(--input-focus-glow), var(--shadow-secondary);
-  background: linear-gradient(135deg, #30363d 0%, #21262d 100%);
+  box-shadow: none;
+  background: var(--input-bg);
 }
 
 .chat-input-main::placeholder {
@@ -491,17 +458,7 @@ html, body, #root {
   transform: none;
 }
 
-.footer-disclaimer {
-  margin-top: 16px;
-  font-size: 0.85rem;
-  text-align: center;
-  color: var(--text-muted);
-  letter-spacing: 0.01em;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 400;
-  width: 100%;
-  user-select: none;
-}
+
 
 /* Loading spinner styles */
 .loader-spinner {
@@ -649,7 +606,6 @@ html, body, #root {
 }
 
 /* Focus visible for better keyboard navigation */
-.header-icon-btn:focus-visible,
 .send-btn:focus-visible,
 .chat-input-main:focus-visible {
   outline: 2px solid var(--accent-blue);

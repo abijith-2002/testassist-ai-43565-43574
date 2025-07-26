@@ -2,17 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import "./ChatPage.css";
 import LoadingSpinner from "./LoadingSpinner";
 
-// SVG icon components for header and send button (inline for no deps)
-const ReloadIcon = ({size=20}) => (
-  <svg width={size} height={size} fill="none" aria-label="Reload" viewBox="0 0 20 20" role="img">
-    <path d="M16.98 10.59A7 7 0 1 1 10 3V1.1a.85.85 0 0 1 1.3-.7l3.14 2.13a.85.85 0 0 1 0 1.4l-3.14 2.14A.85.85 0 0 1 10 5.36V3a6 6 0 1 0 5.31 8.76" stroke="#3F6E8D" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-  </svg>
-);
-const StopIcon = ({size=20}) => (
-  <svg width={size} height={size} viewBox="0 0 20 20" aria-label="Stop" role="img">
-    <rect x="5" y="5" width="10" height="10" rx="3" fill="#3F6E8D"/>
-  </svg>
-);
+// SVG icon components for send button (inline for no deps)
 const SendArrowIcon = ({size=26}) => (
   <svg width={size} height={size} viewBox="0 0 26 26" fill="none" aria-label="Send" role="img">
     <path d="M3 22.5L24 13L3 3.5V10.75L17 13L3 15.25V22.5Z" fill="#FFF"/>
@@ -141,10 +131,6 @@ function App() {
     }
   };
 
-  // Header action handlers (demo stub)
-  const handleReload = ()=>window.location.reload();
-  const handleStop = ()=>setError("✋ AI stopped (demo)");
-
   // Focus effect
   const inputRef = useRef(null);
 
@@ -170,17 +156,10 @@ function App() {
             </svg>
           </span>
           <span className="titlebox">
-            <span className="ai-title">TestAssist</span>
+            <span className="ai-title">Knowledge Bot</span>
           </span>
         </div>
-        <div className="header-actions">
-          <button className="header-icon-btn" tabIndex={0} onClick={handleReload} aria-label="Reload chat">
-            <ReloadIcon size={19}/>
-          </button>
-          <button className="header-icon-btn" tabIndex={0} onClick={handleStop} aria-label="Stop response">
-            <StopIcon size={19}/>
-          </button>
-        </div>
+
       </header>
 
       {/* Main chat area */}
@@ -306,9 +285,7 @@ function App() {
             <SendArrowIcon size={26}/>
           </button>
         </form>
-        <span className="footer-disclaimer">
-          Answers are powered by TestAssist AI and Google Gemini.
-        </span>
+
       </footer>
     </div>
   );
