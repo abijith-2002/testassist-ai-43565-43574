@@ -1,4 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 import "./ChatPage.css";
 import LoadingSpinner from "./LoadingSpinner";
 
@@ -165,9 +168,17 @@ function App() {
                 key={idx}
                 className="assistant-fullwidth-message"
               >
-                {/* AI response without bubble, full width */}
+                {/* AI response rendered as markdown, styled, with code and GFM support */}
                 <div className="assistant-content-direct">
-                  {msg.content}
+                  <ReactMarkdown
+                    children={msg.content}
+                    remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeHighlight]}
+                    linkTarget="_blank"
+                    components={{
+                      a: ({node, ...props}) => <a {...props} rel="noopener noreferrer" target="_blank"/>,
+                    }}
+                  />
                 </div>
                 {/* No line/divider or timestamp for AI */}
               </div>
