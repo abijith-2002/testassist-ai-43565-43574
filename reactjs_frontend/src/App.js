@@ -68,15 +68,61 @@ function App() {
         // Only finalized (non-streaming) messages are included for reliable LLM/RAG grounding.
         // If an assistant streaming message still exists, it's a bug—prevent double submit above.
 
+        // ---- Robust Dev Logging: Show full outgoing chat history (user and assistant) for debug ----
+        // TOGGLE this variable to true for detailed POST payload inspection in console
+        const DEV_HISTORY_DEBUG = true;
+
         const cleanHistory = [
           ...messages
             .filter(m => !m.streaming)
-            .map(({ role, content }) => ({
-              role,
-              content
-            })),
+            .map(({ role, content }, idx) => {
+              // Extra logging for assistant messages; warn if possibly malformed
+              if (DEV_HISTORY_DEBUG && role === "assistant") {
+                // Detect if markdown/code block boundaries are present for assistant
+                // Heuristic: look for at least 3 backticks (code fence) or known markdown
+                const hasFence = content && (content.match(/```/g) || []).length >= 1;
+                const hasNewlines = content && content.includes("\n");
+                if (!hasFence && !hasNewlines && content && content.length > 46)
+                  console.warn(`[chat debug] Assistant message ${idx}: No markdown/code fence or multiline content detected`, content);
+              }
+              return {
+                role,
+                content
+              };
+            }),
           { role: "user", content: userMsg.content }
         ];
+
+        // Print out post-serialization history in order for developer/QA debug
+        if (DEV_HISTORY_DEBUG) {
+          // Mark if any assistant message is likely missing markdown/code blocks
+          if (cleanHistory.some(msg => msg.role === "assistant" && typeof msg.content === "string" && !(msg.content.includes("```") || msg.content.includes("\n")) && msg.content.length > 24)) {
+            console.warn("[chat debug] Outgoing chat history: One or more assistant messages do not visibly contain code/markdown blocks or multiline answers (possible strip/loss bug). Please inspect:");
+          } else {
+            console.log("[chat debug] Outgoing chat history payload (in API order):");
+          }
+          cleanHistory.forEach((msg, idx) => {
+            if (msg.role === "assistant" && typeof msg.content === "string" && (msg.content.includes("```") || msg.content.includes("\n"))) {
+              // Normalize code regions for readability
+              const blockInfo =
+                msg.content.includes("```") ? "[contains code block]" : "[markdown/multiline]";
+              // Show just a summary for long content
+              console.log(
+                `#${idx} [A]`, blockInfo,
+                msg.content.length > 140
+                  ? msg.content.slice(0, 120) + " (...)"
+                  : msg.content
+              );
+            } else if (msg.role === "assistant") {
+              console.log(`#${idx} [A] (NO code or multiline detected):`, msg.content.length > 140 ? msg.content.slice(0,120)+" (...)" : msg.content);
+            } else if (msg.role === "user") {
+              console.log(`#${idx} [U]`, msg.content.length > 140 ? msg.content.slice(0,120)+" (...)" : msg.content);
+            }
+          });
+          // Also print the actual POST payload to backend for inspection
+          console.log("[chat debug] Full serialized POST body:", JSON.stringify({history: cleanHistory}, null, 2));
+        }
+
         resp = await fetch(`${API_BASE}/chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
