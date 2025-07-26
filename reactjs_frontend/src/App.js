@@ -49,10 +49,18 @@ function App() {
 
       let resp;
       try {
+        // Send the entire chat history for context-based RAG logic.
+        // We exclude any assistant messages with streaming:true (not finalized) for clean context.
+        const cleanHistory = [
+          ...messages.filter(m => !m.streaming).map(({ role, content }) => ({ role, content })),
+          { role: "user", content: userMsg.content }
+        ];
         resp = await fetch(`${API_BASE}/chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question: userMsg.content })
+          body: JSON.stringify({
+            history: cleanHistory
+          })
         });
       } catch (err) {
         throw new Error(`Could not reach backend server at ${API_BASE}/chat. ${err?.message || ""}`);
