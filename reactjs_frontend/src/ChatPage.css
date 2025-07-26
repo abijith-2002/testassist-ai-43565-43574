@@ -258,7 +258,7 @@ html, body, #root {
   font-size: 1.10rem;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
-  line-height: 1.6; /* Increased line-height for AI markdown */
+  line-height: 1.8; /* Further increased line-height for AI markdown */
   border-radius: 0;
   box-shadow: none;
   border-top: none;
@@ -280,18 +280,18 @@ html, body, #root {
 .assistant-content-direct ul,
 .assistant-content-direct ol,
 .assistant-content-direct li {
-  line-height: 1.6 !important;
+  line-height: 1.8 !important;
 }
 
 .chat-bubble.user, .chat-bubble-wrapper.user, .bubble-txt {
-  line-height: 1.6 !important; /* Increase line-height for user chat bubble as well */
+  line-height: 2 !important; /* Further increase line-height for user chat bubble as well */
 }
 
 /* Compact markdown spacing for paragraphs and lists in AI replies */
 .assistant-content-direct p {
   margin-top: 0;
   margin-bottom: 0.3em;
-  line-height: 1.6;
+  line-height: 1.8 !important;
 }
 
 /* Remove extra margin above/below lists */
@@ -300,14 +300,14 @@ html, body, #root {
   margin-top: 0.2em;
   margin-bottom: 0.4em;
   padding-left: 1.5em; /* ensure indent for nested lists */
-  line-height: 1.55;
+  line-height: 1.8 !important;
 }
 
 /* List item spacing—minimal gap, no extra bottom margin except for nested */
 .assistant-content-direct li {
   margin-top: 0;
   margin-bottom: 0;
-  line-height: 1.55;
+  line-height: 1.8 !important;
   padding-left: 0.2em;
 }
 
