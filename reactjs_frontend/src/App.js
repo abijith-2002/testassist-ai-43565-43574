@@ -34,38 +34,34 @@ function App() {
    * Send chat message to backend API, append user question and AI response to chat UI.
    * Robust error and loading handling.
    */
+  // PUBLIC_INTERFACE: Stream AI response word-by-word/chunk-by-chunk as it arrives
   const sendMessage = async e => {
     e && e.preventDefault();
-    if(!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading) return;
     setIsLoading(true);
     setError("");
-    // Add user message optimistically
-    const userMsg = {role:"user", content:input, timestamp: new Date().toISOString()};
-    setMessages(prev=>[...prev, userMsg]);
+    const userMsg = { role: "user", content: input, timestamp: new Date().toISOString() };
+    setMessages(prev => [...prev, userMsg]);
     setInput("");
 
     try {
-      // Determine base URL: Use environment variable or fallback to localhost:3001 as default.
-      // REACT_APP_API_BASE_URL takes precedence, otherwise default to localhost:3001
       let API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
 
       let resp;
       try {
         resp = await fetch(`${API_BASE}/chat`, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({question: userMsg.content})
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: userMsg.content })
         });
       } catch (err) {
-        // Network or CORS error
         throw new Error(`Could not reach backend server at ${API_BASE}/chat. ${err?.message || ""}`);
       }
 
-      // Surface ALL error responses, including 404s, with details if present
+      // Handle error responses (including non-JSON)
       if (!resp.ok) {
         let errMsg = `${resp.status} ${resp.statusText}`;
         try {
-          // Try JSON error payloads: FastAPI {"detail": ...}, Gemini {"error": ...}, or custom
           const errData = await resp.json();
           if (errData && typeof errData === "object") {
             if (errData.detail) errMsg = errData.detail;
@@ -73,41 +69,82 @@ function App() {
             else if (errData.error) errMsg = JSON.stringify(errData.error);
             else errMsg = JSON.stringify(errData);
           }
-        } catch (_) {
-          // Not JSON, use statusText
-        }
-        // Surface all errors (including 404) to chat UI clearly
+        } catch (_) { /* not JSON, keep statusText */ }
         throw new Error(`[Backend error] ${errMsg} (code ${resp.status})`);
       }
 
-      // Get backend reply (expecting { answer: str, from_gemini: bool, ... })
-      let data;
-      try {
-        data = await resp.json();
-      } catch (_) {
-        data = {};
-      }
-      // The UI should always display Gemini's reply if present, never fallback to generic message
-      // Prefer: If 'answer' exists and is non-empty, display it, else show empty string (not "[No reply returned]")
-      let replyText = "";
-      if (data && typeof data.answer !== "undefined" && data.answer !== null) {
-        if (typeof data.answer === "string" && data.answer.trim().length > 0) {
-          replyText = data.answer;
-        } else if (typeof data.answer === "string") {
-          replyText = ""; // empty string for empty answer
-        } else {
-          replyText = String(data.answer);
+      // Check if streaming is supported (NDJSON or raw text/lines)
+      if (resp.body && window.ReadableStream && resp.headers.get("content-type") && resp.headers.get("content-type").includes("text/event-stream")) {
+        // (If backend is using event-stream, handle accordingly here. Currently not expected.)
+        throw new Error("Streaming via EventSource not implemented yet.");
+      } else if (resp.body && window.ReadableStream) {
+        // Streaming, e.g. backend sends lines/chunks (JSON/text), use TextDecoder
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let partial = "";
+        let isFirstChunk = true;
+        let readDone = false;
+        let aiMsgSoFar = "";
+        // Add assistant message in "streaming" mode (content built-up)
+        let assistantMsg = {
+          role: "assistant",
+          content: "",
+          timestamp: new Date().toISOString(),
+          // Use a key to ensure React renders this as partial
+        };
+        setMessages(prev => [...prev, assistantMsg]);
+        // Function to update only the last assistant message as streaming
+        const updateStreamingAssistant = (partialContent) => {
+          setMessages(prev => {
+            // Find last assistant message (must have just been appended above)
+            let lastIdx = prev.length - 1;
+            return prev.map((msg, idx) =>
+              (idx === lastIdx && msg.role === "assistant")
+                ? { ...msg, content: partialContent }
+                : msg
+            );
+          });
+        };
+        // Read chunks
+        while (!readDone) {
+          const { value, done } = await reader.read();
+          readDone = done;
+          if (value) {
+            // Append chunk (UTF-8 decode)
+            let chunk = decoder.decode(value, { stream: !done });
+            aiMsgSoFar += chunk;
+            // Optionally process chunk for markdown (do not finalize yet)
+            updateStreamingAssistant(aiMsgSoFar);
+          }
         }
+        // Final update (render full content as finished)
+        updateStreamingAssistant(aiMsgSoFar);
+      } else {
+        // Fallback: Not a streaming body, treat as ordinary JSON { answer: ... }
+        let data;
+        try {
+          data = await resp.json();
+        } catch {
+          data = {};
+        }
+        let replyText = "";
+        if (data && typeof data.answer !== "undefined" && data.answer !== null) {
+          if (typeof data.answer === "string" && data.answer.trim().length > 0) {
+            replyText = data.answer;
+          } else if (typeof data.answer === "string") {
+            replyText = "";
+          } else {
+            replyText = String(data.answer);
+          }
+        }
+        const assistantMsg = {
+          role: "assistant",
+          content: replyText,
+          timestamp: new Date().toISOString(),
+        };
+        setMessages(prev => [...prev, assistantMsg]);
       }
-
-      const assistantMsg = {
-        role: "assistant",
-        content: replyText,
-        timestamp: new Date().toISOString(),
-      };
-      setMessages(prev=>[...prev, assistantMsg]);
     } catch (err) {
-      // Show any fetch/backend errors (including 404/5xx) to user
       setError(
         "Sorry, failed to fetch AI response. " +
         (err?.message
@@ -115,6 +152,12 @@ function App() {
           : String(err)
         )
       );
+      // Remove the "streaming" assistant message if process aborted
+      setMessages(prev => (
+        prev.length > 0 && prev[prev.length - 1]?.role === "assistant" && !prev[prev.length - 1]?.content
+          ? prev.slice(0, -1)
+          : prev
+      ));
     } finally {
       setIsLoading(false);
     }
