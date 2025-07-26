@@ -24,7 +24,7 @@ function App() {
   const chatEndRef = useRef(null);
 
   // PUBLIC_INTERFACE: Scroll to latest message
-  useEffect(() => { if(chatEndRef.current) chatEndRef.current.scrollIntoView({behavior:"smooth"}); }, [messages]);
+  useEffect(() => { if(chatEndRef.current) chatEndRef.current.scrollIntoView({behavior:"smooth"}); }, [messages, isLoading, error]);
 
   /**
    * PUBLIC_INTERFACE
@@ -153,83 +153,58 @@ function App() {
             <span className="ai-title">Knowledge Bot</span>
           </span>
         </div>
-
       </header>
 
       {/* Main chat area */}
       <main className="main-chat-section">
         <div className="chat-content-list" id="chat-messages">
-          {/* No empty-state help text to display */}
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`chat-message-container ${msg.role}`}
-            >
-              <div className={`chat-bubble-wrapper ${msg.role}`}>
-                <div className={`chat-bubble ${msg.role}`}>
-                  {/* Avatar for assistant bubble only */}
-                  {msg.role==="assistant" && (
-                    <span className="bubble-avatar assistant" aria-label="AI logo">
-                      {/* Modern chat bubble SVG */}
-                      <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img">
-                        <rect width="32" height="32" rx="16" fill="#1976D2"/>
-                        <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
-                        <circle cx="14.5" cy="15" r="1.2" fill="#1976D2"/>
-                        <circle cx="17.5" cy="15" r="1.2" fill="#1976D2"/>
-                      </svg>
-                    </span>
-                  )}
-                  <span className="bubble-txt">{msg.content}</span>
+          {/* Messages */}
+          {messages.map((msg, idx) =>
+            msg.role === "assistant" ? (
+              <div
+                key={idx}
+                className="assistant-fullwidth-message"
+              >
+                {/* AI response without bubble, full width */}
+                <div className="assistant-content-direct">
+                  {msg.content}
+                </div>
+                <div className="assistant-direct-timestamp">
+                  AI&nbsp;•&nbsp;{formatTime(msg.timestamp)}
                 </div>
               </div>
-              {/* Timestamp below the bubble */}
-              <div className={`message-timestamp ${msg.role}`}>
-                {(msg.role==="user"?"You":"AI")}&nbsp;•&nbsp;{formatTime(msg.timestamp)}
+            ) : (
+              <div
+                key={idx}
+                className="chat-message-container user"
+              >
+                <div className="chat-bubble-wrapper user">
+                  <div className="chat-bubble user">
+                    <span className="bubble-txt">{msg.content}</span>
+                  </div>
+                </div>
+                <div className="message-timestamp user">
+                  You&nbsp;•&nbsp;{formatTime(msg.timestamp)}
+                </div>
               </div>
-            </div>
-          ))}
-          {/* Show loading spinner between last user message and next assistant reply */}
+            )
+          )}
+          {/* AI loading state as fullwidth direct message */}
           {isLoading && (
-            <div className="chat-message-container assistant">
-              <div className="chat-bubble-wrapper assistant">
-                <div className="chat-bubble assistant loading-bubble" style={{alignItems: "center", justifyContent:"center"}}>
-                  <span className="bubble-avatar assistant" aria-label="AI loading">
-                    {/* Modern chat bubble SVG, faded */}
-                    <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img" style={{opacity:0.65}}>
-                      <rect width="32" height="32" rx="16" fill="#a3c7e7"/>
-                      <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
-                      <circle cx="14.5" cy="15" r="1.2" fill="#a3c7e7"/>
-                      <circle cx="17.5" cy="15" r="1.2" fill="#a3c7e7"/>
-                    </svg>
-                  </span>
-                  <span>
-                    <LoadingSpinner size={30} />
-                  </span>
-                </div>
+            <div className="assistant-fullwidth-message">
+              <div className="assistant-content-direct">
+                <LoadingSpinner size={30} />&nbsp;AI is typing...
               </div>
-              <div className="message-timestamp assistant">
+              <div className="assistant-direct-timestamp">
                 AI&nbsp;•&nbsp;loading...
               </div>
             </div>
           )}
-          {/* Append error as a special "assistant" message bubble for alignment */}
+          {/* AI error as fullwidth direct message */}
           {error && (
-            <div className="chat-message-container assistant">
-              <div className="chat-bubble-wrapper assistant">
-                <div className="chat-bubble assistant error-bubble">
-                  <span className="bubble-avatar assistant" aria-label="AI error">
-                    {/* Modern chat bubble SVG, error styling */}
-                    <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-label="AI Chat Icon" role="img">
-                      <rect width="32" height="32" rx="16" fill="#BF5F63"/>
-                      <path d="M9 13C9 11.3431 10.3431 10 12 10H20C21.6569 10 23 11.3431 23 13V17C23 18.6569 21.6569 20 20 20H14.5L11 23.5V20H12C10.3431 20 9 18.6569 9 17V13Z" fill="white"/>
-                      <circle cx="14.5" cy="15" r="1.2" fill="#BF5F63"/>
-                      <circle cx="17.5" cy="15" r="1.2" fill="#BF5F63"/>
-                    </svg>
-                  </span>
-                  <span className="bubble-txt">{error}</span>
-                </div>
-              </div>
-              <div className="message-timestamp assistant">
+            <div className="assistant-fullwidth-message">
+              <div className="assistant-content-direct error">{error}</div>
+              <div className="assistant-direct-timestamp">
                 AI&nbsp;•&nbsp;{formatTime(new Date().toISOString())}
               </div>
             </div>
