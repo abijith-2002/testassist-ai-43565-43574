@@ -122,9 +122,12 @@ function ChatMessage({
         // Set textarea width to 60% of viewport width as specified
         textareaRef.current.style.width = '60vw';
         
-        // Apply the specified background and text colors for edit mode
-        textareaRef.current.style.backgroundColor = '#9FB4C7';
-        textareaRef.current.style.color = '#2C363F';
+        // Apply the specified background and text colors for edit mode with !important
+        textareaRef.current.style.setProperty('background-color', '#9FB4C7', 'important');
+        textareaRef.current.style.setProperty('color', '#2C363F', 'important');
+        
+        // Add data attribute to help with CSS targeting
+        textareaRef.current.setAttribute('data-edit-mode', 'true');
         
         // Match the height of the original bubble text
         const originalHeight = bubbleTextRef.current.scrollHeight;
@@ -145,12 +148,22 @@ function ChatMessage({
       onRegenerateResponse();
     }
     setIsEditing(false);
+    
+    // Clean up data attributes
+    if (textareaRef.current) {
+      textareaRef.current.removeAttribute('data-edit-mode');
+    }
   };
 
   // Handle cancel edit
   const handleCancelEdit = () => {
     setEditValue(msg.content);
     setIsEditing(false);
+    
+    // Clean up data attributes
+    if (textareaRef.current) {
+      textareaRef.current.removeAttribute('data-edit-mode');
+    }
   };
 
   // Handle input change with auto-resize

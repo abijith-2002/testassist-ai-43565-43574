@@ -43,8 +43,21 @@
   opacity: 1;
 }
 
-.chat-edit-input:focus,
-.chat-edit-input:focus-visible {
+
+/* Focus styles for edit mode textarea */
+.chat-edit-input[style*="background-color"]:focus,
+.chat-edit-input[style*="background-color"]:focus-visible {
+  outline: 2px solid #2C363F !important;
+  outline-offset: 2px;
+  border-color: #2C363F !important;
+  box-shadow: 0 0 0 3px rgba(44, 54, 63, 0.2), 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  background-color: #9FB4C7 !important;
+  color: #2C363F !important;
+}
+
+/* Default focus styles for non-edit mode (should not override edit mode) */
+.chat-edit-input:focus:not([style*="background-color"]),
+.chat-edit-input:focus-visible:not([style*="background-color"]) {
   outline: none;
   border-color: #4b8df6;
   box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1), 0 4px 16px rgba(0, 0, 0, 0.15);
@@ -226,22 +239,38 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.chat-edit-input:focus,
-.chat-edit-input:focus-visible {
+/* Focus styles for edit mode textarea - highest specificity */
+.chat-edit-input[style*="background-color"]:focus,
+.chat-edit-input[style*="background-color"]:focus-visible,
+.chat-edit-input[style*="background-color"]:hover:focus,
+.chat-edit-input[style*="background-color"]:hover:focus-visible,
+.chat-edit-input[data-edit-mode="true"]:focus,
+.chat-edit-input[data-edit-mode="true"]:focus-visible,
+.chat-edit-input[data-edit-mode="true"]:hover:focus,
+.chat-edit-input[data-edit-mode="true"]:hover:focus-visible {
+  outline: 2px solid #2C363F !important;
+  outline-offset: 2px !important;
+  border-color: #2C363F !important;
+  box-shadow: 0 0 0 3px rgba(44, 54, 63, 0.2), 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  background-color: #9FB4C7 !important;
+  color: #2C363F !important;
+}
+
+/* Additional high-specificity rules to override any browser defaults */
+.chat-edit-input[data-edit-mode="true"],
+.chat-edit-input[data-edit-mode="true"]:hover,
+.chat-edit-input[data-edit-mode="true"]:active {
+  background-color: #9FB4C7 !important;
+  color: #2C363F !important;
+}
+
+/* Default focus styles for non-edit mode */
+.chat-edit-input:focus:not([style*="background-color"]),
+.chat-edit-input:focus-visible:not([style*="background-color"]) {
   outline: none;
   border: none;
   box-shadow: none;
   background: transparent;
-}
-
-/* Focus styles for edit mode textarea */
-.chat-edit-input[style*="background-color"]:focus,
-.chat-edit-input[style*="background-color"]:focus-visible {
-  outline: 2px solid #2C363F;
-  outline-offset: 2px;
-  border-color: #2C363F !important;
-  box-shadow: 0 0 0 3px rgba(44, 54, 63, 0.2), 0 4px 16px rgba(0, 0, 0, 0.15) !important;
-  background-color: #9FB4C7 !important;
 }
 
 .edit-actions {
