@@ -30,6 +30,13 @@ function ChatMessage({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(msg.content);
+
+  // Keep editValue in sync with msg.content when msg.content changes or edit mode is entered
+  useEffect(() => {
+    if (isEditing) {
+      setEditValue(msg.content);
+    }
+  }, [msg.content, isEditing]);
   const [copyFeedback, setCopyFeedback] = useState(false);
   const [textareaHeight, setTextareaHeight] = useState('auto');
   
