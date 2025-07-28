@@ -420,7 +420,7 @@ function App() {
       >
         <div className="chat-bubble-wrapper user">
           <div className="chat-bubble user" style={{ position: "relative" }}>
-            {/* Bubble content or input. No edit controls inside the bubble! */}
+            {/* Bubble content or input */}
             {editing ? (
               <form
                 onSubmit={e => {
@@ -462,24 +462,33 @@ function App() {
             ) : (
               <span className="bubble-txt">{msg.content}</span>
             )}
+            
+            {/* Edit button positioned at bottom-left corner of bubble */}
+            {(hover && !editing && canEdit) && (
+              <div className="bubble-edit-controls-under">
+                <button
+                  className="edit-message-btn"
+                  tabIndex={0}
+                  aria-label="Edit prompt"
+                  title="Edit prompt"
+                  onClick={handleEdit}
+                >
+                  {PencilIcon}
+                </button>
+              </div>
+            )}
           </div>
         </div>
-        {/* Controls under the bubble for minimal appearance */}
-        {(hover && !editing && canEdit) && (
-          <div className="bubble-edit-controls-under">
-            <button
-              className="edit-message-btn"
-              tabIndex={0}
-              aria-label="Edit prompt"
-              title="Edit prompt"
-              onClick={handleEdit}
-            >
-              {PencilIcon}
-            </button>
-          </div>
-        )}
+        {/* Save/Cancel controls positioned under the bubble when editing */}
         {(editing) && (
-          <div className="bubble-edit-controls-under">
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'flex-end', 
+            marginTop: '8px',
+            width: '100%',
+            maxWidth: '65%',
+            marginLeft: 'auto'
+          }}>
             <button
               type="button"
               className="edit-save-btn"
@@ -488,6 +497,18 @@ function App() {
               aria-label="Save edit"
               title="Save edit"
               onClick={handleEditSave}
+              style={{
+                background: 'linear-gradient(135deg, var(--accent-blue) 0%, #4A90E2 100%)',
+                color: '#fff',
+                fontWeight: '500',
+                padding: '6px 14px',
+                border: 'none',
+                borderRadius: '8px',
+                marginRight: '8px',
+                cursor: 'pointer',
+                fontSize: '0.85rem',
+                minWidth: '52px'
+              }}
             >
               Save
             </button>
@@ -499,6 +520,17 @@ function App() {
               aria-label="Cancel"
               title="Cancel"
               onClick={handleEditCancel}
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                color: 'rgba(255, 255, 255, 0.7)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                padding: '6px 12px',
+                fontWeight: '400',
+                minWidth: '48px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.85rem'
+              }}
             >
               Cancel
             </button>
