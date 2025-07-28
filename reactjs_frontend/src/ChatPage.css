@@ -9,9 +9,9 @@
   --assistant-bubble-border: rgba(240, 246, 252, 0.1);
   --assistant-text: #f0f6fc;
   
-  --user-bubble: #5D576B;
-  --user-bubble-border: rgba(93, 87, 107, 0.3);
-  --user-text: #ffffff;
+  --user-bubble: #9FB4C7;
+  --user-bubble-border: rgba(159, 180, 199, 0.3);
+  --user-text: #2C363F;
   
   /* Input and Controls */
   --input-bg: #21262d;
@@ -871,7 +871,7 @@ html, body, #root {
 @media (prefers-contrast: high) {
   :root {
     --assistant-bubble-border: rgba(240, 246, 252, 0.3);
-    --user-bubble-border: rgba(31, 111, 235, 0.5);
+    --user-bubble-border: rgba(159, 180, 199, 0.5);
     --input-border: rgba(240, 246, 252, 0.3);
   }
 }
