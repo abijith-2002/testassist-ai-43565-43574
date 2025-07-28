@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../../App.css';
 import '../../ChatPage.css';
 import './Chat.css';
@@ -30,7 +30,39 @@ function ChatMessage({
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(msg.content);
   const [copyFeedback, setCopyFeedback] = useState(false);
+  const [textareaHeight, setTextareaHeight] = useState('auto');
+  
+  // Refs for measuring and controlling elements
+  const bubbleTextRef = useRef(null);
+  const textareaRef = useRef(null);
+  const measureRef = useRef(null);
 
+  // Auto-resize textarea based on content
+  const autoResizeTextarea = () => {
+    if (textareaRef.current) {
+      // Reset height to auto to get the natural height
+      textareaRef.current.style.height = 'auto';
+      
+      // Get the scroll height (content height)
+      const scrollHeight = textareaRef.current.scrollHeight;
+      
+      // Set the height to match content
+      textareaRef.current.style.height = `${scrollHeight}px`;
+      setTextareaHeight(`${scrollHeight}px`);
+    }
+  };
+
+  // Effect to auto-resize when editValue changes - MUST be at top level before any returns
+  useEffect(() => {
+    if (isEditing && textareaRef.current) {
+      // Small delay to ensure DOM has updated
+      setTimeout(() => {
+        autoResizeTextarea();
+      }, 0);
+    }
+  }, [editValue, isEditing]);
+
+  // Early return after all hooks are declared
   if (role === "assistant") {
     return null; // Do not render for assistant
   }
@@ -59,10 +91,40 @@ function ChatMessage({
     }
   };
 
+  // Calculate the required height for textarea to match the original bubble
+  const calculateTextareaHeight = () => {
+    if (bubbleTextRef.current) {
+      // Get the height of the original text content
+      const bubbleHeight = bubbleTextRef.current.scrollHeight;
+      const bubbleStyle = window.getComputedStyle(bubbleTextRef.current);
+      const lineHeight = parseFloat(bubbleStyle.lineHeight);
+      
+      // Calculate approximate number of lines
+      const lines = Math.max(1, Math.ceil(bubbleHeight / lineHeight));
+      
+      return Math.max(lines, editValue.split('\n').length);
+    }
+    return Math.max(2, editValue.split('\n').length);
+  };
+
   // Handle edit button click
   const handleEdit = () => {
     setIsEditing(true);
     setEditValue(msg.content);
+    
+    // Calculate initial height based on original content
+    setTimeout(() => {
+      if (textareaRef.current && bubbleTextRef.current) {
+        // Match the height of the original bubble text
+        const originalHeight = bubbleTextRef.current.scrollHeight;
+        textareaRef.current.style.height = `${originalHeight}px`;
+        setTextareaHeight(`${originalHeight}px`);
+        
+        // Focus and position cursor at end
+        textareaRef.current.focus();
+        textareaRef.current.setSelectionRange(editValue.length, editValue.length);
+      }
+    }, 0);
   };
 
   // Handle save edit
@@ -78,6 +140,12 @@ function ChatMessage({
   const handleCancelEdit = () => {
     setEditValue(msg.content);
     setIsEditing(false);
+  };
+
+  // Handle input change with auto-resize
+  const handleInputChange = (e) => {
+    setEditValue(e.target.value);
+    // Auto-resize will happen via useEffect
   };
 
   // Handle Enter key in edit mode
@@ -97,12 +165,16 @@ function ChatMessage({
           <div className="chat-bubble user">
             <div className="edit-mode-container">
               <textarea
+                ref={textareaRef}
                 className="chat-edit-input"
                 value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
+                onChange={handleInputChange}
                 onKeyDown={handleEditKeyDown}
-                autoFocus
-                rows={Math.max(2, editValue.split('\n').length)}
+                style={{
+                  height: textareaHeight,
+                  minHeight: 'auto',
+                  overflow: 'hidden'
+                }}
               />
               <div className="edit-actions">
                 <button 
@@ -123,7 +195,7 @@ function ChatMessage({
           </div>
         ) : (
           <div className="chat-bubble user">
-            <span className="bubble-txt">{msg.content}</span>
+            <span ref={bubbleTextRef} className="bubble-txt">{msg.content}</span>
             <div className="icon-overlay-container">
               <button
                 className="icon-button edit-btn"
@@ -145,6 +217,22 @@ function ChatMessage({
             </div>
           </div>
         )}
+        
+        {/* Hidden element for measuring text dimensions */}
+        <div 
+          ref={measureRef}
+          style={{
+            position: 'absolute',
+            visibility: 'hidden',
+            height: 'auto',
+            width: 'auto',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word'
+          }}
+          className="bubble-txt"
+        >
+          {editValue}
+        </div>
       </div>
     </div>
   );

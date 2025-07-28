@@ -143,6 +143,9 @@
   width: 100%;
   position: relative;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: inherit;
 }
 
 .chat-edit-input {
@@ -160,12 +163,16 @@
   line-height: 2;
   color: var(--user-text);
   word-break: break-word;
+  white-space: pre-wrap;
   
-  /* Textarea specific properties */
-  resize: vertical;
+  /* Textarea specific properties for auto-grow */
+  resize: none;
   min-height: auto;
+  max-height: none;
   outline: none;
   box-shadow: none;
+  overflow: hidden;
+  vertical-align: top;
   
   /* Make user message bubble selectable */
   -webkit-user-select: text;
@@ -176,6 +183,9 @@
   /* Position relative for z-index */
   position: relative;
   z-index: 1;
+  
+  /* Smooth transitions for height changes */
+  transition: height 0.1s ease-out;
 }
 
 .chat-edit-input:focus,
@@ -189,8 +199,9 @@
 .edit-actions {
   display: flex;
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 12px;
   justify-content: flex-end;
+  flex-shrink: 0;
 }
 
 .edit-save-btn,
@@ -230,6 +241,33 @@
   transform: translateY(-1px);
 }
 
+/* Utility class for measuring text dimensions */
+.text-measure-hidden {
+  position: absolute !important;
+  visibility: hidden !important;
+  height: auto !important;
+  width: auto !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+}
+
+/* Enhanced textarea styling for perfect bubble matching */
+.chat-bubble .chat-edit-input {
+  /* Ensure textarea inherits exact spacing and styling */
+  line-height: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  text-align: inherit;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 600px) {
   .icon-overlay-container {
@@ -246,6 +284,10 @@
   .icon-button svg {
     width: 18px;
     height: 18px;
+  }
+  
+  .chat-edit-input {
+    font-size: 0.95rem;
   }
 }
 =======
