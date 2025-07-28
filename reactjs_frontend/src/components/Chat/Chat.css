@@ -146,17 +146,32 @@
   display: flex;
   flex-direction: column;
   min-height: inherit;
+  
+  /* Ensure no layout shifts when entering edit mode */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure the chat bubble maintains its exact dimensions in edit mode */
+.chat-bubble.user .edit-mode-container {
+  /* Fill the bubble exactly without changing its size */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .chat-edit-input {
-  /* Remove all bubble styling since it's now inside the chat bubble */
+  /* Exact width matching - will be set programmatically */
   width: 100%;
   background: transparent;
   border: none;
   padding: 0;
   margin: 0;
   
-  /* Match text properties from bubble-txt */
+  /* Match text properties from bubble-txt exactly */
   font-size: 1rem;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
@@ -164,6 +179,11 @@
   color: var(--user-text);
   word-break: break-word;
   white-space: pre-wrap;
+  
+  /* Exact box model matching */
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: none;
   
   /* Textarea specific properties for auto-grow */
   resize: none;
@@ -186,6 +206,12 @@
   
   /* Smooth transitions for height changes */
   transition: height 0.1s ease-out;
+  
+  /* Ensure no extra spacing or margins */
+  text-indent: 0;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  text-align: left;
 }
 
 .chat-edit-input:focus,

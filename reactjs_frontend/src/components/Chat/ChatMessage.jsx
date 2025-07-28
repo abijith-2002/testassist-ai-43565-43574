@@ -37,17 +37,21 @@ function ChatMessage({
   const textareaRef = useRef(null);
   const measureRef = useRef(null);
 
-  // Auto-resize textarea based on content
+  // Auto-resize textarea based on content while maintaining width
   const autoResizeTextarea = () => {
     if (textareaRef.current) {
+      // Store current width to maintain it
+      const currentWidth = textareaRef.current.style.width;
+      
       // Reset height to auto to get the natural height
       textareaRef.current.style.height = 'auto';
       
       // Get the scroll height (content height)
       const scrollHeight = textareaRef.current.scrollHeight;
       
-      // Set the height to match content
+      // Set the height to match content and restore width
       textareaRef.current.style.height = `${scrollHeight}px`;
+      textareaRef.current.style.width = currentWidth; // Maintain exact width
       setTextareaHeight(`${scrollHeight}px`);
     }
   };
@@ -112,9 +116,22 @@ function ChatMessage({
     setIsEditing(true);
     setEditValue(msg.content);
     
-    // Calculate initial height based on original content
+    // Calculate initial dimensions based on original content
     setTimeout(() => {
       if (textareaRef.current && bubbleTextRef.current) {
+        const bubbleElement = bubbleTextRef.current.closest('.chat-bubble');
+        const bubbleStyle = window.getComputedStyle(bubbleElement);
+        const textStyle = window.getComputedStyle(bubbleTextRef.current);
+        
+        // Match the exact width of the bubble content area
+        const bubbleWidth = bubbleElement.offsetWidth;
+        const paddingLeft = parseFloat(bubbleStyle.paddingLeft);
+        const paddingRight = parseFloat(bubbleStyle.paddingRight);
+        const contentWidth = bubbleWidth - paddingLeft - paddingRight;
+        
+        // Set textarea width to match content width exactly
+        textareaRef.current.style.width = `${contentWidth}px`;
+        
         // Match the height of the original bubble text
         const originalHeight = bubbleTextRef.current.scrollHeight;
         textareaRef.current.style.height = `${originalHeight}px`;
