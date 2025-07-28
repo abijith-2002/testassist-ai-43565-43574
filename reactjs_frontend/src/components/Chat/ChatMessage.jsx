@@ -155,19 +155,23 @@ function ChatMessage({
     if (!editValue.trim() || isLoading) return;
 
     if (editValue.trim() !== msg.content) {
-      // Ensure the edit AND regen happen in sequence—wait for the state update
-      // Instead of calling both handlers here (which leads to stale closure), we combine edit+regen
-      // and let App.js handle atomic update and regen on the new state.
-      if (typeof onEditMessage === "function" && typeof onRegenerateResponse === "function") {
-        // New: Call a composed update-and-regen handler if present
+      // Always trigger both the message update and AI regeneration on save
+      // (Call onEditMessage with doRegenerate:true; fallback triggers both)
+      if (typeof onEditMessage === "function") {
+        // Use the regeneration option if supported
         if (onEditMessage.length === 3) {
-          // New signature: onEditMessage(idx, newContent, { doRegenerate: true })
           onEditMessage(messageIndex, editValue.trim(), { doRegenerate: true });
         } else {
-          // Fallback: old API - call edit then regen (may still be buggy!)
+          // Fallback for older prop API: edit then trigger regeneration
           onEditMessage(messageIndex, editValue.trim());
-          onRegenerateResponse(messageIndex);
+          if (typeof onRegenerateResponse === "function") {
+            // Always call latest regen function with correct message index
+            onRegenerateResponse(messageIndex);
+          }
         }
+      } else if (typeof onRegenerateResponse === "function") {
+        // Fallback: only regen (should not happen in main app)
+        onRegenerateResponse(messageIndex);
       }
     }
     setIsEditing(false);
