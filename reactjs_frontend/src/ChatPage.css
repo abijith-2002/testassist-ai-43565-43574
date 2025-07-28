@@ -385,6 +385,131 @@ html, body, #root {
   line-height: 2 !important; /* Further increase line-height for user chat bubble as well */
 }
 
+/* --- Minimal edit icon and controls directly under user bubble --- */
+.bubble-edit-controls-under {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 2px;
+  width: 100%;
+  min-height: 28px;
+  /* Take max width of user bubble container but keep close "under bubble" feel */
+  max-width: 65%;
+  margin-left: auto;
+  /* Avoid non-user messages shifting around */
+  position: relative;
+  z-index: 7;
+}
+
+/* Minimal pencil button, unintrusive and clean */
+.edit-message-btn {
+  background: none;
+  border: none;
+  color: #537ae9;
+  padding: 3px 7px;
+  margin: 0 2px;
+  border-radius: 50%;
+  outline: none;
+  box-shadow: none;
+  transition: background 0.13s, color 0.13s;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  font-size: 1.11rem;
+}
+
+.edit-message-btn svg {
+  display: block;
+  stroke: #3564cc;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.edit-message-btn:hover,
+.edit-message-btn:focus-visible {
+  background: rgba(31, 111, 235, 0.08);
+  color: #2451a1;
+  stroke: #2451a1;
+  outline: 2px solid #3564cc44;
+}
+
+/* Controls for save/cancel beneath bubble (minimal, horizontally aligned) */
+.bubble-edit-controls-under .edit-save-btn,
+.bubble-edit-controls-under .edit-cancel-btn {
+  margin: 0 5px 0 0;
+  min-width: 56px;
+}
+
+.bubble-edit-controls-under .edit-save-btn {
+  background: var(--accent-blue, #5baffa);
+  color: #fff;
+  font-weight: 500;
+  border-radius: 7px;
+  padding: 6px 13px;
+  border: none;
+  box-shadow: none;
+  font-size: 0.98rem;
+  transition: background 0.13s;
+  margin-right: 8px;
+}
+.bubble-edit-controls-under .edit-save-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.bubble-edit-controls-under .edit-save-btn:hover,
+.bubble-edit-controls-under .edit-save-btn:focus-visible {
+  background: #2256b2;
+}
+
+.bubble-edit-controls-under .edit-cancel-btn {
+  background: none;
+  color: #bb1329;
+  border: none;
+  border-radius: 7px;
+  padding: 6px 10px;
+  font-weight: 400;
+  font-size: 0.98rem;
+  min-width: 54px;
+  box-shadow: none;
+  transition: color 0.13s;
+}
+
+.bubble-edit-controls-under .edit-cancel-btn:hover,
+.bubble-edit-controls-under .edit-cancel-btn:focus-visible {
+  text-decoration: underline;
+}
+
+/* Adjust edit textarea for minimal visual clutter */
+.chat-edit-input {
+  font-size: 1rem;
+  font-family: inherit;
+  color: #25496c;
+  background: #eaf1fb;
+  border-radius: 10px;
+  border: 1px solid #b3cef6;
+  padding: 7px 10px;
+}
+
+.chat-edit-input:focus,
+.chat-edit-input:focus-visible {
+  outline: 2px solid var(--accent-blue, #4b8df6);
+}
+
+/* Responsive: keep controls beneath bubble on small screens */
+@media (max-width: 850px) {
+  .bubble-edit-controls-under {
+    max-width: 85%;
+  }
+}
+@media (max-width: 600px) {
+  .bubble-edit-controls-under {
+    max-width: 98vw;
+    padding-right: 2vw;
+  }
+}
+
 /* Compact markdown spacing for paragraphs and lists in AI replies */
 .assistant-content-direct p {
   margin-top: 0;

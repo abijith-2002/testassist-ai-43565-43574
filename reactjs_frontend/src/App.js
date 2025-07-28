@@ -380,11 +380,8 @@ function App() {
     const [editing, setEditing] = useState(false);
     const [editValue, setEditValue] = useState(msg.content);
 
-    // Only show edit for last user message OR if its assistant response follows it (ensures proper context edit)
-    // But here, allow editing any user message that is not currently being sent.
     const canEdit = !isLoading;
 
-    // Focus textarea when entering edit mode
     const taRef = useRef(null);
     useEffect(()=>{
       if (editing && taRef.current) taRef.current.focus();
@@ -395,7 +392,6 @@ function App() {
       setEditing(true);
     };
 
-    // Save edits: update message and regenerate
     const handleEditSave = async () => {
       if (editValue.trim() && editValue !== msg.content) {
         await regenerateResponse(editValue, idx);
@@ -403,11 +399,18 @@ function App() {
       setEditing(false);
     };
 
-    // Cancel edit (restore previous)
     const handleEditCancel = () => {
       setEditing(false);
       setEditValue(msg.content);
     };
+
+    // Pencil SVG icon, sized small, focusable
+    const PencilIcon = (
+      <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" style={{verticalAlign:"middle"}}
+        fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14.8 2.8c.44-.44 1.16-.44 1.6 0l1.8 1.8c.44.44.44 1.16 0 1.6l-9.7 9.7-3.03.45c-.5.07-.94-.37-.87-.87l.45-3.03 9.7-9.7zm0 0L17 5" />
+      </svg>
+    );
 
     return (
       <div
@@ -418,28 +421,29 @@ function App() {
       >
         <div className="chat-bubble-wrapper user">
           <div className="chat-bubble user" style={{ position: "relative" }}>
-            {/* If editing, show input, else normal */}
+            {/* Bubble content or input. No edit controls inside the bubble! */}
             {editing ? (
               <form
                 onSubmit={e => {
                   e.preventDefault();
                   handleEditSave();
                 }}
-                style={{ width: "100%", display: "flex", alignItems: "center" }}
+                style={{ width: "100%" }}
                 tabIndex={-1}
               >
                 <textarea
                   className="chat-edit-input"
                   style={{
                     resize: "vertical",
-                    width: "92%",
-                    height: "58px",
+                    width: "97%",
+                    minHeight: "48px",
+                    maxHeight: "120px",
                     fontSize: "1rem",
                     fontFamily: "inherit",
                     color: "#25496c",
                     background: "#eaf1fb",
                     borderRadius: "10px",
-                    marginRight: 8,
+                    margin: "0 0 0 0",
                     padding: "7px 10px",
                     border: "1px solid #b3cef6",
                     outline: "none",
@@ -455,81 +459,94 @@ function App() {
                     if(e.key==="Enter" && !e.shiftKey){e.preventDefault();handleEditSave();}
                   }}
                 />
-                <button
-                  type="submit"
-                  className="edit-save-btn"
-                  style={{
-                    fontSize: "1.01rem",
-                    marginRight: 4,
-                    background: "var(--accent-blue, #5baffa)",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "7px",
-                    padding: "6px 14px",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    boxShadow: "0 1px 8px rgba(31, 111, 235, 0.13)",
-                  }}
-                  disabled={isLoading || !editValue.trim() || editValue===msg.content}
-                  tabIndex={0}
-                  aria-label="Save edit"
-                  title="Save edit"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="edit-cancel-btn"
-                  style={{
-                    fontSize: "0.99rem",
-                    background: "none",
-                    color: "#bb1329",
-                    border: "none",
-                    borderRadius: "7px",
-                    padding: "6px 10px",
-                    cursor: "pointer",
-                    fontWeight: 450,
-                  }}
-                  tabIndex={0}
-                  aria-label="Cancel"
-                  title="Cancel"
-                  onClick={handleEditCancel}
-                >
-                  Cancel
-                </button>
               </form>
             ) : (
-              <>
-                <span className="bubble-txt">{msg.content}</span>
-                {hover && canEdit && (
-                  <button
-                    className="edit-message-btn"
-                    tabIndex={0}
-                    aria-label="Edit prompt"
-                    title="Edit prompt"
-                    style={{
-                      position: "absolute",
-                      right: 8,
-                      top: 8,
-                      background: "rgba(31, 111, 235, 0.06)",
-                      color: "#3972da",
-                      border: "none",
-                      borderRadius: "5px",
-                      padding: "2px 10px",
-                      fontSize: "0.92rem",
-                      fontWeight: 600,
-                      outline: "none",
-                      cursor: "pointer",
-                      zIndex: 3,
-                      boxShadow: "0 2px 8px rgba(42,101,188,0.09)",
-                    }}
-                    onClick={handleEdit}
-                  >Edit</button>
-                )}
-              </>
+              <span className="bubble-txt">{msg.content}</span>
             )}
           </div>
         </div>
+        {/* Controls under the bubble for minimal appearance */}
+        {(hover && !editing && canEdit) && (
+          <div className="bubble-edit-controls-under">
+            <button
+              className="edit-message-btn"
+              tabIndex={0}
+              aria-label="Edit prompt"
+              title="Edit prompt"
+              style={{
+                background: "none",
+                border: "none",
+                color: "#537ae9",
+                padding: "3px 7px",
+                marginTop: "2px",
+                borderRadius: "50%",
+                outline: "none",
+                boxShadow: "none",
+                fontSize: "0.98rem",
+                display: "inline-flex",
+                alignItems: "center",
+                transition: "background 0.13s"
+              }}
+              onClick={handleEdit}
+            >
+              {PencilIcon}
+            </button>
+          </div>
+        )}
+        {(editing) && (
+          <div className="bubble-edit-controls-under">
+            <button
+              type="button"
+              className="edit-save-btn"
+              style={{
+                fontSize: "0.98rem",
+                background: "var(--accent-blue, #5baffa)",
+                color: "#fff",
+                border: "none",
+                borderRadius: "7px",
+                padding: "6px 13px",
+                cursor: isLoading || !editValue.trim() || editValue===msg.content ? "not-allowed" : "pointer",
+                fontWeight: 500,
+                marginRight: 8,
+                marginTop: "8px",
+                minWidth: 54,
+                opacity: isLoading || !editValue.trim() || editValue===msg.content ? 0.55 : 1,
+                boxShadow: "none"
+              }}
+              disabled={isLoading || !editValue.trim() || editValue===msg.content}
+              tabIndex={0}
+              aria-label="Save edit"
+              title="Save edit"
+              onClick={handleEditSave}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              className="edit-cancel-btn"
+              style={{
+                fontSize: "0.98rem",
+                background: "none",
+                color: "#bb1329",
+                border: "none",
+                borderRadius: "7px",
+                padding: "6px 10px",
+                cursor: isLoading ? "not-allowed" : "pointer",
+                fontWeight: 400,
+                marginTop: "8px",
+                minWidth: 54,
+                opacity: isLoading ? 0.46 : 1,
+                boxShadow: "none"
+              }}
+              tabIndex={0}
+              aria-label="Cancel"
+              title="Cancel"
+              onClick={handleEditCancel}
+            >
+              Cancel
+            </button>
+          </div>
+        )}
       </div>
     );
   }
