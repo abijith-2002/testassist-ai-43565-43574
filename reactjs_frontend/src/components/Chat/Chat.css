@@ -164,7 +164,7 @@
 }
 
 .chat-edit-input {
-  /* Exact width matching - will be set programmatically */
+  /* Width will be set to 60vw programmatically in edit mode */
   width: 100%;
   background: transparent;
   border: none;
@@ -214,12 +214,34 @@
   text-align: left;
 }
 
+/* Edit mode specific styling - overrides previous settings when in edit mode */
+.chat-edit-input[style*="background-color"] {
+  /* These styles are applied when the textarea has inline background-color style (edit mode) */
+  width: 60vw !important;
+  background-color: #9FB4C7 !important;
+  color: #2C363F !important;
+  border-radius: 8px;
+  padding: 12px 16px;
+  border: 1px solid rgba(44, 54, 63, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .chat-edit-input:focus,
 .chat-edit-input:focus-visible {
   outline: none;
   border: none;
   box-shadow: none;
   background: transparent;
+}
+
+/* Focus styles for edit mode textarea */
+.chat-edit-input[style*="background-color"]:focus,
+.chat-edit-input[style*="background-color"]:focus-visible {
+  outline: 2px solid #2C363F;
+  outline-offset: 2px;
+  border-color: #2C363F !important;
+  box-shadow: 0 0 0 3px rgba(44, 54, 63, 0.2), 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  background-color: #9FB4C7 !important;
 }
 
 .edit-actions {
@@ -314,6 +336,19 @@
   
   .chat-edit-input {
     font-size: 0.95rem;
+  }
+  
+  /* Adjust edit mode textarea width for mobile */
+  .chat-edit-input[style*="background-color"] {
+    width: 90vw !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+}
+
+/* Tablet responsiveness */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .chat-edit-input[style*="background-color"] {
+    width: 70vw !important;
   }
 }
 =======

@@ -119,18 +119,12 @@ function ChatMessage({
     // Calculate initial dimensions based on original content
     setTimeout(() => {
       if (textareaRef.current && bubbleTextRef.current) {
-        const bubbleElement = bubbleTextRef.current.closest('.chat-bubble');
-        const bubbleStyle = window.getComputedStyle(bubbleElement);
-        const textStyle = window.getComputedStyle(bubbleTextRef.current);
+        // Set textarea width to 60% of viewport width as specified
+        textareaRef.current.style.width = '60vw';
         
-        // Match the exact width of the bubble content area
-        const bubbleWidth = bubbleElement.offsetWidth;
-        const paddingLeft = parseFloat(bubbleStyle.paddingLeft);
-        const paddingRight = parseFloat(bubbleStyle.paddingRight);
-        const contentWidth = bubbleWidth - paddingLeft - paddingRight;
-        
-        // Set textarea width to match content width exactly
-        textareaRef.current.style.width = `${contentWidth}px`;
+        // Apply the specified background and text colors for edit mode
+        textareaRef.current.style.backgroundColor = '#9FB4C7';
+        textareaRef.current.style.color = '#2C363F';
         
         // Match the height of the original bubble text
         const originalHeight = bubbleTextRef.current.scrollHeight;
