@@ -504,12 +504,18 @@ html, body, #root {
   box-shadow: var(--shadow-subtle);
 }
 
+/* Set medium font weight for user chat bubbles */
+.chat-bubble.user {
+  font-weight: 500;
+}
+
 .chat-bubble.user {
   background: var(--user-bubble);
   color: var(--user-text);
   border: 1px solid var(--user-bubble-border);
   position: relative;
   overflow: hidden;
+  font-weight: 500;
   /* Make user message bubble selectable */
   -webkit-user-select: text;
   -moz-user-select: text;
@@ -586,6 +592,7 @@ html, body, #root {
   white-space: pre-line;
   position: relative;
   z-index: 1;
+  font-weight: inherit;
   /* Make chat text selectable for copy/paste */
   -webkit-user-select: text;
   -moz-user-select: text;
