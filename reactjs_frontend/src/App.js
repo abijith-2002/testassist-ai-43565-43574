@@ -374,6 +374,166 @@ function App() {
     return d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
   };
 
+  // Inline user message bubble with edit button/field
+  function UserBubbleWithEdit({idx, msg, messages, setMessages, setIsLoading, setError, isLoading, regenerateResponse}) {
+    const [hover, setHover] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const [editValue, setEditValue] = useState(msg.content);
+
+    // Only show edit for last user message OR if its assistant response follows it (ensures proper context edit)
+    // But here, allow editing any user message that is not currently being sent.
+    const canEdit = !isLoading;
+
+    // Focus textarea when entering edit mode
+    const taRef = useRef(null);
+    useEffect(()=>{
+      if (editing && taRef.current) taRef.current.focus();
+    }, [editing]);
+
+    const handleEdit = () => {
+      setEditValue(msg.content);
+      setEditing(true);
+    };
+
+    // Save edits: update message and regenerate
+    const handleEditSave = async () => {
+      if (editValue.trim() && editValue !== msg.content) {
+        await regenerateResponse(editValue, idx);
+      }
+      setEditing(false);
+    };
+
+    // Cancel edit (restore previous)
+    const handleEditCancel = () => {
+      setEditing(false);
+      setEditValue(msg.content);
+    };
+
+    return (
+      <div
+        className="chat-message-container user"
+        onMouseEnter={()=>setHover(true)}
+        onMouseLeave={()=>setHover(false)}
+        style={{ position: "relative" }}
+      >
+        <div className="chat-bubble-wrapper user">
+          <div className="chat-bubble user" style={{ position: "relative" }}>
+            {/* If editing, show input, else normal */}
+            {editing ? (
+              <form
+                onSubmit={e => {
+                  e.preventDefault();
+                  handleEditSave();
+                }}
+                style={{ width: "100%", display: "flex", alignItems: "center" }}
+                tabIndex={-1}
+              >
+                <textarea
+                  className="chat-edit-input"
+                  style={{
+                    resize: "vertical",
+                    width: "92%",
+                    height: "58px",
+                    fontSize: "1rem",
+                    fontFamily: "inherit",
+                    color: "#25496c",
+                    background: "#eaf1fb",
+                    borderRadius: "10px",
+                    marginRight: 8,
+                    padding: "7px 10px",
+                    border: "1px solid #b3cef6",
+                    outline: "none",
+                  }}
+                  ref={taRef}
+                  value={editValue}
+                  maxLength={1024}
+                  onChange={e=>setEditValue(e.target.value)}
+                  disabled={isLoading}
+                  autoFocus
+                  onKeyDown={e=>{
+                    if(e.key==="Escape"){handleEditCancel();}
+                    if(e.key==="Enter" && !e.shiftKey){e.preventDefault();handleEditSave();}
+                  }}
+                />
+                <button
+                  type="submit"
+                  className="edit-save-btn"
+                  style={{
+                    fontSize: "1.01rem",
+                    marginRight: 4,
+                    background: "var(--accent-blue, #5baffa)",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "7px",
+                    padding: "6px 14px",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    boxShadow: "0 1px 8px rgba(31, 111, 235, 0.13)",
+                  }}
+                  disabled={isLoading || !editValue.trim() || editValue===msg.content}
+                  tabIndex={0}
+                  aria-label="Save edit"
+                  title="Save edit"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="edit-cancel-btn"
+                  style={{
+                    fontSize: "0.99rem",
+                    background: "none",
+                    color: "#bb1329",
+                    border: "none",
+                    borderRadius: "7px",
+                    padding: "6px 10px",
+                    cursor: "pointer",
+                    fontWeight: 450,
+                  }}
+                  tabIndex={0}
+                  aria-label="Cancel"
+                  title="Cancel"
+                  onClick={handleEditCancel}
+                >
+                  Cancel
+                </button>
+              </form>
+            ) : (
+              <>
+                <span className="bubble-txt">{msg.content}</span>
+                {hover && canEdit && (
+                  <button
+                    className="edit-message-btn"
+                    tabIndex={0}
+                    aria-label="Edit prompt"
+                    title="Edit prompt"
+                    style={{
+                      position: "absolute",
+                      right: 8,
+                      top: 8,
+                      background: "rgba(31, 111, 235, 0.06)",
+                      color: "#3972da",
+                      border: "none",
+                      borderRadius: "5px",
+                      padding: "2px 10px",
+                      fontSize: "0.92rem",
+                      fontWeight: 600,
+                      outline: "none",
+                      cursor: "pointer",
+                      zIndex: 3,
+                      boxShadow: "0 2px 8px rgba(42,101,188,0.09)",
+                    }}
+                    onClick={handleEdit}
+                  >Edit</button>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="chatpage-root">
       {/* Header */}
@@ -400,6 +560,7 @@ function App() {
       <main className="main-chat-section">
         <div className="chat-content-list" id="chat-messages">
           {/* Messages */}
+          {/* State for edit prompt */}
           {messages.map((msg, idx) =>
             msg.role === "assistant" ? (
               <div
@@ -417,9 +578,7 @@ function App() {
                       a: ({node, ...props}) => <a {...props} rel="noopener noreferrer" target="_blank"/>,
                       // Patch code block to wrap language label for CSS badge
                       code({node, inline, className, children, ...props}) {
-                        // Extract language from className, like "language-python"
                         const match = /language-(\w+)/.exec(className || "");
-                        // Give our <pre> tag a data-language attr, CSS displays it as a corner badge
                         if (!inline) {
                           const lang = match ? match[1] : null;
                           return (
@@ -434,7 +593,6 @@ function App() {
                             </pre>
                           );
                         }
-                        // Inline code
                         return (
                           <code {...props} className={className}>
                             {children}
@@ -444,20 +602,100 @@ function App() {
                     }}
                   />
                 </div>
-                {/* No line/divider or timestamp for AI */}
               </div>
             ) : (
-              <div
+              <UserBubbleWithEdit
                 key={idx}
-                className="chat-message-container user"
-              >
-                <div className="chat-bubble-wrapper user">
-                  <div className="chat-bubble user">
-                    <span className="bubble-txt">{msg.content}</span>
-                  </div>
-                </div>
-                {/* No timestamp for user either */}
-              </div>
+                idx={idx}
+                msg={msg}
+                messages={messages}
+                setMessages={setMessages}
+                setIsLoading={setIsLoading}
+                setError={setError}
+                isLoading={isLoading}
+                regenerateResponse={async (newPrompt, editIdx) => {
+                  // Remove old assistant response after the edited prompt (if present)
+                  let newMsgs = messages.slice();
+                  // Remove next assistant msg if it exists for this user msg
+                  if (
+                    editIdx < newMsgs.length - 1 &&
+                    newMsgs[editIdx + 1]?.role === "assistant"
+                  ) {
+                    newMsgs.splice(editIdx + 1, 1);
+                  }
+                  // Replace user message at idx with edited prompt
+                  newMsgs[editIdx] = { ...newMsgs[editIdx], content: newPrompt };
+                  setMessages(newMsgs);
+                  // Call backend to re-fetch response for modified prompt using correct chat history
+                  setIsLoading(true);
+                  setError("");
+                  try {
+                    let API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
+                    // Prepare clean chat history up to here (omit any streaming)
+                    const cleanHistory = newMsgs
+                      .slice(0, editIdx + 1)
+                      .filter(m => !m.streaming)
+                      .map(({ role, content }) => ({ role, content }));
+
+                    const resp = await fetch(`${API_BASE}/chat`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        history: cleanHistory
+                      })
+                    });
+
+                    if (!resp.ok) {
+                      let errMsg = `${resp.status} ${resp.statusText}`;
+                      try {
+                        const errData = await resp.json();
+                        if (errData && typeof errData === "object") {
+                          if (errData.detail) errMsg = errData.detail;
+                          else if (errData.error && errData.error.message) errMsg = errData.error.message;
+                          else if (errData.error) errMsg = JSON.stringify(errData.error);
+                          else errMsg = JSON.stringify(errData);
+                        }
+                      } catch (_) {}
+                      throw new Error(`[Backend error] ${errMsg} (code ${resp.status})`);
+                    }
+
+                    // Streaming support (optional/minimal; full parse not required, just show full answer at the end)
+                    let data;
+                    try { data = await resp.json(); } catch { data = {}; }
+                    let replyText = "";
+                    if (data && typeof data.answer !== "undefined" && data.answer !== null) {
+                      if (typeof data.answer === "string" && data.answer.trim().length > 0) {
+                        replyText = data.answer;
+                      } else if (typeof data.answer === "string") {
+                        replyText = "";
+                      } else {
+                        replyText = String(data.answer);
+                      }
+                    }
+                    // Update the assistant response
+                    setMessages(msgs => {
+                      // Insert right after the edited user message
+                      const updated = msgs.slice();
+                      updated.splice(editIdx + 1, 0, {
+                        role: "assistant",
+                        content: replyText,
+                        timestamp: new Date().toISOString()
+                      });
+                      return updated;
+                    });
+                  } catch (err) {
+                    setError(
+                      "Sorry, failed to fetch AI response. " +
+                        (err?.message
+                          ? err.message.replace(/^Error:/, '').trim()
+                          : String(err)
+                        )
+                    );
+                  } finally {
+                    setIsLoading(false);
+                  }
+                }}
+              />
             )
           )}
           {/* AI loading state as fullwidth direct message */}
