@@ -417,9 +417,10 @@ function App() {
         className="chat-message-container user"
         onMouseEnter={()=>setHover(true)}
         onMouseLeave={()=>setHover(false)}
+        style={{ position: "relative" }}
       >
         <div className="chat-bubble-wrapper user">
-          <div className="chat-bubble user" style={{ position: "relative" }}>
+          <div className="chat-bubble user">
             {/* Bubble content or input */}
             {editing ? (
               <form
@@ -462,23 +463,24 @@ function App() {
             ) : (
               <span className="bubble-txt">{msg.content}</span>
             )}
-            
-            {/* Edit button positioned at bottom-right corner of bubble */}
-            {(hover && !editing && canEdit) && (
-              <div className="bubble-edit-controls-under">
-                <button
-                  className="edit-message-btn"
-                  tabIndex={0}
-                  aria-label="Edit prompt"
-                  title="Edit prompt"
-                  onClick={handleEdit}
-                >
-                  {PencilIcon}
-                </button>
-              </div>
-            )}
           </div>
         </div>
+        
+        {/* Edit button positioned beneath the bubble - absolute positioning to prevent layout shifts */}
+        {(hover && !editing && canEdit) && (
+          <div className="edit-button-under-bubble">
+            <button
+              className="edit-message-btn"
+              tabIndex={0}
+              aria-label="Edit prompt"
+              title="Edit prompt"
+              onClick={handleEdit}
+            >
+              {PencilIcon}
+            </button>
+          </div>
+        )}
+        
         {/* Save/Cancel controls positioned under the bubble when editing */}
         {(editing) && (
           <div style={{ 

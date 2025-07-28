@@ -235,6 +235,7 @@ html, body, #root {
   padding-right: 28px;
   animation: slideIn 0.3s ease-out;
   position: relative; /* Enable absolute positioning for child elements */
+  padding-bottom: 32px; /* Reserved space for edit button to prevent layout shifts */
 }
 
 .chat-message-container.user {
@@ -391,18 +392,19 @@ html, body, #root {
   line-height: 2 !important; /* Further increase line-height for user chat bubble as well */
 }
 
-/* --- Edit icon positioned at bottom-right corner of user bubble --- */
-.bubble-edit-controls-under {
+/* --- Edit button positioned beneath the user chat bubble --- */
+.edit-button-under-bubble {
+  position: absolute;
+  top: 100%; /* Position directly beneath the bubble */
+  right: 0; /* Align with right edge of bubble wrapper */
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  position: absolute;
-  bottom: 4px; /* Position near bottom of bubble */
-  right: 8px; /* Position at right side of bubble */
   width: auto;
   height: auto;
-  z-index: 8;
+  z-index: 10;
   pointer-events: all;
+  margin-top: 4px; /* Small gap between bubble and button */
 }
 
 /* Minimal pencil button - transparent with subtle rounded corners */
@@ -411,8 +413,7 @@ html, body, #root {
   border: none;
   color: var(--edit-button-icon-color);
   padding: 4px 6px;
-  margin-left: 4px;
-  margin-right: 8px;
+  margin: 0;
   border-radius: 4px;
   outline: none;
   box-shadow: none;
@@ -450,61 +451,7 @@ html, body, #root {
   transform: scale(0.95);
 }
 
-/* Controls for save/cancel beneath bubble - more compact and elegant */
-.bubble-edit-controls-under .edit-save-btn,
-.bubble-edit-controls-under .edit-cancel-btn {
-  margin: 0 3px 0 0;
-  cursor: pointer;
-  font-size: 0.85rem;
-  border-radius: 8px;
-  transition: all 0.15s ease;
-}
 
-.bubble-edit-controls-under .edit-save-btn {
-  background: linear-gradient(135deg, var(--accent-blue) 0%, #4A90E2 100%);
-  color: #fff;
-  font-weight: 500;
-  padding: 6px 14px;
-  border: none;
-  box-shadow: 0 2px 6px rgba(88, 166, 255, 0.2);
-  min-width: 52px;
-}
-
-.bubble-edit-controls-under .edit-save-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(88, 166, 255, 0.3);
-}
-
-.bubble-edit-controls-under .edit-save-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.bubble-edit-controls-under .edit-cancel-btn {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 6px 12px;
-  font-weight: 400;
-  min-width: 48px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.bubble-edit-controls-under .edit-cancel-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.9);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-}
-
-.bubble-edit-controls-under .edit-cancel-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none;
-}
 
 /* Refined edit textarea - cleaner and more integrated */
 .chat-edit-input {
@@ -534,9 +481,8 @@ html, body, #root {
 
 /* Responsive: adjust edit button positioning for smaller screens */
 @media (max-width: 850px) {
-  .bubble-edit-controls-under {
-    bottom: 3px;
-    right: 6px;
+  .edit-button-under-bubble {
+    margin-top: 3px;
   }
   
   .edit-message-btn {
@@ -552,21 +498,19 @@ html, body, #root {
   
   .chat-message-container {
     margin-bottom: 36px; /* Tighter spacing for medium screens */
+    padding-bottom: 30px; /* Adjusted reserved space for medium screens */
   }
 }
 
 @media (max-width: 600px) {
-  .bubble-edit-controls-under {
-    bottom: 2px;
-    right: 4px;
+  .edit-button-under-bubble {
+    margin-top: 2px;
   }
   
   .edit-message-btn {
     min-width: 24px;
     min-height: 24px;
     padding: 4px 6px;
-    margin-left: 2px;
-    margin-right: 4px;
   }
   
   .edit-message-btn svg {
@@ -574,16 +518,17 @@ html, body, #root {
     height: 14px;
   }
   
-  .bubble-edit-controls-under .edit-save-btn,
-  .bubble-edit-controls-under .edit-cancel-btn {
-    font-size: 0.8rem;
-    padding: 5px 10px;
+  .edit-save-btn,
+  .edit-cancel-btn {
+    font-size: 0.8rem !important;
+    padding: 5px 10px !important;
   }
   
   .chat-message-container {
     margin-bottom: 32px; /* Minimal spacing for mobile */
     padding-left: 14px;
     padding-right: 14px;
+    padding-bottom: 28px; /* Adjusted reserved space for mobile */
   }
 }
 
