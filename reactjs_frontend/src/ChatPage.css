@@ -396,7 +396,7 @@ html, body, #root {
 .edit-button-under-bubble {
   position: absolute;
   top: 100%; /* Position directly beneath the bubble */
-  left: 0; /* Align with left edge of bubble wrapper */
+  left: 35%; /* Align with left edge of the chat bubble itself (accounting for bubble wrapper's 65% max-width and right alignment) */
   display: flex;
   align-items: center;
   justify-content: flex-start; /* Left-align the button */
@@ -404,7 +404,7 @@ html, body, #root {
   height: auto;
   z-index: 10;
   pointer-events: all;
-  margin-top: 4px; /* Small gap between bubble and button */
+  margin-top: 2px; /* Minimal gap between bubble and button */
 }
 
 /* Minimal pencil button - transparent with subtle rounded corners */
@@ -412,43 +412,46 @@ html, body, #root {
   background: transparent;
   border: none;
   color: var(--edit-button-icon-color);
-  padding: 4px 6px;
+  padding: 3px 4px;
   margin: 0;
-  border-radius: 4px;
+  border-radius: 3px;
   outline: none;
   box-shadow: none;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.15s ease, transform 0.1s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  min-width: 24px;
-  min-height: 24px;
+  min-width: 20px;
+  min-height: 20px;
   width: auto;
   height: auto;
+  opacity: 0.8;
 }
 
 .edit-message-btn svg {
   display: block;
   fill: currentColor;
   stroke: currentColor;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   pointer-events: none;
-  stroke-width: 1.65;
+  stroke-width: 1.6;
 }
 
 .edit-message-btn:hover,
 .edit-message-btn:focus-visible {
   background: var(--edit-button-hover-bg);
   color: var(--edit-button-icon-color);
+  opacity: 1;
   transform: none;
   box-shadow: none;
 }
 
 .edit-message-btn:active {
   background: var(--edit-button-active-bg);
-  transform: scale(0.95);
+  transform: scale(0.96);
+  opacity: 1;
 }
 
 
@@ -482,18 +485,19 @@ html, body, #root {
 /* Responsive: adjust edit button positioning for smaller screens */
 @media (max-width: 850px) {
   .edit-button-under-bubble {
-    margin-top: 3px;
+    margin-top: 2px;
+    left: 25%; /* Adjust positioning for medium screens with different bubble width */
   }
   
   .edit-message-btn {
-    min-width: 22px;
-    min-height: 22px;
-    padding: 3px 5px;
+    min-width: 20px;
+    min-height: 20px;
+    padding: 3px 4px;
   }
   
   .edit-message-btn svg {
-    width: 15px;
-    height: 15px;
+    width: 13px;
+    height: 13px;
   }
   
   .chat-message-container {
@@ -505,17 +509,18 @@ html, body, #root {
 @media (max-width: 600px) {
   .edit-button-under-bubble {
     margin-top: 2px;
+    left: 15%; /* Adjust positioning for mobile screens with different bubble width */
   }
   
   .edit-message-btn {
-    min-width: 24px;
-    min-height: 24px;
-    padding: 4px 6px;
+    min-width: 22px;
+    min-height: 22px;
+    padding: 3px 4px;
   }
   
   .edit-message-btn svg {
-    width: 14px;
-    height: 14px;
+    width: 13px;
+    height: 13px;
   }
   
   .edit-save-btn,
