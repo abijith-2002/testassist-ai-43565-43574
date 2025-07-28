@@ -67,6 +67,7 @@ function ChatMessageList({
             messageIndex={idx}
             onEditMessage={onEditMessage}
             onRegenerateResponse={onRegenerateResponse}
+            isLoading={isLoading}
           />
         )
       )}

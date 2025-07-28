@@ -25,7 +25,8 @@ function ChatMessage({
   msg,
   messageIndex,
   onEditMessage,
-  onRegenerateResponse
+  onRegenerateResponse,
+  isLoading
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(msg.content);
@@ -143,12 +144,14 @@ function ChatMessage({
 
   // Handle save edit
   const handleSaveEdit = () => {
+    if (!editValue.trim() || isLoading) return;
     if (editValue.trim() !== msg.content) {
       onEditMessage(messageIndex, editValue.trim());
+      // Ensure 'Save' disables other actions while regenerating
       onRegenerateResponse(messageIndex);
     }
     setIsEditing(false);
-    
+
     // Clean up data attributes
     if (textareaRef.current) {
       textareaRef.current.removeAttribute('data-edit-mode');
@@ -204,13 +207,21 @@ function ChatMessage({
                 <button 
                   className="edit-save-btn"
                   onClick={handleSaveEdit}
-                  disabled={!editValue.trim()}
+                  disabled={!editValue.trim() || isLoading}
                 >
-                  Save
+                  {isLoading ? (
+                    <span style={{display:'inline-flex',alignItems:'center',gap:'6px'}}>
+                      <svg className="spinner" width="18" height="18" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="9" stroke="#EEE" strokeWidth="2" opacity="0.22"/><circle cx="11" cy="11" r="9" stroke="#3F6E8D" strokeWidth="2" strokeDasharray="32 52" strokeLinecap="round"><animateTransform attributeName="transform" type="rotate" from="0 11 11" to="360 11 11" dur="1s" repeatCount="indefinite"/></circle></svg>
+                      Saving...
+                    </span>
+                  ) : (
+                    "Save"
+                  )}
                 </button>
                 <button 
                   className="edit-cancel-btn"
                   onClick={handleCancelEdit}
+                  disabled={isLoading}
                 >
                   Cancel
                 </button>
