@@ -13,7 +13,9 @@ function ChatMessageList({
   setMessages,
   setIsLoading,
   setError,
-  isLoading
+  isLoading,
+  onEditMessage,
+  onRegenerateResponse
 }) {
   return (
     <>
@@ -62,6 +64,9 @@ function ChatMessageList({
             key={idx}
             role={msg.role}
             msg={msg}
+            messageIndex={idx}
+            onEditMessage={onEditMessage}
+            onRegenerateResponse={onRegenerateResponse}
           />
         )
       )}

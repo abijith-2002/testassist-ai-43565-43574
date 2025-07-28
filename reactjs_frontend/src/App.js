@@ -374,6 +374,211 @@ function App() {
     return d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
   };
 
+  // PUBLIC_INTERFACE: Handle message editing
+  /**
+   * Updates a user message at the specified index with new content
+   * @param {number} messageIndex - Index of the message to edit
+   * @param {string} newContent - New content for the message
+   */
+  const handleEditMessage = (messageIndex, newContent) => {
+    setMessages(prev => 
+      prev.map((msg, idx) => 
+        idx === messageIndex ? { ...msg, content: newContent } : msg
+      )
+    );
+  };
+
+  // PUBLIC_INTERFACE: Handle response regeneration after edit
+  /**
+   * Regenerates the AI response after a user message has been edited
+   * Removes all assistant messages after the edited message and triggers a new response
+   */
+  const handleRegenerateResponse = async () => {
+    if (isLoading) return;
+    
+    // Find the last user message and remove all subsequent messages
+    const lastUserIndex = messages.findLastIndex(msg => msg.role === "user");
+    if (lastUserIndex === -1) return;
+    
+    // Keep messages up to and including the last user message
+    const messagesToKeep = messages.slice(0, lastUserIndex + 1);
+    setMessages(messagesToKeep);
+    
+    // Get the last user message content
+    const lastUserMessage = messagesToKeep[lastUserIndex];
+    if (!lastUserMessage.content.trim()) return;
+    
+    setIsLoading(true);
+    setError("");
+
+    try {
+      let API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
+
+      // Prepare chat history (excluding the current message that will be re-sent)
+      const cleanHistory = messagesToKeep
+        .filter(m => !m.streaming)
+        .map(({ role, content }) => ({ role, content }));
+
+      const resp = await fetch(`${API_BASE}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          history: cleanHistory
+        })
+      });
+
+      if (!resp.ok) {
+        let errMsg = `${resp.status} ${resp.statusText}`;
+        try {
+          const errData = await resp.json();
+          if (errData && typeof errData === "object") {
+            if (errData.detail) errMsg = errData.detail;
+            else if (errData.error && errData.error.message) errMsg = errData.error.message;
+            else if (errData.error) errMsg = JSON.stringify(errData.error);
+            else errMsg = JSON.stringify(errData);
+          }
+        } catch (_) { /* not JSON, keep statusText */ }
+        throw new Error(`[Backend error] ${errMsg} (code ${resp.status})`);
+      }
+
+      // Handle streaming response similar to sendMessage
+      let usedStreaming = false;
+      if (resp.body && window.ReadableStream) {
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let buffer = "";
+        let done = false;
+
+        // Add new assistant message for streaming
+        const timestamp = new Date().toISOString();
+        setMessages(prev => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "",
+            timestamp,
+            streaming: true
+          }
+        ]);
+
+        const updateStreamingAssistant = (partialContent) => {
+          setMessages(prev => {
+            let lastIdx = prev.length - 1;
+            return prev.map((msg, idx) =>
+              (idx === lastIdx && msg.role === "assistant")
+                ? { ...msg, content: partialContent }
+                : msg
+            );
+          });
+        };
+
+        while (!done) {
+          const { value, done: localDone } = await reader.read();
+          done = localDone;
+          if (value) {
+            buffer += decoder.decode(value, { stream: !localDone });
+            try {
+              const jsonStart = buffer.indexOf("{");
+              const jsonEnd = buffer.indexOf("}", jsonStart);
+              if (jsonStart !== -1 && jsonEnd !== -1) {
+                const jsonStr = buffer.substring(jsonStart, jsonEnd + 1);
+                const data = JSON.parse(jsonStr);
+                if (typeof data.answer === "string") {
+                  const parsedAnswer = data.answer;
+                  const charsPerTick = 5;
+                  const msInterval = 3;
+                  let lastContent = "";
+                  
+                  for (let i = charsPerTick; i <= parsedAnswer.length; i += charsPerTick) {
+                    let toDisplay = parsedAnswer.substring(0, i);
+                    if (toDisplay !== lastContent) {
+                      updateStreamingAssistant(toDisplay);
+                      lastContent = toDisplay;
+                      await new Promise(resolve => setTimeout(resolve, msInterval));
+                    }
+                  }
+                  if (lastContent !== parsedAnswer) updateStreamingAssistant(parsedAnswer);
+                } else {
+                  updateStreamingAssistant("");
+                }
+                usedStreaming = true;
+                break;
+              }
+            } catch (err) {
+              // Continue reading
+            }
+          }
+        }
+
+        if (!usedStreaming) {
+          let fallbackData;
+          try {
+            fallbackData = JSON.parse(buffer);
+          } catch {
+            fallbackData = {};
+          }
+          let replyText = "";
+          if (fallbackData && typeof fallbackData.answer === "string" && fallbackData.answer.trim().length > 0) {
+            replyText = fallbackData.answer;
+          }
+          updateStreamingAssistant(replyText || "");
+        }
+
+        // Finalize streaming message
+        setMessages(prev => {
+          let lastIdx = prev.length - 1;
+          if (
+            prev.length > 0 &&
+            prev[lastIdx].role === "assistant" &&
+            prev[lastIdx].streaming
+          ) {
+            return prev.map((msg, idx) =>
+              idx === lastIdx
+                ? { ...msg, streaming: undefined }
+                : msg
+            );
+          }
+          return prev;
+        });
+
+      } else {
+        // Non-streaming fallback
+        let data;
+        try {
+          data = await resp.json();
+        } catch {
+          data = {};
+        }
+        let replyText = "";
+        if (data && typeof data.answer !== "undefined" && data.answer !== null) {
+          if (typeof data.answer === "string" && data.answer.trim().length > 0) {
+            replyText = data.answer;
+          } else if (typeof data.answer === "string") {
+            replyText = "";
+          } else {
+            replyText = String(data.answer);
+          }
+        }
+        const assistantMsg = {
+          role: "assistant",
+          content: replyText,
+          timestamp: new Date().toISOString(),
+        };
+        setMessages(prev => [...prev, assistantMsg]);
+      }
+    } catch (err) {
+      setError(
+        "Sorry, failed to regenerate AI response. " +
+        (err?.message
+          ? err.message.replace(/^Error:/, '').trim()
+          : String(err)
+        )
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
 
   return (
@@ -407,6 +612,8 @@ function App() {
             setIsLoading={setIsLoading}
             setError={setError}
             isLoading={isLoading}
+            onEditMessage={handleEditMessage}
+            onRegenerateResponse={handleRegenerateResponse}
           />
           {/* AI loading state as fullwidth direct message */}
           {isLoading && (
