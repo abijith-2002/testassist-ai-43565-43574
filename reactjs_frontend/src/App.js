@@ -417,7 +417,6 @@ function App() {
         className="chat-message-container user"
         onMouseEnter={()=>setHover(true)}
         onMouseLeave={()=>setHover(false)}
-        style={{ position: "relative" }}
       >
         <div className="chat-bubble-wrapper user">
           <div className="chat-bubble user" style={{ position: "relative" }}>
@@ -473,20 +472,6 @@ function App() {
               tabIndex={0}
               aria-label="Edit prompt"
               title="Edit prompt"
-              style={{
-                background: "none",
-                border: "none",
-                color: "#537ae9",
-                padding: "3px 7px",
-                marginTop: "2px",
-                borderRadius: "50%",
-                outline: "none",
-                boxShadow: "none",
-                fontSize: "0.98rem",
-                display: "inline-flex",
-                alignItems: "center",
-                transition: "background 0.13s"
-              }}
               onClick={handleEdit}
             >
               {PencilIcon}
@@ -498,21 +483,6 @@ function App() {
             <button
               type="button"
               className="edit-save-btn"
-              style={{
-                fontSize: "0.98rem",
-                background: "var(--accent-blue, #5baffa)",
-                color: "#fff",
-                border: "none",
-                borderRadius: "7px",
-                padding: "6px 13px",
-                cursor: isLoading || !editValue.trim() || editValue===msg.content ? "not-allowed" : "pointer",
-                fontWeight: 500,
-                marginRight: 8,
-                marginTop: "8px",
-                minWidth: 54,
-                opacity: isLoading || !editValue.trim() || editValue===msg.content ? 0.55 : 1,
-                boxShadow: "none"
-              }}
               disabled={isLoading || !editValue.trim() || editValue===msg.content}
               tabIndex={0}
               aria-label="Save edit"
@@ -524,20 +494,7 @@ function App() {
             <button
               type="button"
               className="edit-cancel-btn"
-              style={{
-                fontSize: "0.98rem",
-                background: "none",
-                color: "#bb1329",
-                border: "none",
-                borderRadius: "7px",
-                padding: "6px 10px",
-                cursor: isLoading ? "not-allowed" : "pointer",
-                fontWeight: 400,
-                marginTop: "8px",
-                minWidth: 54,
-                opacity: isLoading ? 0.46 : 1,
-                boxShadow: "none"
-              }}
+              disabled={isLoading}
               tabIndex={0}
               aria-label="Cancel"
               title="Cancel"
