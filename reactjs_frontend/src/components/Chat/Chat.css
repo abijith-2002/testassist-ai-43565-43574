@@ -28,14 +28,7 @@
   pointer-events: none;
   stroke-width: 1.6;
 }
-.edit-message-btn:hover,
-.edit-message-btn:focus-visible {
-  background: rgba(255,255,255,0.1);
-  color: #E5E5E5;
-  opacity: 1;
-  transform: none;
-  box-shadow: none;
-}
+
 .edit-message-btn:active {
   background: rgba(255,255,255,0.15);
   transform: scale(0.96);
