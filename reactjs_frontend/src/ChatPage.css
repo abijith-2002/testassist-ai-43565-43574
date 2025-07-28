@@ -396,10 +396,10 @@ html, body, #root {
 .edit-button-under-bubble {
   position: absolute;
   top: 100%; /* Position directly beneath the bubble */
-  right: 0; /* Align with right edge of bubble wrapper */
+  left: 0; /* Align with left edge of bubble wrapper */
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start; /* Left-align the button */
   width: auto;
   height: auto;
   z-index: 10;
