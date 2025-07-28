@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
-import "./ChatPage.css";
+import ChatMessageList from "./components/Chat/ChatMessageList";
 import LoadingSpinner from "./LoadingSpinner";
+import "./ChatPage.css";
+import "./components/Chat/Chat.css";
+import './App.css';
 
 // SVG icon components for send button (inline for no deps)
 const SendArrowIcon = ({size=26}) => (
@@ -567,145 +567,95 @@ function App() {
       {/* Main chat area */}
       <main className="main-chat-section">
         <div className="chat-content-list" id="chat-messages">
-          {/* Messages */}
-          {/* State for edit prompt */}
-          {messages.map((msg, idx) =>
-            msg.role === "assistant" ? (
-              <div
-                key={idx}
-                className="assistant-fullwidth-message"
-              >
-                {/* AI response rendered as markdown, styled, with code and GFM support */}
-                <div className="assistant-content-direct">
-                  <ReactMarkdown
-                    children={msg.content}
-                    remarkPlugins={[remarkGfm]}
-                    rehypePlugins={[rehypeHighlight]}
-                    linkTarget="_blank"
-                    components={{
-                      a: ({node, ...props}) => <a {...props} rel="noopener noreferrer" target="_blank"/>,
-                      // Patch code block to wrap language label for CSS badge
-                      code({node, inline, className, children, ...props}) {
-                        const match = /language-(\w+)/.exec(className || "");
-                        if (!inline) {
-                          const lang = match ? match[1] : null;
-                          return (
-                            <pre
-                              className={className}
-                              data-language={lang || undefined}
-                              tabIndex={0}
-                            >
-                              <code {...props} className={className}>
-                                {children}
-                              </code>
-                            </pre>
-                          );
-                        }
-                        return (
-                          <code {...props} className={className}>
-                            {children}
-                          </code>
-                        );
-                      },
-                    }}
-                  />
-                </div>
-              </div>
-            ) : (
-              <UserBubbleWithEdit
-                key={idx}
-                idx={idx}
-                msg={msg}
-                messages={messages}
-                setMessages={setMessages}
-                setIsLoading={setIsLoading}
-                setError={setError}
-                isLoading={isLoading}
-                regenerateResponse={async (newPrompt, editIdx) => {
-                  // Remove old assistant response after the edited prompt (if present)
-                  let newMsgs = messages.slice();
-                  // Remove next assistant msg if it exists for this user msg
-                  if (
-                    editIdx < newMsgs.length - 1 &&
-                    newMsgs[editIdx + 1]?.role === "assistant"
-                  ) {
-                    newMsgs.splice(editIdx + 1, 1);
-                  }
-                  // Replace user message at idx with edited prompt
-                  newMsgs[editIdx] = { ...newMsgs[editIdx], content: newPrompt };
-                  setMessages(newMsgs);
-                  // Call backend to re-fetch response for modified prompt using correct chat history
-                  setIsLoading(true);
-                  setError("");
+          <ChatMessageList
+            messages={messages}
+            setMessages={setMessages}
+            setIsLoading={setIsLoading}
+            setError={setError}
+            isLoading={isLoading}
+            regenerateResponse={async (newPrompt, editIdx) => {
+              // Remove old assistant response after the edited prompt (if present)
+              let newMsgs = messages.slice();
+              // Remove next assistant msg if it exists for this user msg
+              if (
+                editIdx < newMsgs.length - 1 &&
+                newMsgs[editIdx + 1]?.role === "assistant"
+              ) {
+                newMsgs.splice(editIdx + 1, 1);
+              }
+              // Replace user message at idx with edited prompt
+              newMsgs[editIdx] = { ...newMsgs[editIdx], content: newPrompt };
+              setMessages(newMsgs);
+              // Call backend to re-fetch response for modified prompt using correct chat history
+              setIsLoading(true);
+              setError("");
+              try {
+                let API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
+                // Prepare clean chat history up to here (omit any streaming)
+                const cleanHistory = newMsgs
+                  .slice(0, editIdx + 1)
+                  .filter(m => !m.streaming)
+                  .map(({ role, content }) => ({ role, content }));
+
+                const resp = await fetch(`${API_BASE}/chat`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    history: cleanHistory
+                  })
+                });
+
+                if (!resp.ok) {
+                  let errMsg = `${resp.status} ${resp.statusText}`;
                   try {
-                    let API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
-                    // Prepare clean chat history up to here (omit any streaming)
-                    const cleanHistory = newMsgs
-                      .slice(0, editIdx + 1)
-                      .filter(m => !m.streaming)
-                      .map(({ role, content }) => ({ role, content }));
-
-                    const resp = await fetch(`${API_BASE}/chat`, {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        history: cleanHistory
-                      })
-                    });
-
-                    if (!resp.ok) {
-                      let errMsg = `${resp.status} ${resp.statusText}`;
-                      try {
-                        const errData = await resp.json();
-                        if (errData && typeof errData === "object") {
-                          if (errData.detail) errMsg = errData.detail;
-                          else if (errData.error && errData.error.message) errMsg = errData.error.message;
-                          else if (errData.error) errMsg = JSON.stringify(errData.error);
-                          else errMsg = JSON.stringify(errData);
-                        }
-                      } catch (_) {}
-                      throw new Error(`[Backend error] ${errMsg} (code ${resp.status})`);
+                    const errData = await resp.json();
+                    if (errData && typeof errData === "object") {
+                      if (errData.detail) errMsg = errData.detail;
+                      else if (errData.error && errData.error.message) errMsg = errData.error.message;
+                      else if (errData.error) errMsg = JSON.stringify(errData.error);
+                      else errMsg = JSON.stringify(errData);
                     }
+                  } catch (_) { }
+                  throw new Error(`[Backend error] ${errMsg} (code ${resp.status})`);
+                }
 
-                    // Streaming support (optional/minimal; full parse not required, just show full answer at the end)
-                    let data;
-                    try { data = await resp.json(); } catch { data = {}; }
-                    let replyText = "";
-                    if (data && typeof data.answer !== "undefined" && data.answer !== null) {
-                      if (typeof data.answer === "string" && data.answer.trim().length > 0) {
-                        replyText = data.answer;
-                      } else if (typeof data.answer === "string") {
-                        replyText = "";
-                      } else {
-                        replyText = String(data.answer);
-                      }
-                    }
-                    // Update the assistant response
-                    setMessages(msgs => {
-                      // Insert right after the edited user message
-                      const updated = msgs.slice();
-                      updated.splice(editIdx + 1, 0, {
-                        role: "assistant",
-                        content: replyText,
-                        timestamp: new Date().toISOString()
-                      });
-                      return updated;
-                    });
-                  } catch (err) {
-                    setError(
-                      "Sorry, failed to fetch AI response. " +
-                        (err?.message
-                          ? err.message.replace(/^Error:/, '').trim()
-                          : String(err)
-                        )
-                    );
-                  } finally {
-                    setIsLoading(false);
+                // Streaming support (optional/minimal; full parse not required, just show full answer at the end)
+                let data;
+                try { data = await resp.json(); } catch { data = {}; }
+                let replyText = "";
+                if (data && typeof data.answer !== "undefined" && data.answer !== null) {
+                  if (typeof data.answer === "string" && data.answer.trim().length > 0) {
+                    replyText = data.answer;
+                  } else if (typeof data.answer === "string") {
+                    replyText = "";
+                  } else {
+                    replyText = String(data.answer);
                   }
-                }}
-              />
-            )
-          )}
+                }
+                // Update the assistant response
+                setMessages(msgs => {
+                  // Insert right after the edited user message
+                  const updated = msgs.slice();
+                  updated.splice(editIdx + 1, 0, {
+                    role: "assistant",
+                    content: replyText,
+                    timestamp: new Date().toISOString()
+                  });
+                  return updated;
+                });
+              } catch (err) {
+                setError(
+                  "Sorry, failed to fetch AI response. " +
+                  (err?.message
+                    ? err.message.replace(/^Error:/, '').trim()
+                    : String(err)
+                  )
+                );
+              } finally {
+                setIsLoading(false);
+              }
+            }}
+          />
           {/* AI loading state as fullwidth direct message */}
           {isLoading && (
             <div className="assistant-fullwidth-message">
