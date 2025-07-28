@@ -31,12 +31,13 @@ function ChatMessage({
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(msg.content);
 
-  // Keep editValue in sync with msg.content when msg.content changes or edit mode is entered
+  // Only update editValue when edit mode is entered or the message actually changes outside editing
   useEffect(() => {
     if (isEditing) {
       setEditValue(msg.content);
     }
-  }, [msg.content, isEditing]);
+    // eslint-disable-next-line
+  }, [isEditing]);
   const [copyFeedback, setCopyFeedback] = useState(false);
   const [textareaHeight, setTextareaHeight] = useState('auto');
   
