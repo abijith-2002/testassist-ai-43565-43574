@@ -383,13 +383,18 @@ function App() {
    * @param {object} [opts] - Optional params. Pass {doRegenerate: true} to chain regenerate.
    */
   const handleEditMessage = (messageIndex, newContent, opts = {}) => {
-    // If regeneration requested, perform atomic state update+regen using callback form
+    // Always allow atomic update-and-regen for prompt editing saves.
+    // Do not require content to be different; every "save" triggers regen from backend.
     if (opts.doRegenerate) {
       setMessages(prev => {
-        const updatedMsgs = prev.map((msg, idx) =>
-          idx === messageIndex ? { ...msg, content: newContent } : msg
-        );
-        // After state updates, immediately regenerate (using new state).
+        // Update user message at the given index, discard all messages after.
+        const updatedMsgs = prev
+          .slice(0, messageIndex + 1)
+          .map((msg, idx) =>
+            idx === messageIndex ? { ...msg, content: newContent } : msg
+          );
+        // Remove any assistant response immediately following the edited user message (if any).
+        // This ensures every edit+save triggers a full regeneration.
         setTimeout(() => {
           handleRegenerateResponse(messageIndex, updatedMsgs);
         }, 0);
@@ -412,12 +417,12 @@ function App() {
    */
   const handleRegenerateResponse = async (editedMessageIndex, newMessagesArr) => {
     if (isLoading) return;
-    // Always use the freshest state passed in, fallback to current messages state
+    // Use freshest state. Keep chat up to the just-edited user message, remove all after.
     const msgsSource = Array.isArray(newMessagesArr) ? newMessagesArr : messages;
     const messagesToKeep = msgsSource.slice(0, editedMessageIndex + 1);
     setMessages(messagesToKeep);
 
-    // Get the edited user message content
+    // Validate edited message exists and is a non-empty user message
     const editedMessage = messagesToKeep[editedMessageIndex];
     if (!editedMessage || editedMessage.role !== "user" || !editedMessage.content.trim()) return;
 
@@ -427,7 +432,7 @@ function App() {
     try {
       let API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
 
-      // Prepare chat history up to the edited message
+      // Only send user/assistant message pairs up to edited (all finalized up to now)
       const cleanHistory = messagesToKeep
         .filter(m => !m.streaming)
         .map(({ role, content }) => ({ role, content }));
@@ -454,7 +459,7 @@ function App() {
         throw new Error(`[Backend error] ${errMsg} (code ${resp.status})`);
       }
 
-      // Handle streaming response similar to sendMessage
+      // Streaming response (identical to sendMessage)
       let usedStreaming = false;
       if (resp.body && window.ReadableStream) {
         const reader = resp.body.getReader();

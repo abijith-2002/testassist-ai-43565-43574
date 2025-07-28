@@ -154,29 +154,25 @@ function ChatMessage({
   const handleSaveEdit = async () => {
     if (!editValue.trim() || isLoading) return;
 
-    if (editValue.trim() !== msg.content) {
-      // Always trigger both the message update and AI regeneration on save
-      // (Call onEditMessage with doRegenerate:true; fallback triggers both)
-      if (typeof onEditMessage === "function") {
-        // Use the regeneration option if supported
-        if (onEditMessage.length === 3) {
-          onEditMessage(messageIndex, editValue.trim(), { doRegenerate: true });
-        } else {
-          // Fallback for older prop API: edit then trigger regeneration
-          onEditMessage(messageIndex, editValue.trim());
-          if (typeof onRegenerateResponse === "function") {
-            // Always call latest regen function with correct message index
-            onRegenerateResponse(messageIndex);
-          }
+    // Always update the user message and trigger answer regeneration on save,
+    // regardless if the value actually changed, to guarantee backend re-request.
+    if (typeof onEditMessage === "function") {
+      // Always pass doRegenerate:true if supported
+      if (onEditMessage.length === 3) {
+        onEditMessage(messageIndex, editValue.trim(), { doRegenerate: true });
+      } else {
+        // Fallback legacy prop: edit, then trigger regeneration
+        onEditMessage(messageIndex, editValue.trim());
+        if (typeof onRegenerateResponse === "function") {
+          onRegenerateResponse(messageIndex);
         }
-      } else if (typeof onRegenerateResponse === "function") {
-        // Fallback: only regen (should not happen in main app)
-        onRegenerateResponse(messageIndex);
       }
+    } else if (typeof onRegenerateResponse === "function") {
+      onRegenerateResponse(messageIndex);
     }
+
     setIsEditing(false);
 
-    // Clean up data attributes
     if (textareaRef.current) {
       textareaRef.current.removeAttribute('data-edit-mode');
     }
