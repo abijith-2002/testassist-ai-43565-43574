@@ -138,49 +138,52 @@
   }
 }
 
-/* Edit mode styles */
+/* Edit mode styles - inherits chat bubble container */
 .edit-mode-container {
   width: 100%;
   position: relative;
+  flex: 1;
 }
 
 .chat-edit-input {
+  /* Remove all bubble styling since it's now inside the chat bubble */
   width: 100%;
-  background: var(--user-bubble);
-  border: 1px solid var(--user-bubble-border);
-  border-radius: 20px;
-  padding: 12px 16px;
-  color: var(--user-text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  
+  /* Match text properties from bubble-txt */
   font-size: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
   line-height: 2;
+  color: var(--user-text);
+  word-break: break-word;
+  
+  /* Textarea specific properties */
   resize: vertical;
   min-height: auto;
-  box-shadow: var(--shadow-subtle);
-  transition: all 0.2s ease;
-  word-break: break-word;
+  outline: none;
+  box-shadow: none;
+  
+  /* Make user message bubble selectable */
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  
+  /* Position relative for z-index */
   position: relative;
-  overflow: hidden;
-}
-
-.chat-edit-input::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-  pointer-events: none;
+  z-index: 1;
 }
 
 .chat-edit-input:focus,
 .chat-edit-input:focus-visible {
   outline: none;
-  border-color: var(--input-focus-border);
-  box-shadow: 0 0 0 3px var(--input-focus-glow), var(--shadow-primary);
-  background: var(--user-bubble);
+  border: none;
+  box-shadow: none;
+  background: transparent;
 }
 
 .edit-actions {

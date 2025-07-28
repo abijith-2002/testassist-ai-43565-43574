@@ -93,8 +93,8 @@ function ChatMessage({
   return (
     <div className="chat-message-container user">
       <div className="chat-bubble-wrapper user">
-        <div className="chat-bubble user">
-          {isEditing ? (
+        {isEditing ? (
+          <div className="chat-bubble user">
             <div className="edit-mode-container">
               <textarea
                 className="chat-edit-input"
@@ -120,31 +120,31 @@ function ChatMessage({
                 </button>
               </div>
             </div>
-          ) : (
-            <>
-              <span className="bubble-txt">{msg.content}</span>
-              <div className="icon-overlay-container">
-                <button
-                  className="icon-button edit-btn"
-                  onClick={handleEdit}
-                  aria-label="Edit message and regenerate response"
-                  title="Edit message"
-                >
-                  <EditIcon size={16} />
-                </button>
-                <button
-                  className="icon-button copy-btn"
-                  onClick={handleCopy}
-                  aria-label="Copy message"
-                  title={copyFeedback ? "Copied!" : "Copy message"}
-                >
-                  <CopyIcon size={16} />
-                  {copyFeedback && <span className="copy-feedback">✓</span>}
-                </button>
-              </div>
-            </>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="chat-bubble user">
+            <span className="bubble-txt">{msg.content}</span>
+            <div className="icon-overlay-container">
+              <button
+                className="icon-button edit-btn"
+                onClick={handleEdit}
+                aria-label="Edit message and regenerate response"
+                title="Edit message"
+              >
+                <EditIcon size={16} />
+              </button>
+              <button
+                className="icon-button copy-btn"
+                onClick={handleCopy}
+                aria-label="Copy message"
+                title={copyFeedback ? "Copied!" : "Copy message"}
+              >
+                <CopyIcon size={16} />
+                {copyFeedback && <span className="copy-feedback">✓</span>}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
