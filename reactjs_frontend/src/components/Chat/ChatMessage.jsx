@@ -145,7 +145,7 @@ function ChatMessage({
   const handleSaveEdit = () => {
     if (editValue.trim() !== msg.content) {
       onEditMessage(messageIndex, editValue.trim());
-      onRegenerateResponse();
+      onRegenerateResponse(messageIndex);
     }
     setIsEditing(false);
     

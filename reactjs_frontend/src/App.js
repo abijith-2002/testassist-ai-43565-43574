@@ -391,22 +391,19 @@ function App() {
   // PUBLIC_INTERFACE: Handle response regeneration after edit
   /**
    * Regenerates the AI response after a user message has been edited
-   * Removes all assistant messages after the edited message and triggers a new response
+   * Removes all messages after the edited message and triggers a new response
+   * @param {number} editedMessageIndex - Index of the message that was edited
    */
-  const handleRegenerateResponse = async () => {
+  const handleRegenerateResponse = async (editedMessageIndex) => {
     if (isLoading) return;
     
-    // Find the last user message and remove all subsequent messages
-    const lastUserIndex = messages.findLastIndex(msg => msg.role === "user");
-    if (lastUserIndex === -1) return;
-    
-    // Keep messages up to and including the last user message
-    const messagesToKeep = messages.slice(0, lastUserIndex + 1);
+    // Remove all messages after the edited message
+    const messagesToKeep = messages.slice(0, editedMessageIndex + 1);
     setMessages(messagesToKeep);
     
-    // Get the last user message content
-    const lastUserMessage = messagesToKeep[lastUserIndex];
-    if (!lastUserMessage.content.trim()) return;
+    // Get the edited user message content
+    const editedMessage = messagesToKeep[editedMessageIndex];
+    if (!editedMessage || editedMessage.role !== "user" || !editedMessage.content.trim()) return;
     
     setIsLoading(true);
     setError("");
@@ -414,7 +411,7 @@ function App() {
     try {
       let API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3001";
 
-      // Prepare chat history (excluding the current message that will be re-sent)
+      // Prepare chat history up to the edited message
       const cleanHistory = messagesToKeep
         .filter(m => !m.streaming)
         .map(({ role, content }) => ({ role, content }));
