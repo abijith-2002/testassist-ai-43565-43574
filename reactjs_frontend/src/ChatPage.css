@@ -1,11 +1,11 @@
 :root {
   /* Dark Theme Color Palette */
-  --primary-bg: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #0d1117 100%);
-  --surface-bg: linear-gradient(135deg, #161b22 0%, #21262d 100%);
-  --chat-area-bg: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+  --primary-bg: #0f1419;
+  --surface-bg: #161b22;
+  --chat-area-bg: #0d1117;
   
   /* Chat Bubbles */
-  --assistant-bubble: linear-gradient(135deg, #30363d 0%, #21262d 100%);
+  --assistant-bubble: #30363d;
   --assistant-bubble-border: rgba(240, 246, 252, 0.1);
   --assistant-text: #f0f6fc;
   
@@ -14,12 +14,12 @@
   --user-text: #ffffff;
   
   /* Input and Controls */
-  --input-bg: linear-gradient(135deg, #21262d 0%, #30363d 100%);
+  --input-bg: #21262d;
   --input-border: rgba(240, 246, 252, 0.12);
   --input-focus-border: rgba(31, 111, 235, 0.5);
   --input-focus-glow: rgba(31, 111, 235, 0.15);
-  --send-btn-bg: linear-gradient(135deg, #238636 0%, #1f7f2e 100%);
-  --send-btn-hover: linear-gradient(135deg, #2ea043 0%, #238636 100%);
+  --send-btn-bg: #238636;
+  --send-btn-hover: #2ea043;
   
   /* Text Colors */
   --text-primary: #f0f6fc;
@@ -33,7 +33,7 @@
   --accent-orange: #ff8c42;
   
   /* Interactive Elements */
-  --header-avatar-bg: linear-gradient(135deg, #1f6feb 0%, #0969da 100%);
+  --header-avatar-bg: #1f6feb;
   --icon-color: #8b949e;
   --icon-hover: #f0f6fc;
   
@@ -88,10 +88,7 @@ html, body, #root {
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(31, 111, 235, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(35, 134, 54, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(165, 163, 255, 0.05) 0%, transparent 50%);
+  background: transparent;
   pointer-events: none;
   z-index: 0;
 }
@@ -151,12 +148,8 @@ html, body, #root {
 .header-bar .ai-title {
   font-size: 1.35rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--accent-blue);
   letter-spacing: 0.02rem;
-  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .header-bar .ai-sub {
@@ -283,7 +276,7 @@ html, body, #root {
 /* --- Polished Styling for Assistant Markdown Code Blocks --- */
 .assistant-content-direct pre {
   /* Background and border for a modern card effect */
-  background: linear-gradient(135deg, #181c24 0%, #23293a 100%);
+  background: #181c24;
   border-radius: 14px;
   padding: 1.1em 1.2em;
   margin: 1em 0 1.1em 0;
@@ -331,7 +324,7 @@ html, body, #root {
   position: absolute;
   top: 0.65em;
   right: 1.4em;
-  background: linear-gradient(135deg, #23293a 60%, #30363d 100%);
+  background: #23293a;
   color: #a5a3ff;
   font-family: inherit;
   font-size: 0.82em;
@@ -531,7 +524,7 @@ html, body, #root {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  background: rgba(255, 255, 255, 0.05);
   pointer-events: none;
 }
 
@@ -550,7 +543,7 @@ html, body, #root {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(240, 246, 252, 0.05) 0%, transparent 50%);
+  background: rgba(240, 246, 252, 0.03);
   pointer-events: none;
 }
 
@@ -605,7 +598,7 @@ html, body, #root {
 
 /* Error message styling */
 .chat-bubble.error-bubble {
-  background: linear-gradient(135deg, #da3633 0%, #cf222e 100%) !important;
+  background: #da3633 !important;
   color: #ffffff !important;
   border-radius: 24px; /* More rounded corners like other bubbles */
   box-shadow: var(--shadow-primary);
@@ -616,7 +609,7 @@ html, body, #root {
 
 .chat-bubble.error-bubble .bubble-avatar.assistant {
   border: 2px solid rgba(255, 255, 255, 0.3);
-  background: linear-gradient(135deg, #a40e26 0%, #cf222e 100%) !important;
+  background: #a40e26 !important;
 }
 
 /* Floating input container */

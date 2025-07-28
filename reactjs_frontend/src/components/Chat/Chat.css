@@ -242,12 +242,12 @@
 }
 
 .edit-save-btn {
-  background: linear-gradient(135deg, #238636 0%, #1f7f2e 100%);
+  background: #238636;
   color: white;
 }
 
 .edit-save-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2ea043 0%, #238636 100%);
+  background: #2ea043;
   transform: translateY(-1px);
 }
 
