@@ -47,23 +47,4 @@ input, textarea {
   font-family: inherit;
 }
 
-/* ---- Edit button and edit input area for user chat ---- */
-.edit-message-btn {
-  transition: background 0.14s, color 0.14s, box-shadow 0.14s;
-}
-.edit-message-btn:hover, .edit-message-btn:focus-visible {
-  background: var(--accent-blue, #4b8df6);
-  color: #fff !important;
-  outline: 2px solid var(--accent-blue,#4b8df6);
-}
-.edit-save-btn:hover, .edit-save-btn:focus-visible {
-  background: var(--accent-blue, #2256b2);
-}
-.edit-cancel-btn:hover, .edit-cancel-btn:focus-visible {
-  text-decoration: underline;
-}
 
-/* For textarea edit field */
-.chat-edit-input:focus, .chat-edit-input:focus-visible {
-  outline: 2px solid var(--accent-blue, #4b8df6);
-}

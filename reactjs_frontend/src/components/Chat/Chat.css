@@ -1,17 +1,55 @@
-.edit-button-under-bubble {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  display: flex;
+
+.edit-message-btn {
+  background: transparent;
+  border: none;
+  color: #E5E5E5;
+  padding: 3px 4px;
+  margin: 0;
+  border-radius: 3px;
+  outline: none;
+  box-shadow: none;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  cursor: pointer;
+  min-width: 20px;
+  min-height: 20px;
+  width: auto;
   height: auto;
-  z-index: 10;
-  pointer-events: all;
-  margin-top: 2px;
+  opacity: 0.8;
 }
+.edit-message-btn svg {
+  display: block;
+  fill: currentColor;
+  stroke: currentColor;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  stroke-width: 1.6;
+}
+.edit-message-btn:hover,
+.edit-message-btn:focus-visible {
+  background: rgba(255,255,255,0.1);
+  color: #E5E5E5;
+  opacity: 1;
+  transform: none;
+  box-shadow: none;
+}
+.edit-message-btn:active {
+  background: rgba(255,255,255,0.15);
+  transform: scale(0.96);
+  opacity: 1;
+}
+
+.chat-edit-input:focus,
+.chat-edit-input:focus-visible {
+  outline: none;
+  border-color: #4b8df6;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1), 0 4px 16px rgba(0, 0, 0, 0.15);
+  background: rgba(33, 38, 45, 0.95);
+}
+=======
 =======
 
 .edit-message-btn {

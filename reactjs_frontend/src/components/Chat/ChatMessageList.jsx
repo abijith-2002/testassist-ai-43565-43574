@@ -13,8 +13,7 @@ function ChatMessageList({
   setMessages,
   setIsLoading,
   setError,
-  isLoading,
-  regenerateResponse
+  isLoading
 }) {
   return (
     <>
@@ -61,15 +60,8 @@ function ChatMessageList({
         ) : (
           <ChatMessage
             key={idx}
-            idx={idx}
             role={msg.role}
             msg={msg}
-            messages={messages}
-            setMessages={setMessages}
-            setIsLoading={setIsLoading}
-            setError={setError}
-            isLoading={isLoading}
-            regenerateResponse={regenerateResponse}
           />
         )
       )}

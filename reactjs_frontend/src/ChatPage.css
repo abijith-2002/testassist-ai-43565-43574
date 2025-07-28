@@ -43,10 +43,7 @@
   --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.2);
   --glow-accent: 0 0 20px rgba(31, 111, 235, 0.3);
   
-  /* Edit Button Design Variables */
-  --edit-button-icon-color: #E5E5E5;
-  --edit-button-hover-bg: rgba(255, 255, 255, 0.1);
-  --edit-button-active-bg: rgba(255, 255, 255, 0.15);
+
 }
 
 html, body, #root {
@@ -227,15 +224,13 @@ html, body, #root {
 .chat-message-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px; /* Reduced for tighter spacing with edit controls */
+  margin-bottom: 40px;
   width: 100%;
   max-width: 100vw;
   box-sizing: border-box;
   padding-left: 28px;
   padding-right: 28px;
   animation: slideIn 0.3s ease-out;
-  position: relative; /* Enable absolute positioning for child elements */
-  padding-bottom: 32px; /* Reserved space for edit button to prevent layout shifts */
 }
 
 .chat-message-container.user {
@@ -392,151 +387,7 @@ html, body, #root {
   line-height: 2 !important; /* Further increase line-height for user chat bubble as well */
 }
 
-/* --- Edit button positioned beneath the user chat bubble --- */
-.edit-button-under-bubble {
-  position: absolute;
-  top: 100%; /* Position directly beneath the bubble */
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center; /* Center the button horizontally */
-  width: 100%;
-  height: auto;
-  z-index: 10;
-  pointer-events: all;
-  margin-top: 2px; /* Minimal gap between bubble and button */
-}
 
-/* Minimal pencil button - transparent with subtle rounded corners */
-.edit-message-btn {
-  background: transparent;
-  border: none;
-  color: var(--edit-button-icon-color);
-  padding: 3px 4px;
-  margin: 0;
-  border-radius: 3px;
-  outline: none;
-  box-shadow: none;
-  transition: background-color 0.15s ease, transform 0.1s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  min-width: 20px;
-  min-height: 20px;
-  width: auto;
-  height: auto;
-  opacity: 0.8;
-}
-
-.edit-message-btn svg {
-  display: block;
-  fill: currentColor;
-  stroke: currentColor;
-  width: 14px;
-  height: 14px;
-  pointer-events: none;
-  stroke-width: 1.6;
-}
-
-.edit-message-btn:hover,
-.edit-message-btn:focus-visible {
-  background: var(--edit-button-hover-bg);
-  color: var(--edit-button-icon-color);
-  opacity: 1;
-  transform: none;
-  box-shadow: none;
-}
-
-.edit-message-btn:active {
-  background: var(--edit-button-active-bg);
-  transform: scale(0.96);
-  opacity: 1;
-}
-
-
-
-/* Refined edit textarea - cleaner and more integrated */
-.chat-edit-input {
-  font-size: 1rem;
-  font-family: inherit;
-  color: var(--text-primary);
-  background: rgba(33, 38, 45, 0.8);
-  border-radius: 12px;
-  border: 1px solid rgba(88, 166, 255, 0.2);
-  padding: 10px 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  transition: all 0.2s ease;
-}
-
-.chat-edit-input:focus,
-.chat-edit-input:focus-visible {
-  outline: none;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1), 0 4px 16px rgba(0, 0, 0, 0.15);
-  background: rgba(33, 38, 45, 0.95);
-}
-
-.chat-edit-input::placeholder {
-  color: var(--text-muted);
-}
-
-/* Responsive: adjust edit button positioning for smaller screens */
-@media (max-width: 850px) {
-  .edit-button-under-bubble {
-    margin-top: 2px;
-    /* Keep centered positioning - no left adjustment needed */
-  }
-  
-  .edit-message-btn {
-    min-width: 20px;
-    min-height: 20px;
-    padding: 3px 4px;
-  }
-  
-  .edit-message-btn svg {
-    width: 13px;
-    height: 13px;
-  }
-  
-  .chat-message-container {
-    margin-bottom: 36px; /* Tighter spacing for medium screens */
-    padding-bottom: 30px; /* Adjusted reserved space for medium screens */
-  }
-}
-
-@media (max-width: 600px) {
-  .edit-button-under-bubble {
-    margin-top: 2px;
-    /* Keep centered positioning - no left adjustment needed */
-  }
-  
-  .edit-message-btn {
-    min-width: 22px;
-    min-height: 22px;
-    padding: 3px 4px;
-  }
-  
-  .edit-message-btn svg {
-    width: 13px;
-    height: 13px;
-  }
-  
-  .edit-save-btn,
-  .edit-cancel-btn {
-    font-size: 0.8rem !important;
-    padding: 5px 10px !important;
-  }
-  
-  .chat-message-container {
-    margin-bottom: 32px; /* Minimal spacing for mobile */
-    padding-left: 14px;
-    padding-right: 14px;
-    padding-bottom: 28px; /* Adjusted reserved space for mobile */
-  }
-}
 
 /* Compact markdown spacing for paragraphs and lists in AI replies */
 .assistant-content-direct p {
@@ -942,7 +793,7 @@ html, body, #root {
   }
 
   .chat-content-list {
-    padding: 0 0 110px 0; /* Adjusted bottom padding for medium screens */
+    padding: 0 0 110px 0;
   }
 
   .floating-input-container {
@@ -976,12 +827,12 @@ html, body, #root {
   }
   
   .chat-content-list {
-    padding: 0 0 100px 0; /* Mobile bottom padding for floating input clearance */
+    padding: 0 0 100px 0;
     margin: 0;
   }
   
   .chat-message-container {
-    margin-bottom: 32px; /* Consistent with above mobile breakpoint */
+    margin-bottom: 32px;
     padding-left: 14px;
     padding-right: 14px;
   }
