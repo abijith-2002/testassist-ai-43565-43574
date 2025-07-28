@@ -396,11 +396,12 @@ html, body, #root {
 .edit-button-under-bubble {
   position: absolute;
   top: 100%; /* Position directly beneath the bubble */
-  left: 35%; /* Align with left edge of the chat bubble itself (accounting for bubble wrapper's 65% max-width and right alignment) */
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Left-align the button */
-  width: auto;
+  justify-content: center; /* Center the button horizontally */
+  width: 100%;
   height: auto;
   z-index: 10;
   pointer-events: all;
@@ -486,7 +487,7 @@ html, body, #root {
 @media (max-width: 850px) {
   .edit-button-under-bubble {
     margin-top: 2px;
-    left: 25%; /* Adjust positioning for medium screens with different bubble width */
+    /* Keep centered positioning - no left adjustment needed */
   }
   
   .edit-message-btn {
@@ -509,7 +510,7 @@ html, body, #root {
 @media (max-width: 600px) {
   .edit-button-under-bubble {
     margin-top: 2px;
-    left: 15%; /* Adjust positioning for mobile screens with different bubble width */
+    /* Keep centered positioning - no left adjustment needed */
   }
   
   .edit-message-btn {

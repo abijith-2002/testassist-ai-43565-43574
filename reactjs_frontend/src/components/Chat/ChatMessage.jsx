@@ -102,16 +102,9 @@ function ChatMessage({
           )}
         </div>
       </div>
-      {/* Edit button positioned absolutely beneath bubble, left-aligned to bubble's left edge */}
+      {/* Edit button positioned absolutely beneath bubble, centered relative to the bubble */}
       {(hover && !editing && canEdit) && (
-        <div
-          className="edit-button-under-bubble"
-          style={{
-            // Alignment: The following ensures absolute positioning using percentages based on the chat bubble wrapper
-            left: 0,
-            // Remove fixed percent to be flush with wrapper
-          }}
-        >
+        <div className="edit-button-under-bubble">
           <button
             className="edit-message-btn"
             tabIndex={0}

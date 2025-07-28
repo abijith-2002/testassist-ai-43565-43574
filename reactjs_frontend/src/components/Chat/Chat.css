@@ -2,15 +2,17 @@
   position: absolute;
   top: 100%;
   left: 0;
+  right: 0;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  width: auto;
+  justify-content: center;
+  width: 100%;
   height: auto;
   z-index: 10;
   pointer-events: all;
   margin-top: 2px;
 }
+=======
 
 .edit-message-btn {
   background: transparent;
