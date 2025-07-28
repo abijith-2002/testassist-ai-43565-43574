@@ -463,7 +463,7 @@ function App() {
               <span className="bubble-txt">{msg.content}</span>
             )}
             
-            {/* Edit button positioned at bottom-left corner of bubble */}
+            {/* Edit button positioned at bottom-right corner of bubble */}
             {(hover && !editing && canEdit) && (
               <div className="bubble-edit-controls-under">
                 <button

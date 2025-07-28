@@ -42,6 +42,11 @@
   --shadow-secondary: 0 4px 12px rgba(0, 0, 0, 0.3);
   --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.2);
   --glow-accent: 0 0 20px rgba(31, 111, 235, 0.3);
+  
+  /* Edit Button Design Variables */
+  --edit-button-icon-color: #E5E5E5;
+  --edit-button-hover-bg: rgba(255, 255, 255, 0.1);
+  --edit-button-active-bg: rgba(255, 255, 255, 0.15);
 }
 
 html, body, #root {
@@ -386,56 +391,63 @@ html, body, #root {
   line-height: 2 !important; /* Further increase line-height for user chat bubble as well */
 }
 
-/* --- Edit icon positioned at bottom-left corner of user bubble --- */
+/* --- Edit icon positioned at bottom-right corner of user bubble --- */
 .bubble-edit-controls-under {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   position: absolute;
   bottom: 4px; /* Position near bottom of bubble */
-  left: 8px; /* Position at left side of bubble */
+  right: 8px; /* Position at right side of bubble */
   width: auto;
   height: auto;
   z-index: 8;
   pointer-events: all;
 }
 
-/* Minimal pencil button - more compact and subtle */
+/* Minimal pencil button - transparent with subtle rounded corners */
 .edit-message-btn {
-  background: rgba(88, 166, 255, 0.03);
-  border: 1px solid rgba(88, 166, 255, 0.12);
-  color: rgba(88, 166, 255, 0.85);
-  padding: 6px;
-  margin: 0;
-  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--edit-button-icon-color);
+  padding: 4px 6px;
+  margin-left: 4px;
+  margin-right: 8px;
+  border-radius: 4px;
   outline: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.15s ease;
+  box-shadow: none;
+  transition: background-color 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
   cursor: pointer;
-  width: 28px;
-  height: 28px;
+  min-width: 24px;
+  min-height: 24px;
+  width: auto;
+  height: auto;
 }
 
 .edit-message-btn svg {
   display: block;
+  fill: currentColor;
   stroke: currentColor;
   width: 16px;
   height: 16px;
   pointer-events: none;
-  stroke-width: 1.8;
+  stroke-width: 1.65;
 }
 
 .edit-message-btn:hover,
 .edit-message-btn:focus-visible {
-  background: rgba(88, 166, 255, 0.12);
-  border-color: rgba(88, 166, 255, 0.25);
-  color: var(--accent-blue);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(88, 166, 255, 0.15);
+  background: var(--edit-button-hover-bg);
+  color: var(--edit-button-icon-color);
+  transform: none;
+  box-shadow: none;
+}
+
+.edit-message-btn:active {
+  background: var(--edit-button-active-bg);
+  transform: scale(0.95);
 }
 
 /* Controls for save/cancel beneath bubble - more compact and elegant */
@@ -524,13 +536,13 @@ html, body, #root {
 @media (max-width: 850px) {
   .bubble-edit-controls-under {
     bottom: 3px;
-    left: 6px;
+    right: 6px;
   }
   
   .edit-message-btn {
-    width: 26px;
-    height: 26px;
-    padding: 5px;
+    min-width: 22px;
+    min-height: 22px;
+    padding: 3px 5px;
   }
   
   .edit-message-btn svg {
@@ -546,13 +558,15 @@ html, body, #root {
 @media (max-width: 600px) {
   .bubble-edit-controls-under {
     bottom: 2px;
-    left: 4px;
+    right: 4px;
   }
   
   .edit-message-btn {
-    width: 24px;
-    height: 24px;
-    padding: 4px;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 4px 6px;
+    margin-left: 2px;
+    margin-right: 4px;
   }
   
   .edit-message-btn svg {
