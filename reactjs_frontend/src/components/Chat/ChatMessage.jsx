@@ -150,12 +150,24 @@ function ChatMessage({
   };
 
   // Handle save edit
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editValue.trim() || isLoading) return;
+
     if (editValue.trim() !== msg.content) {
-      onEditMessage(messageIndex, editValue.trim());
-      // Ensure 'Save' disables other actions while regenerating
-      onRegenerateResponse(messageIndex);
+      // Ensure the edit AND regen happen in sequence—wait for the state update
+      // Instead of calling both handlers here (which leads to stale closure), we combine edit+regen
+      // and let App.js handle atomic update and regen on the new state.
+      if (typeof onEditMessage === "function" && typeof onRegenerateResponse === "function") {
+        // New: Call a composed update-and-regen handler if present
+        if (onEditMessage.length === 3) {
+          // New signature: onEditMessage(idx, newContent, { doRegenerate: true })
+          onEditMessage(messageIndex, editValue.trim(), { doRegenerate: true });
+        } else {
+          // Fallback: old API - call edit then regen (may still be buggy!)
+          onEditMessage(messageIndex, editValue.trim());
+          onRegenerateResponse(messageIndex);
+        }
+      }
     }
     setIsEditing(false);
 

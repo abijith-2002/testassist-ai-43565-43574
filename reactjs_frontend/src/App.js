@@ -374,37 +374,53 @@ function App() {
     return d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
   };
 
-  // PUBLIC_INTERFACE: Handle message editing
+  // PUBLIC_INTERFACE: Handle message editing (composed - now supports edit+regen chain)
   /**
-   * Updates a user message at the specified index with new content
+   * Updates a user message at the specified index with new content, optionally
+   * triggers re-generation after update (atomically, prevents async out-of-order bugs).
    * @param {number} messageIndex - Index of the message to edit
    * @param {string} newContent - New content for the message
+   * @param {object} [opts] - Optional params. Pass {doRegenerate: true} to chain regenerate.
    */
-  const handleEditMessage = (messageIndex, newContent) => {
-    setMessages(prev => 
-      prev.map((msg, idx) => 
-        idx === messageIndex ? { ...msg, content: newContent } : msg
-      )
-    );
+  const handleEditMessage = (messageIndex, newContent, opts = {}) => {
+    // If regeneration requested, perform atomic state update+regen using callback form
+    if (opts.doRegenerate) {
+      setMessages(prev => {
+        const updatedMsgs = prev.map((msg, idx) =>
+          idx === messageIndex ? { ...msg, content: newContent } : msg
+        );
+        // After state updates, immediately regenerate (using new state).
+        setTimeout(() => {
+          handleRegenerateResponse(messageIndex, updatedMsgs);
+        }, 0);
+        return updatedMsgs;
+      });
+    } else {
+      setMessages(prev =>
+        prev.map((msg, idx) =>
+          idx === messageIndex ? { ...msg, content: newContent } : msg
+        )
+      );
+    }
   };
 
-  // PUBLIC_INTERFACE: Handle response regeneration after edit
   /**
-   * Regenerates the AI response after a user message has been edited
-   * Removes all messages after the edited message and triggers a new response
+   * Regenerates the AI response after a user message has been edited.
+   * If newMessagesArr is provided, this is used to guarantee latest state (called after edit update).
    * @param {number} editedMessageIndex - Index of the message that was edited
+   * @param {array} [newMessagesArr] - If present, use as state source (e.g. from fresh state change)
    */
-  const handleRegenerateResponse = async (editedMessageIndex) => {
+  const handleRegenerateResponse = async (editedMessageIndex, newMessagesArr) => {
     if (isLoading) return;
-    
-    // Remove all messages after the edited message
-    const messagesToKeep = messages.slice(0, editedMessageIndex + 1);
+    // Always use the freshest state passed in, fallback to current messages state
+    const msgsSource = Array.isArray(newMessagesArr) ? newMessagesArr : messages;
+    const messagesToKeep = msgsSource.slice(0, editedMessageIndex + 1);
     setMessages(messagesToKeep);
-    
+
     // Get the edited user message content
     const editedMessage = messagesToKeep[editedMessageIndex];
     if (!editedMessage || editedMessage.role !== "user" || !editedMessage.content.trim()) return;
-    
+
     setIsLoading(true);
     setError("");
 
@@ -446,7 +462,6 @@ function App() {
         let buffer = "";
         let done = false;
 
-        // Add new assistant message for streaming
         const timestamp = new Date().toISOString();
         setMessages(prev => [
           ...prev,
@@ -485,7 +500,6 @@ function App() {
                   const charsPerTick = 5;
                   const msInterval = 3;
                   let lastContent = "";
-                  
                   for (let i = charsPerTick; i <= parsedAnswer.length; i += charsPerTick) {
                     let toDisplay = parsedAnswer.substring(0, i);
                     if (toDisplay !== lastContent) {
@@ -521,7 +535,6 @@ function App() {
           updateStreamingAssistant(replyText || "");
         }
 
-        // Finalize streaming message
         setMessages(prev => {
           let lastIdx = prev.length - 1;
           if (
