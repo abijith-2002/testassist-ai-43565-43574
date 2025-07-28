@@ -1,8 +1,8 @@
 :root {
   /* Dark Theme Color Palette */
-  --primary-bg: #0f1419;
-  --surface-bg: #161b22;
-  --chat-area-bg: #0d1117;
+  --primary-bg: #2C363F;
+  --surface-bg: #2C363F;
+  --chat-area-bg: #2C363F;
   
   /* Chat Bubbles */
   --assistant-bubble: #30363d;
