@@ -67,17 +67,19 @@
 
 /* Message actions container positioned outside the bubble */
 .message-actions-container {
-  display: none;
+  display: none !important;
+  flex-direction: row;
   gap: 6px;
   margin-top: 8px;
   margin-left: auto;
   align-items: center;
   justify-content: flex-end;
+  opacity: 0;
   transition: opacity 0.2s ease;
 }
 
 .chat-message-container.user:hover .message-actions-container {
-  display: flex;
+  display: flex !important;
   opacity: 1;
 }
 
