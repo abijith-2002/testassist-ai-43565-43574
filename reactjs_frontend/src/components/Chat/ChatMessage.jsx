@@ -251,25 +251,6 @@ function ChatMessage({
         ) : (
           <div className="chat-bubble user">
             <span ref={bubbleTextRef} className="bubble-txt">{msg.content}</span>
-            <div className="icon-overlay-container">
-              <button
-                className="icon-button edit-btn"
-                onClick={handleEdit}
-                aria-label="Edit message and regenerate response"
-                title="Edit message"
-              >
-                <EditIcon size={16} />
-              </button>
-              <button
-                className="icon-button copy-btn"
-                onClick={handleCopy}
-                aria-label="Copy message"
-                title={copyFeedback ? "Copied!" : "Copy message"}
-              >
-                <CopyIcon size={16} />
-                {copyFeedback && <span className="copy-feedback">✓</span>}
-              </button>
-            </div>
           </div>
         )}
         
@@ -289,6 +270,29 @@ function ChatMessage({
           {editValue}
         </div>
       </div>
+      
+      {/* Action buttons positioned outside the bubble */}
+      {!isEditing && (
+        <div className="message-actions-container">
+          <button
+            className="message-action-btn edit-btn"
+            onClick={handleEdit}
+            aria-label="Edit message and regenerate response"
+            title="Edit message"
+          >
+            <EditIcon size={16} />
+          </button>
+          <button
+            className="message-action-btn copy-btn"
+            onClick={handleCopy}
+            aria-label="Copy message"
+            title={copyFeedback ? "Copied!" : "Copy message"}
+          >
+            <CopyIcon size={16} />
+            {copyFeedback && <span className="copy-feedback">✓</span>}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -351,7 +351,7 @@ function App() {
         /Please set.*GEMINI/i.test(errorMessage) ||
         /google.*gemini.*api.*key.*unconfigured/i.test(errorMessage)
       ) {
-        userFriendlyError = "Gemini API key is not configured. Please contact your administrator.";
+        userFriendlyError = "Gemini API key is not configured.";
       } else {
         userFriendlyError =
           "Sorry, failed to fetch AI response. " +

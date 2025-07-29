@@ -65,55 +65,50 @@
 }
 =======
 
-/* Icon overlay container for user chat bubbles */
-.chat-bubble.user {
-  position: relative;
-}
-
-.icon-overlay-container {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+/* Message actions container positioned outside the bubble */
+.message-actions-container {
   display: flex;
-  gap: 8px;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: all 0.2s ease-in-out;
-  z-index: 10;
+  gap: 6px;
+  margin-top: 8px;
+  margin-left: auto;
+  align-items: center;
+  justify-content: flex-end;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
 }
 
-.chat-bubble.user:hover .icon-overlay-container {
+.chat-message-container.user:hover .message-actions-container {
   opacity: 1;
-  transform: translateY(0);
 }
 
-.icon-button {
-  width: 24px;
-  height: 24px;
+.message-action-btn {
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
-  border: none;
-  border-radius: 4px;
+  background: rgba(240, 246, 252, 0.08);
+  border: 1px solid rgba(240, 246, 252, 0.12);
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.15s ease;
-  color: #E5E5E5;
-  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
   position: relative;
+  backdrop-filter: blur(8px);
 }
 
-.icon-button:hover {
-  transform: scale(1.1);
-  background: rgba(0, 0, 0, 0.8);
-  color: #ffffff;
+.message-action-btn:hover {
+  background: rgba(240, 246, 252, 0.15);
+  border-color: rgba(240, 246, 252, 0.2);
+  color: var(--text-primary);
+  transform: translateY(-1px);
 }
 
-.icon-button:active {
-  transform: scale(0.95);
+.message-action-btn:active {
+  transform: translateY(0) scale(0.96);
 }
 
-.icon-button svg {
+.message-action-btn svg {
   width: 16px;
   height: 16px;
   pointer-events: none;
@@ -347,18 +342,17 @@
 
 /* Mobile responsiveness */
 @media (max-width: 600px) {
-  .icon-overlay-container {
-    top: 8px;
-    right: 8px;
-    gap: 6px;
+  .message-actions-container {
+    margin-top: 6px;
+    gap: 4px;
   }
   
-  .icon-button {
-    width: 28px;
-    height: 28px;
+  .message-action-btn {
+    width: 32px;
+    height: 32px;
   }
   
-  .icon-button svg {
+  .message-action-btn svg {
     width: 18px;
     height: 18px;
   }
