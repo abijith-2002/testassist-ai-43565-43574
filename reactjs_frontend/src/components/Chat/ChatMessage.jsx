@@ -14,7 +14,7 @@ const CopyIcon = ({ size = 16 }) => (
 // Edit icon SVG component
 const EditIcon = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2-2v-7"/>
     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
   </svg>
 );
@@ -102,22 +102,6 @@ function ChatMessage({
       }
       document.body.removeChild(textArea);
     }
-  };
-
-  // Calculate the required height for textarea to match the original bubble
-  const calculateTextareaHeight = () => {
-    if (bubbleTextRef.current) {
-      // Get the height of the original text content
-      const bubbleHeight = bubbleTextRef.current.scrollHeight;
-      const bubbleStyle = window.getComputedStyle(bubbleTextRef.current);
-      const lineHeight = parseFloat(bubbleStyle.lineHeight);
-      
-      // Calculate approximate number of lines
-      const lines = Math.max(1, Math.ceil(bubbleHeight / lineHeight));
-      
-      return Math.max(lines, editValue.split('\n').length);
-    }
-    return Math.max(2, editValue.split('\n').length);
   };
 
   // Handle edit button click
@@ -251,25 +235,6 @@ function ChatMessage({
         ) : (
           <div className="chat-bubble user">
             <span ref={bubbleTextRef} className="bubble-txt">{msg.content}</span>
-            <div className="icon-overlay-container">
-              <button
-                className="icon-button edit-btn"
-                onClick={handleEdit}
-                aria-label="Edit message and regenerate response"
-                title="Edit message"
-              >
-                <EditIcon size={16} />
-              </button>
-              <button
-                className="icon-button copy-btn"
-                onClick={handleCopy}
-                aria-label="Copy message"
-                title={copyFeedback ? "Copied!" : "Copy message"}
-              >
-                <CopyIcon size={16} />
-                {copyFeedback && <span className="copy-feedback">✓</span>}
-              </button>
-            </div>
           </div>
         )}
         
@@ -289,6 +254,31 @@ function ChatMessage({
           {editValue}
         </div>
       </div>
+      
+      {/* Fixed-height allocated area for action buttons - always present, buttons controlled by opacity/visibility */}
+      {!isEditing && (
+        <div className="message-actions-area">
+          <div className="message-actions-container">
+            <button
+              className="message-action-btn edit-btn"
+              onClick={handleEdit}
+              aria-label="Edit message and regenerate response"
+              title="Edit message"
+            >
+              <EditIcon size={16} />
+            </button>
+            <button
+              className="message-action-btn copy-btn"
+              onClick={handleCopy}
+              aria-label="Copy message"
+              title={copyFeedback ? "Copied!" : "Copy message"}
+            >
+              <CopyIcon size={16} />
+              {copyFeedback && <span className="copy-feedback">✓</span>}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

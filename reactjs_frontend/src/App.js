@@ -339,13 +339,28 @@ function App() {
         setMessages(prev => [...prev, assistantMsg]);
       }
     } catch (err) {
-      setError(
-        "Sorry, failed to fetch AI response. " +
-        (err?.message
-          ? err.message.replace(/^Error:/, '').trim()
-          : String(err)
-        )
-      );
+      // Detect Gemini API not configured error and show custom user-friendly message
+      let userFriendlyError = "";
+      const errorMessage = err?.message || "";
+      // Heuristic match for various Gemini or API key configuration error scenarios
+      if (
+        /gemini api.*not\s*configured/i.test(errorMessage) ||
+        /api key.*not\s*configured/i.test(errorMessage) ||
+        /api.*key.*missing/i.test(errorMessage) ||
+        /NO_GEMINI_API_KEY/i.test(errorMessage) ||
+        /Please set.*GEMINI/i.test(errorMessage) ||
+        /google.*gemini.*api.*key.*unconfigured/i.test(errorMessage)
+      ) {
+        userFriendlyError = "Gemini API key is not configured.";
+      } else {
+        userFriendlyError =
+          "Sorry, failed to fetch AI response. " +
+          (errorMessage
+            ? errorMessage.replace(/^Error:/, "").trim()
+            : String(err)
+          );
+      }
+      setError(userFriendlyError);
       // Remove the "streaming" assistant message if process aborted
       setMessages(prev => (
         prev.length > 0 && prev[prev.length - 1]?.role === "assistant" && !prev[prev.length - 1]?.content

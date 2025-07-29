@@ -213,7 +213,7 @@ html, body, #root {
 .chat-message-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  margin-bottom: 20px; /* Reduced from 40px for more compact flow */
   width: 100%;
   max-width: 100vw;
   box-sizing: border-box;
@@ -224,6 +224,7 @@ html, body, #root {
 
 .chat-message-container.user {
   align-items: flex-end;
+  margin-bottom: 12px; /* Even smaller gap before AI response */
 }
 
 /* ========== AI Fullwidth (bubbleless) Style ========== */
@@ -231,7 +232,7 @@ html, body, #root {
   width: 100vw;
   max-width: 100vw;
   padding: 0;
-  margin: 0 0 16px 0;
+  margin: 0 0 24px 0; /* Slightly increased bottom margin after AI response */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -818,9 +819,17 @@ html, body, #root {
   }
   
   .chat-message-container {
-    margin-bottom: 32px;
+    margin-bottom: 16px; /* Reduced from 32px for compact mobile view */
     padding-left: 14px;
     padding-right: 14px;
+  }
+  
+  .chat-message-container.user {
+    margin-bottom: 8px; /* Even more compact gap before AI response on mobile */
+  }
+  
+  .assistant-fullwidth-message {
+    margin-bottom: 20px; /* Adjusted AI response bottom margin for mobile */
   }
   
   .chat-bubble-wrapper {

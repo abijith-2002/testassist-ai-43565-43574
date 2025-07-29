@@ -1,119 +1,63 @@
-=======
-
-.edit-message-btn {
-  background: transparent;
-  border: none;
-  color: #E5E5E5;
-  padding: 3px 4px;
-  margin: 0;
-  border-radius: 3px;
-  outline: none;
-  box-shadow: none;
-  transition: background-color 0.15s ease, transform 0.1s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  min-width: 20px;
-  min-height: 20px;
-  width: auto;
-  height: auto;
-  opacity: 0.8;
-}
-.edit-message-btn svg {
-  display: block;
-  fill: currentColor;
-  stroke: currentColor;
-  width: 14px;
-  height: 14px;
-  pointer-events: none;
-  stroke-width: 1.6;
-}
-.edit-message-btn:hover,
-.edit-message-btn:focus-visible {
-  background: rgba(255,255,255,0.1);
-  color: #E5E5E5;
-  opacity: 1;
-  transform: none;
-  box-shadow: none;
-}
-.edit-message-btn:active {
-  background: rgba(255,255,255,0.15);
-  transform: scale(0.96);
-  opacity: 1;
-}
-
-
-/* Focus styles for edit mode textarea */
-.chat-edit-input[style*="background-color"]:focus,
-.chat-edit-input[style*="background-color"]:focus-visible {
-  outline: 2px solid #2C363F !important;
-  outline-offset: 2px;
-  border-color: #2C363F !important;
-  box-shadow: 0 0 0 3px rgba(44, 54, 63, 0.2), 0 4px 16px rgba(0, 0, 0, 0.15) !important;
-  background-color: #9FB4C7 !important;
-  color: #2C363F !important;
-}
-
-/* Default focus styles for non-edit mode (should not override edit mode) */
-.chat-edit-input:focus:not([style*="background-color"]),
-.chat-edit-input:focus-visible:not([style*="background-color"]) {
-  outline: none;
-  border-color: #4b8df6;
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1), 0 4px 16px rgba(0, 0, 0, 0.15);
-  background: rgba(33, 38, 45, 0.95);
-}
-=======
-
-/* Icon overlay container for user chat bubbles */
-.chat-bubble.user {
-  position: relative;
-}
-
-.icon-overlay-container {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+/* Message actions area - fixed height allocated space that prevents UI shift */
+.message-actions-area {
+  width: 100%;
+  height: 40px; /* Fixed height allocation */
+  min-height: 40px;
   display: flex;
-  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 4px;
+  pointer-events: none; /* Allow hover to work on parent container */
+}
+
+/* Message actions container positioned within the allocated area */
+.message-actions-container {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
   opacity: 0;
-  transform: translateY(-4px);
-  transition: all 0.2s ease-in-out;
-  z-index: 10;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
-.chat-bubble.user:hover .icon-overlay-container {
+/* Show buttons on hover of the entire chat message container */
+.chat-message-container.user:hover .message-actions-container {
   opacity: 1;
-  transform: translateY(0);
+  visibility: visible;
+  pointer-events: all;
 }
 
-.icon-button {
-  width: 24px;
-  height: 24px;
+.message-action-btn {
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
-  border: none;
-  border-radius: 4px;
+  background: rgba(240, 246, 252, 0.08);
+  border: 1px solid rgba(240, 246, 252, 0.12);
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.15s ease;
-  color: #E5E5E5;
-  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
   position: relative;
+  backdrop-filter: blur(8px);
 }
 
-.icon-button:hover {
-  transform: scale(1.1);
-  background: rgba(0, 0, 0, 0.8);
-  color: #ffffff;
+.message-action-btn:hover {
+  background: rgba(240, 246, 252, 0.15);
+  border-color: rgba(240, 246, 252, 0.2);
+  color: var(--text-primary);
+  transform: translateY(-1px);
 }
 
-.icon-button:active {
-  transform: scale(0.95);
+.message-action-btn:active {
+  transform: translateY(0) scale(0.96);
 }
 
-.icon-button svg {
+.message-action-btn svg {
   width: 16px;
   height: 16px;
   pointer-events: none;
@@ -347,18 +291,21 @@
 
 /* Mobile responsiveness */
 @media (max-width: 600px) {
-  .icon-overlay-container {
-    top: 8px;
-    right: 8px;
-    gap: 6px;
+  .message-actions-area {
+    height: 36px; /* Slightly smaller for mobile */
+    min-height: 36px;
   }
   
-  .icon-button {
-    width: 28px;
-    height: 28px;
+  .message-actions-container {
+    gap: 4px;
   }
   
-  .icon-button svg {
+  .message-action-btn {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .message-action-btn svg {
     width: 18px;
     height: 18px;
   }
@@ -380,9 +327,8 @@
     width: 70vw !important;
   }
 }
-=======
-=======
 
+/* Legacy styles for backwards compatibility */
 .edit-message-btn {
   background: transparent;
   border: none;
@@ -403,6 +349,7 @@
   height: auto;
   opacity: 0.8;
 }
+
 .edit-message-btn svg {
   display: block;
   fill: currentColor;
@@ -412,6 +359,7 @@
   pointer-events: none;
   stroke-width: 1.6;
 }
+
 .edit-message-btn:hover,
 .edit-message-btn:focus-visible {
   background: rgba(255,255,255,0.1);
@@ -420,16 +368,9 @@
   transform: none;
   box-shadow: none;
 }
+
 .edit-message-btn:active {
   background: rgba(255,255,255,0.15);
   transform: scale(0.96);
   opacity: 1;
-}
-
-.chat-edit-input:focus,
-.chat-edit-input:focus-visible {
-  outline: none;
-  border-color: #4b8df6;
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1), 0 4px 16px rgba(0, 0, 0, 0.15);
-  background: rgba(33, 38, 45, 0.95);
 }
