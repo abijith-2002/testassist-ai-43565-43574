@@ -3,6 +3,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
+// Mock window.prompt before using it in jest.mock
+const mockPrompt = jest.fn();
+global.prompt = mockPrompt;
+
 // Mock the ChatMessageList component to avoid react-markdown issues
 jest.mock('../components/Chat/ChatMessageList', () => {
   return function MockChatMessageList({ messages, onEditMessage, onRegenerateResponse, isLoading }) {
@@ -19,7 +23,7 @@ jest.mock('../components/Chat/ChatMessageList', () => {
               <button 
                 onClick={() => {
                   // Simulate edit mode
-                  const newContent = prompt('Edit message:', msg.content);
+                  const newContent = global.prompt('Edit message:', msg.content);
                   if (newContent) {
                     onEditMessage(idx, newContent, { doRegenerate: true });
                   }
@@ -52,16 +56,13 @@ global.fetch = jest.fn();
 // Mock environment variable
 process.env.REACT_APP_API_BASE_URL = 'http://localhost:3001';
 
-// Mock window.prompt for the edit simulation
-global.prompt = jest.fn();
-
 describe('Chat Prompt Edit and Response Regeneration Flow (Simplified)', () => {
   let user;
 
   beforeEach(() => {
     user = userEvent.setup();
     fetch.mockClear();
-    global.prompt.mockClear();
+    mockPrompt.mockClear();
     
     // Mock successful streaming API response
     fetch.mockResolvedValue({
@@ -107,7 +108,7 @@ describe('Chat Prompt Edit and Response Regeneration Flow (Simplified)', () => {
     });
 
     // Mock the prompt for editing
-    global.prompt.mockReturnValue('Edited test message');
+    mockPrompt.mockReturnValue('Edited test message');
 
     // Setup new mock response for regeneration
     fetch.mockResolvedValue({
@@ -177,7 +178,7 @@ describe('Chat Prompt Edit and Response Regeneration Flow (Simplified)', () => {
     });
 
     // Mock edit prompt
-    global.prompt.mockReturnValue('Modified message for backend');
+    mockPrompt.mockReturnValue('Modified message for backend');
 
     // Click edit button
     const editButton = screen.getByTestId('edit-btn-0');
@@ -238,7 +239,7 @@ describe('Chat Prompt Edit and Response Regeneration Flow (Simplified)', () => {
     });
 
     // Mock edit prompt
-    global.prompt.mockReturnValue('Edited test question');
+    mockPrompt.mockReturnValue('Edited test question');
 
     // Click edit button
     const editButton = screen.getByTestId('edit-btn-0');
@@ -276,7 +277,7 @@ describe('Chat Prompt Edit and Response Regeneration Flow (Simplified)', () => {
     fetch.mockRejectedValue(new Error('Network error'));
 
     // Mock edit prompt
-    global.prompt.mockReturnValue('Edited message with error');
+    mockPrompt.mockReturnValue('Edited message with error');
 
     // Click edit button
     const editButton = screen.getByTestId('edit-btn-0');
