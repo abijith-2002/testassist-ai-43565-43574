@@ -138,25 +138,27 @@ function ChatMessage({
   const handleSaveEdit = async () => {
     if (!editValue.trim() || isLoading) return;
 
-    // Update state with new prompt and trigger backend regeneration
+    // Always update the state with the new user prompt AND trigger a backend regeneration request
+    // This guarantees: (1) updated state, (2) UI refresh, (3) backend call to fetch new response
+
     if (typeof onEditMessage === "function") {
-      // Always trigger regeneration atomically with the prompt update
-      if (onEditMessage.length === 3) {
-        // Modern API (expected): atomic edit + regenerate in one step
-        onEditMessage(messageIndex, editValue.trim(), { doRegenerate: true });
-      } else {
-        // Legacy compatibility
+      // Always prefer the modern atomic API (edit + regenerate in one action)
+      onEditMessage(
+        messageIndex,
+        editValue.trim(),
+        { doRegenerate: true }
+      );
+    } else {
+      // Defensive fallback: if API missing, try both legacy
+      if (typeof onEditMessage === "function") {
         onEditMessage(messageIndex, editValue.trim());
-        if (typeof onRegenerateResponse === "function") {
-          onRegenerateResponse(messageIndex);
-        }
       }
-    } else if (typeof onRegenerateResponse === "function") {
-      // Defensive: fallback to regen only
-      onRegenerateResponse(messageIndex);
+      if (typeof onRegenerateResponse === "function") {
+        onRegenerateResponse(messageIndex);
+      }
     }
 
-    // UI updates to show latest prompt and block editing mode
+    // UI updates: End edit mode immediately
     setIsEditing(false);
     if (textareaRef.current) {
       textareaRef.current.removeAttribute('data-edit-mode');
