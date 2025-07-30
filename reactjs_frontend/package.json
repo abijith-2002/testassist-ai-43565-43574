@@ -32,6 +32,14 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "cross-env": "^7.0.3"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-markdown|remark-.*|rehype-.*|unified|bail|is-plain-obj|trough|vfile.*|unist-.*|mdast-.*|hast-.*|comma-separated-tokens|property-information|hast-util-.*|space-separated-tokens|character-entities|parse-entities|character-entities-legacy|character-reference-invalid|is-decimal|is-hexadecimal|is-alphanumerical|decode-named-character-reference|micromark.*|devlop|zwitch|html-void-elements|longest-streak|ccount|escape-string-regexp|markdown-table)/)"
+    ]
   }
 }
