@@ -138,14 +138,20 @@ function ChatMessage({
   const handleSaveEdit = async () => {
     if (!editValue.trim() || isLoading) return;
 
-    // Always update the user message and trigger answer regeneration on save,
-    // regardless if the value actually changed, to guarantee backend re-request.
+    // Instantly show the edited message in the chat bubble, exit editing state
+    setIsEditing(false);
+    if (textareaRef.current) {
+      textareaRef.current.removeAttribute('data-edit-mode');
+    }
+
+    // Call parent handler to:
+    //   1. instantly update user bubble with new prompt
+    //   2. trigger backend regeneration and spinner
     if (typeof onEditMessage === "function") {
-      // Always pass doRegenerate:true if supported
+      // Always use doRegenerate:true for atomic UX
       if (onEditMessage.length === 3) {
         onEditMessage(messageIndex, editValue.trim(), { doRegenerate: true });
       } else {
-        // Fallback legacy prop: edit, then trigger regeneration
         onEditMessage(messageIndex, editValue.trim());
         if (typeof onRegenerateResponse === "function") {
           onRegenerateResponse(messageIndex);
@@ -153,12 +159,6 @@ function ChatMessage({
       }
     } else if (typeof onRegenerateResponse === "function") {
       onRegenerateResponse(messageIndex);
-    }
-
-    setIsEditing(false);
-
-    if (textareaRef.current) {
-      textareaRef.current.removeAttribute('data-edit-mode');
     }
   };
 
